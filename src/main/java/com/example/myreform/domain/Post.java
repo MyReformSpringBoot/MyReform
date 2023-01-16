@@ -17,7 +17,7 @@ public class Post extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long post_id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id2") // 수정 필요
     private User user;
 
@@ -46,8 +46,8 @@ public class Post extends BaseTimeEntity{
     }
 
     @Builder
-    public Post(Long post_id, User user, Long category_id, String title, String contents){
-        this.post_id = post_id;
+    public Post(User user, Long category_id, String title, String contents){
+//        this.post_id = post_id;
         this.user = user;
         this.category_id = category_id;
         this.title = title;

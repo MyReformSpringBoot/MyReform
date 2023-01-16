@@ -34,8 +34,8 @@ class PostServiceImplTest {
         String title = "게시글 1";
         String contents = "내용";
 
-        PostSaveDto postSaveDto = new PostSaveDto(post_id, user, category_id, title, contents);
-        postService.save(postSaveDto);
+        PostSaveDto postSaveDto = new PostSaveDto(user, category_id, title, contents);
+        postService.save(user, postSaveDto);
         em.flush();
         em.clear();
         Post findPost = em.createQuery("select p from post p", Post.class).getSingleResult();
