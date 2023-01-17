@@ -1,16 +1,14 @@
-package com.example.myreform.model;
+package com.example.myreform.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-//import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Entity
-//@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)//access 속성을 이용해서 동일한 패키지 내의 클래스에서만 객체를 생성할 수 있도록 제어합니다.
 @Getter
@@ -26,7 +24,6 @@ public class PostImage {//extends Image
 
     @Builder
     public PostImage(long postId, long imageId){
-        //super(imageId, imageURL, updateAt );
         this.postId = postId;
         this.imageId = imageId;
     }

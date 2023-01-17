@@ -1,9 +1,10 @@
-package com.example.myreform.controller;
+package com.example.myreform.controller.post;
 
 
-import com.example.myreform.model.Post;
-import com.example.myreform.model.Image;
-import com.sun.istack.NotNull;
+//import com.example.myreform.model.Post;
+//import com.example.myreform.model.Image;
+
+import com.example.myreform.domain.Image;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -26,7 +27,6 @@ public class ImageHandler {
         List<Image> fileList = new ArrayList<>();
 
         // 파일이 빈 것이 들어오면 빈 것을 반환
-        System.out.println(multipartFiles);
         if (multipartFiles.isEmpty()) {
             return fileList;
         }
