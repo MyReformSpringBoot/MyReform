@@ -17,10 +17,12 @@ import java.time.LocalDateTime;
 @DiscriminatorColumn
 public abstract class BaseTimeEntity {
     @CreatedDate
-    @Column(updatable = false, name = "createAt", nullable = false)
+    @Column(updatable = false, name = "create_at", nullable = false)
+    //db의 콜럼명 변경함  createAt  =>  create_at
+    //Unknown column 'create_at' in 'field list' 에러가 나서 create_at로 변경
     private LocalDateTime createAt;
 
     @LastModifiedDate
-    @Column(updatable = true, name = "updateAt")
+    @Column(updatable = true, name = "update_at")
     private LocalDateTime updateAt;
 }

@@ -2,10 +2,8 @@ package com.example.myreform.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity(name = "image")
 @Getter
@@ -15,8 +13,15 @@ public class Image extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long image_id;
+    @Column(name = "image_id")
+    private long imageId;
 
-    private String image_url;
+    @Column(name = "image_url")
+    private String imageURL;
+
+    @Builder
+    public Image(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
 }

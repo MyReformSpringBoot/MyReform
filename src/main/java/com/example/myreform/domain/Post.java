@@ -18,7 +18,7 @@ public class Post extends BaseTimeEntity{
     private Long postId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id2") // 수정 필요
+    @JoinColumn(name = "user_id") // 수정 필요(어떤거로 해야할지 모르겠지만 원래는 name = "user_id2"로 되어 있었음
     private User user;
 
     @Column(name = "category_id")
