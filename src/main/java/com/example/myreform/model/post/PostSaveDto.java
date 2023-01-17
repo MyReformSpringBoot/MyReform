@@ -27,7 +27,6 @@ public class PostSaveDto {
 
     public Post toEntity() {
         Post post = Post.builder()
-//                .post_id(post_id)
                 .user(user)
                 .category_id(category_id)
                 .title(title)
@@ -38,7 +37,6 @@ public class PostSaveDto {
 
     @Builder
     public PostSaveDto(User user, Long category_id, String title, String contents) {
-//        this.post_id = post_id;
         this.user = user;
         this.category_id = category_id;
         this.title = title;
