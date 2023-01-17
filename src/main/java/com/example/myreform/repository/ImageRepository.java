@@ -1,6 +1,7 @@
 package com.example.myreform.repository;
 
-import com.example.myreform.model.Image;
+
+import com.example.myreform.domain.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

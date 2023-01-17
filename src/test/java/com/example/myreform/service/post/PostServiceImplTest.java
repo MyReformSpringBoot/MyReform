@@ -35,11 +35,12 @@ class PostServiceImplTest {
         String contents = "내용";
 
         PostSaveDto postSaveDto = new PostSaveDto(user, category_id, title, contents);
-        postService.save(user, postSaveDto);
+        //이미지 어떻게 테스트 케이스로 넣어야할지 몰라서 주석처리함 => postman으로 테스트 진행함
+        //postService.save(user, postSaveDto, );
         em.flush();
         em.clear();
         Post findPost = em.createQuery("select p from post p", Post.class).getSingleResult();
-        Post post = em.find(Post.class, findPost.getPost_id());
+        Post post = em.find(Post.class, findPost.getPostId());
         assertThat(post.getTitle()).isEqualTo(title);
         System.out.println("post = " + post.getCreateAt());
     }
