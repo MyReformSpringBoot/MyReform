@@ -2,10 +2,9 @@ package com.example.myreform.service.post;
 
 import com.example.myreform.domain.Post;
 import com.example.myreform.domain.User;
-import com.example.myreform.model.post.PostFindDto;
 import com.example.myreform.model.post.PostSaveDto;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface PostService {
 
@@ -13,4 +12,6 @@ public interface PostService {
     Post save(User user, PostSaveDto postSaveDto) throws Exception;
 
     Post findById(Long postId);
+
+    List<Post> fetchPostPagesBy(Long lastPostId, int size);
 }

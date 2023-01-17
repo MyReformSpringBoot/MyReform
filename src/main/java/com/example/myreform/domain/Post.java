@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity(name = "post")
 @Getter
@@ -15,18 +14,20 @@ import java.time.LocalDateTime;
 public class Post extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long post_id;
+    @Column(name = "post_id")
+    private Long postId;
 
     @ManyToOne
     @JoinColumn(name = "user_id2") // 수정 필요
     private User user;
 
-    private Long category_id;
+    @Column(name = "category_id")
+    private Long categoryId;
 
-    @Column(length = 45, nullable = false) // 제목 길이 체크
+    @Column(length = 45, nullable = false, name = "title") // 제목 길이 체크
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "contents")
     private String contents;
 
 
@@ -47,9 +48,8 @@ public class Post extends BaseTimeEntity{
 
     @Builder
     public Post(User user, Long category_id, String title, String contents){
-//        this.post_id = post_id;
         this.user = user;
-        this.category_id = category_id;
+        this.categoryId = category_id;
         this.title = title;
         this.contents = contents;
     }

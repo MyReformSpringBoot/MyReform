@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 public class PostSaveDto {
-    private Long post_id;
 
     private User user; // 수정 필요
 
