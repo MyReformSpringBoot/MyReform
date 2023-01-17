@@ -25,14 +25,18 @@ public class User {
 
     @Column(length = 10, unique = true)
     private String id;
+    @Column(nullable = false)
     private String pw;
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false, unique = true)
     private String nickname;
 
     private String introduction;
-    private int marketing;
+
+    @Column(nullable = false)
+    private boolean marketing;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -54,7 +58,7 @@ public class User {
 
     @Builder
     public User(String id, String pw, String nickname, String email,
-                Role role, int marketing) {
+                Role role, boolean marketing) {
         this.id = id;
         this.pw = pw;
         this.email = email;

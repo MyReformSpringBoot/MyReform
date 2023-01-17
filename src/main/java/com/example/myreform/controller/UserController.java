@@ -25,11 +25,17 @@ public class UserController {
     // 회원가입
     @PostMapping("/users/new-user")
     public UserResponse signUp(@RequestBody UserDTO request) {
+        System.out.println("<sign up>");
+        System.out.println(request.getNickname() + ", " + request.getId() + ", "
+                + request.getPw() + ", " + request.getEmail()+  ", " + request.getMarketing() + "\n");
         return userService.signUp(request);
     }
 
     @PostMapping("/users")
-    public UserResponse login(@RequestBody UserDTO userDTO) {
-        return userService.login(userDTO);
+    public UserResponse login(@RequestBody UserDTO request) {
+        System.out.println("<sign up>");
+        System.out.println(request.getNickname() + ", " + request.getId() + ", "
+                + request.getPw() + ", " + request.getEmail()+  ", " + request.getMarketing() + "\n");
+        return userService.login(request);
     }
 }

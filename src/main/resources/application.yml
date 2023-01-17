@@ -12,3 +12,8 @@ spring:
     password: 1212
   thymeleaf:
     cache: false
+
+
+  jpa:
+    hibernate:
+      ddl-auto=update: update

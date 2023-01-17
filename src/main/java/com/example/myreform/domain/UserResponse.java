@@ -9,7 +9,7 @@ public class UserResponse { // extends ResponseEntity
     //private StatusEnum status;
     private int code;
     private String description;
-    private UserDTO data;
+    private Object data;
 }
 
 

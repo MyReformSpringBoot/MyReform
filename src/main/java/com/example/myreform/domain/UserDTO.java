@@ -11,11 +11,10 @@ public class UserDTO {
     private String email;
     private String pw;
     private String nickname;
-
-    private int marketing;
+    private boolean marketing;
 
     @Builder
-    public UserDTO(String id, String pw, String nickname, String email, int marketing) {
+    public UserDTO(String id, String pw, String nickname, String email, boolean marketing) {
         this.id = id;
         this.pw = pw;
         this.email = email;
@@ -32,5 +31,9 @@ public class UserDTO {
                 .pw(encodePw)
                 .role(User.Role.USER)
                 .build();
+    }
+
+    public boolean getMarketing() {
+        return marketing;
     }
 }
