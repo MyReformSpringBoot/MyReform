@@ -2,6 +2,7 @@ package com.example.myreform.service.post;
 
 import com.example.myreform.domain.Post;
 import com.example.myreform.domain.User;
+import com.example.myreform.model.post.PostFindDto;
 import com.example.myreform.model.post.PostSaveDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,5 +15,5 @@ public interface PostService {
 
     Post findById(Long postId);
 
-    List<Post> fetchPostPagesBy(Long lastPostId, int size);
+    List<PostFindDto> fetchPostPagesBy(Long lastPostId, int size);
 }

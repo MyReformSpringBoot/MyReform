@@ -18,16 +18,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PostSaveDto extends BaseTimeEntity {
 
-    private User user; // 수정 필요
-
+    private User user;
     @Column(name = "category_id")
     private long categoryId;
-
     private String title;
-
     private String contents;
-
-
     private int status;
 
     public Post toEntity() {

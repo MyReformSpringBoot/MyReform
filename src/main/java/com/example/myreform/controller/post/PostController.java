@@ -2,6 +2,7 @@ package com.example.myreform.controller.post;
 
 import com.example.myreform.domain.Post;
 import com.example.myreform.domain.User;
+import com.example.myreform.model.post.PostFindDto;
 import com.example.myreform.model.post.PostSaveDto;
 import com.example.myreform.service.post.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +37,7 @@ public class PostController {
     // 전체 게시물 조회
     @GetMapping("")
     @ResponseBody
-    public List<Post> getPost(@RequestParam Long lastPostId, @RequestParam int size) throws Exception {
+    public List<PostFindDto> getPost(@RequestParam Long lastPostId, @RequestParam int size) throws Exception {
         return postService.fetchPostPagesBy(lastPostId, size);
     }
 }

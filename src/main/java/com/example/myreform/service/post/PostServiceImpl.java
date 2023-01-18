@@ -6,6 +6,7 @@ import com.example.myreform.domain.Post;
 import com.example.myreform.domain.User;
 
 import com.example.myreform.domain.PostImage;
+import com.example.myreform.model.post.PostFindDto;
 import com.example.myreform.model.post.PostSaveDto;
 import com.example.myreform.repository.ImageRepository;
 import com.example.myreform.repository.PostImageRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,11 +76,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> fetchPostPagesBy(Long lastPostId, int size) {
+    public List<PostFindDto> fetchPostPagesBy(Long lastPostId, int size) {
         Page<Post> posts = fetchPages(lastPostId, size);
         System.out.println("posts = " + posts.getTotalPages());
         System.out.println("posts = " + posts.getContent());
-        return posts.getContent();
+        System.out.println(posts.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList()).get(0));
+        return posts.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList());
     }
 
     private Page<Post> fetchPages(Long lastPageId, int size)  {

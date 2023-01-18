@@ -1,5 +1,6 @@
 package com.example.myreform.domain;
 
+import com.example.myreform.model.post.PostFindDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,6 +45,15 @@ public class Post extends BaseTimeEntity{
 
     public void updateContents(String contents) {
         this.contents = contents;
+    }
+
+    public PostFindDto toDto() {
+        return PostFindDto.builder()
+                .user(user)
+                .categoryId(categoryId)
+                .title(title)
+                .contents(contents)
+                .build();
     }
 
     @Builder
