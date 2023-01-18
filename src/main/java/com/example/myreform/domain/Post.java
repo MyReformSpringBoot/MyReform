@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Post extends BaseTimeEntity{
+public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
@@ -53,6 +53,9 @@ public class Post extends BaseTimeEntity{
                 .categoryId(categoryId)
                 .title(title)
                 .contents(contents)
+                .createAt(super.getCreateAt())
+                .updateAt(super.getUpdateAt())
+                .status(super.getStatus())
                 .build();
     }
 

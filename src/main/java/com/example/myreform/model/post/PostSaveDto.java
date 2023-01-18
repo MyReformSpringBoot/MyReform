@@ -1,22 +1,17 @@
 package com.example.myreform.model.post;
 
-import com.example.myreform.domain.BaseTimeEntity;
+import com.example.myreform.domain.BaseEntity;
 import com.example.myreform.domain.Post;
 import com.example.myreform.domain.User;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class PostSaveDto extends BaseTimeEntity {
+public class PostSaveDto extends BaseEntity {
 
     private User user;
     @Column(name = "category_id")

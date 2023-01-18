@@ -87,7 +87,9 @@ public class PostServiceImpl implements PostService {
     private Page<Post> fetchPages(Long lastPageId, int size)  {
         System.out.println("size = " + size);
         System.out.println("lastPageId = " + lastPageId);
+
         PageRequest pageRequest = PageRequest.of(0, size);
+        System.out.println(postRepository.findAllByPostIdLessThanOrderByPostIdDesc(lastPageId, pageRequest).getContent().get(0));
         return postRepository.findAllByPostIdLessThanOrderByPostIdDesc(lastPageId, pageRequest);
     }
 }

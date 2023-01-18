@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @DiscriminatorColumn
-public abstract class BaseTimeEntity {
+public abstract class BaseEntity {
     @CreatedDate
     @Column(updatable = false, name = "create_at", nullable = false)
     //db의 콜럼명 변경함  createAt  =>  create_at
@@ -25,4 +25,7 @@ public abstract class BaseTimeEntity {
     @LastModifiedDate
     @Column(updatable = true, name = "update_at")
     private LocalDateTime updateAt;
+
+    @Column(name = "status")
+    private int status;
 }

@@ -23,5 +23,4 @@ public class User {
     private String nickname;
     private String intruduction;
     private String marketing;
-
 }
