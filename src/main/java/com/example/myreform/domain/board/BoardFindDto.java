@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-public class BoardFindDto extends BaseEntity {
+public class BoardFindDto {
 
+    @Column(name = "board_id")
+    private Long boardId;
     private User user;
     @Column(name = "category_id")
     private long categoryId;
@@ -23,7 +25,8 @@ public class BoardFindDto extends BaseEntity {
     private int status;
 
     @Builder
-    public BoardFindDto(User user, long categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status) {
+    public BoardFindDto(Long boardId, User user, long categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status) {
+        this.boardId = boardId;
         this.user = user;
         this.categoryId = categoryId;
         this.title = title;

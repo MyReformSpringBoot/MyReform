@@ -107,8 +107,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     void deleteBoardImages(List<BoardImage> boardImages){
-        for(BoardImage postImage: boardImages){
-            Image image =  postImage.getImage();
+        for(BoardImage boardImage: boardImages){
+            Image image =  boardImage.getImage();
 
             String path = new File("/Users/ihyein/hil/UMC/MyReform").getAbsolutePath() + "/" + image.getImageURL();
             File file = new File(path);
@@ -126,12 +126,15 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardFindDto> fetchBoardPagesBy(Long lastBoardId, int size) {
+    public Object fetchBoardPagesBy(Long lastBoardId, int size) {
         Page<Board> boards = fetchPages(lastBoardId, size);
-        System.out.println("posts = " + boards.getTotalPages());
-        System.out.println("posts = " + boards.getContent());
-        System.out.println(boards.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList()).get(0));
-        return boards.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList());
+        List<BoardFindDto> boardFindDtos = boards.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList());
+        List<Pair<BoardFindDto, List<BoardImage>>> result = new ArrayList<>();
+        for (BoardFindDto boardFindDto: boardFindDtos) {
+            Long boardId = boardFindDto.getBoardId();
+            result.add(new Pair<>(boardFindDto, boardImageRepository.findAllByBoardId(boardId)));
+        }
+        return result;
     }
 
     private Page<Board> fetchPages(Long lastBoardId, int size)  {

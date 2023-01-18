@@ -36,8 +36,8 @@ public class BoardController {
     // 전체 게시물 조회
     @GetMapping("")
     @ResponseBody
-    public List<BoardFindDto> getPost(@RequestParam Long lastBoardId, @RequestParam int size) throws Exception {
-        return boardService.fetchBoardPagesBy(lastBoardId, size);
+    public ResponseEntity<Object> getPost(@RequestParam Long lastBoardId, @RequestParam int size) throws Exception {
+        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size), HttpStatus.OK);
     }
 
     //게시물 수정

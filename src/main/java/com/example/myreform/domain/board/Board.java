@@ -50,6 +50,7 @@ public class Board extends BaseEntity {
 
     public BoardFindDto toDto() {
         return BoardFindDto.builder()
+                .boardId(boardId)
                 .user(user)
                 .categoryId(categoryId)
                 .title(title)
