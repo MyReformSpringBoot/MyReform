@@ -17,7 +17,6 @@ public class BoardSaveDto extends BaseEntity {
     private long categoryId;
     private String title;
     private String contents;
-    private int status;
 
     public Board toEntity() {
         Board board = Board.builder()
