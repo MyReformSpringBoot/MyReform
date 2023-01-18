@@ -1,6 +1,6 @@
 package com.example.myreform.repository;
 
-import com.example.myreform.domain.User;
+import com.example.myreform.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

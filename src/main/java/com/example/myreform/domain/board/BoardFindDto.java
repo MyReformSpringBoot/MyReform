@@ -1,7 +1,7 @@
-package com.example.myreform.model.post;
+package com.example.myreform.domain.board;
 
 import com.example.myreform.domain.BaseEntity;
-import com.example.myreform.domain.User;
+import com.example.myreform.domain.user.User;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-public class PostFindDto extends BaseEntity {
+public class BoardFindDto extends BaseEntity {
 
     private User user;
     @Column(name = "category_id")
@@ -23,7 +23,7 @@ public class PostFindDto extends BaseEntity {
     private int status;
 
     @Builder
-    public PostFindDto(User user, long categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status) {
+    public BoardFindDto(User user, long categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status) {
         this.user = user;
         this.categoryId = categoryId;
         this.title = title;

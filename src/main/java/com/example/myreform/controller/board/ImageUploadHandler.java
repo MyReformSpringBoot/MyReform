@@ -1,6 +1,6 @@
-package com.example.myreform.controller.post;
+package com.example.myreform.controller.board;
 
-import com.example.myreform.domain.Image;
+import com.example.myreform.domain.board.Image;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ImageUploadHandler {
 
-    public List<Image> parseImageInfo(Long postId, @NonNull List<MultipartFile> multipartFiles) throws Exception {
+    public List<Image> parseImageInfo(Long boardId, @NonNull List<MultipartFile> multipartFiles) throws Exception {
 
         // 반환을 할 파일 리스트
         List<Image> fileList = new ArrayList<>();

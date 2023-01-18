@@ -1,8 +1,8 @@
-package com.example.myreform.service.post;
+package com.example.myreform.service.board;
 
-import com.example.myreform.domain.Post;
-import com.example.myreform.domain.User;
-import com.example.myreform.model.post.PostSaveDto;
+import com.example.myreform.domain.board.Board;
+import com.example.myreform.domain.user.User;
+import com.example.myreform.domain.board.BoardSaveDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,21 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
 @Transactional
-class PostServiceImplTest {
+class boardServiceImplTest {
     @Autowired
     private EntityManager em;
 
     @Autowired
-    private PostService postService;
+    private BoardService boardService;
 
     @Test
     public void 게시글_업로드() throws Exception {
@@ -34,15 +30,15 @@ class PostServiceImplTest {
         String title = "게시글 1";
         String contents = "내용";
 
-        PostSaveDto postSaveDto = new PostSaveDto(user, category_id, title, contents);
+        BoardSaveDto postSaveDto = new BoardSaveDto(user, category_id, title, contents);
         //이미지 어떻게 테스트 케이스로 넣어야할지 몰라서 주석처리함 => postman으로 테스트 진행함
         //postService.save(user, postSaveDto, );
         em.flush();
         em.clear();
-        Post findPost = em.createQuery("select p from post p", Post.class).getSingleResult();
-        Post post = em.find(Post.class, findPost.getPostId());
-        assertThat(post.getTitle()).isEqualTo(title);
-        System.out.println("post = " + post.getCreateAt());
+        Board findPost = em.createQuery("select p from board p", Board.class).getSingleResult();
+        Board board = em.find(Board.class, findPost.getBoardId());
+        assertThat(board.getTitle()).isEqualTo(title);
+        System.out.println("post = " + board.getCreateAt());
     }
 
 }

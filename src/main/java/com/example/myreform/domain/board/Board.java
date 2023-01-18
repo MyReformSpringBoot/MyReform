@@ -1,6 +1,7 @@
-package com.example.myreform.domain;
+package com.example.myreform.domain.board;
 
-import com.example.myreform.model.post.PostFindDto;
+import com.example.myreform.domain.BaseEntity;
+import com.example.myreform.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,18 +9,18 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "post")
+@Entity(name = "board")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Post extends BaseEntity {
+public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long postId;
+    @Column(name = "board_id")
+    private Long boardId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // 수정 필요(어떤거로 해야할지 모르겠지만 원래는 name = "user_id2"로 되어 있었음
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "category_id")
@@ -47,8 +48,8 @@ public class Post extends BaseEntity {
         this.contents = contents;
     }
 
-    public PostFindDto toDto() {
-        return PostFindDto.builder()
+    public BoardFindDto toDto() {
+        return BoardFindDto.builder()
                 .user(user)
                 .categoryId(categoryId)
                 .title(title)
@@ -60,7 +61,7 @@ public class Post extends BaseEntity {
     }
 
     @Builder
-    public Post(User user, Long category_id, String title, String contents){
+    public Board(User user, Long category_id, String title, String contents){
         this.user = user;
         this.categoryId = category_id;
         this.title = title;

@@ -1,4 +1,4 @@
-package com.example.myreform.domain;
+package com.example.myreform.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -23,7 +23,7 @@ public class User {
     @JsonIgnore//json으로 보내는 객체에 포함되지 않게 해줌
     private String pw;
     private String nickname;
-    private String intruduction;
+    private String introduction;
     @JsonIgnore
     private String marketing;
 }

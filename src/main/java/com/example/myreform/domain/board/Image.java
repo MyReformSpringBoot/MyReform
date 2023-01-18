@@ -1,5 +1,6 @@
-package com.example.myreform.domain;
+package com.example.myreform.domain.board;
 
+import com.example.myreform.domain.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;

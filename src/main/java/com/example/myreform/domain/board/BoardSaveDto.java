@@ -1,8 +1,7 @@
-package com.example.myreform.model.post;
+package com.example.myreform.domain.board;
 
 import com.example.myreform.domain.BaseEntity;
-import com.example.myreform.domain.Post;
-import com.example.myreform.domain.User;
+import com.example.myreform.domain.user.User;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -11,7 +10,7 @@ import javax.persistence.Column;
 @Setter
 @ToString
 @NoArgsConstructor
-public class PostSaveDto extends BaseEntity {
+public class BoardSaveDto extends BaseEntity {
 
     private User user;
     @Column(name = "category_id")
@@ -20,18 +19,18 @@ public class PostSaveDto extends BaseEntity {
     private String contents;
     private int status;
 
-    public Post toEntity() {
-        Post post = Post.builder()
+    public Board toEntity() {
+        Board board = Board.builder()
                 .user(user)
                 .category_id(categoryId)
                 .title(title)
                 .contents(contents)
                 .build();
-        return post;
+        return board;
     }
 
     @Builder
-    public PostSaveDto(User user, Long categoryId, String title, String contents) {
+    public BoardSaveDto(User user, Long categoryId, String title, String contents) {
         this.user = user;
         this.categoryId = categoryId;
         this.title = title;

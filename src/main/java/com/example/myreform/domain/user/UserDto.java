@@ -1,4 +1,4 @@
-package com.example.myreform.model.user;
+package com.example.myreform.domain.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
