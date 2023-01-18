@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,37 +76,36 @@ public class PostServiceImpl implements PostService {
         post.updateTitle(postSaveDto.getTitle());
 
         List<PostImage> postImages = postImageRepository.findAllByPostId(postId);
-        deletePostImages(postImages);
 
+        postRepository.save(post);
         try {
-            savePostImage(postId, files);
+            postImageRepository.saveAllAndFlush(savePostImage(postId, files));
         } catch (Exception e) {
             throw new RuntimeException(e);//수정
         }
-
-        postRepository.save(post);
-        postImageRepository.saveAll(postImages);
+        deletePostImages(postImages);
         return post;
     }
 
 
     @Override
-    public void delete(Long postId) {
+    public String delete(Long postId) {
         Post post;
         if (postRepository.existsById(postId)) {
            post = findById(postId);
         } else {
-            return;
+            return "해당 게시글이 없습니다.";
         }
 
         List<PostImage> postImages = postImageRepository.findAllByPostId(postId);
         deletePostImages(postImages);
 
-        postImageRepository.deleteAll(postImages);
         postRepository.delete(post);
+        return "해당 게시글을 삭제했습니다.";
 
     }
 
+    @Transactional
     void deletePostImages(List<PostImage> postImages){
         for(PostImage postImage: postImages){
             Image image =  postImage.getImage();
@@ -118,6 +116,7 @@ public class PostServiceImpl implements PostService {
                 file.delete();
             }
         }
+        postImageRepository.deleteAll(postImages);
     }
 
     @Override

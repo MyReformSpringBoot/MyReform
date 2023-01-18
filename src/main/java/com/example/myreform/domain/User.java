@@ -24,5 +24,6 @@ public class User {
     private String pw;
     private String nickname;
     private String intruduction;
+    @JsonIgnore
     private String marketing;
 }
