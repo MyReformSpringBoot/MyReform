@@ -44,7 +44,6 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
         //post를 먼저 저장해야 postImage에 저장할 수 있음 => 따라서 save를 먼저 호출
-        //이후 생성된 db에 이미 저장된, 방금 만든 post반환을 위해 findById를 호출함
         Board board = boardSaveDto.toEntity();
         board.confirmUser(user);
         boardRepository.save(board);
@@ -70,7 +69,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Board update(Long boardId, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
+    public Object update(Long boardId, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
         Board board = findById(boardId);
         board.updateContents(boardSaveDto.getContents());
         board.updateTitle(boardSaveDto.getTitle());
@@ -84,7 +83,7 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
         deleteBoardImages(boardImages);
-        return board;
+        return new Pair<>(board, boardImageRepository.findAllByBoardId(boardId));
     }
 
 

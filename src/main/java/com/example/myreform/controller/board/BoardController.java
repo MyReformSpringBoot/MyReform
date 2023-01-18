@@ -1,17 +1,19 @@
 package com.example.myreform.controller.board;
 
 import com.example.myreform.domain.user.User;
-import com.example.myreform.domain.board.BoardFindDto;
 import com.example.myreform.domain.board.BoardSaveDto;
 import com.example.myreform.service.board.BoardService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -44,15 +46,17 @@ public class BoardController {
     @PostMapping("/{boardId}")
     public ResponseEntity<Object> updatePost(@PathVariable("boardId") long boardId, @RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
         ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-        BoardSaveDto postSaveDto = mapper.treeToValue(saveObj.get("board"), BoardSaveDto.class);
+        BoardSaveDto boardSaveDto = mapper.treeToValue(saveObj.get("board"), BoardSaveDto.class);
 
-        return new ResponseEntity<>(boardService.update(boardId, postSaveDto, files), HttpStatus.OK);
+        return new ResponseEntity<>(boardService.update(boardId, boardSaveDto, files), HttpStatus.OK);
     }
 
     //게시물 삭제
     @DeleteMapping("/{boardId}")
-    public String deletePost(@PathVariable("boardId") long boardId){
-
-        return boardService.delete(boardId);
+    public Object deletePost(@PathVariable("boardId") long boardId) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("result: ", boardService.delete(boardId));
+        return new ObjectMapper().writeValueAsString(hashMap);
     }
 }
