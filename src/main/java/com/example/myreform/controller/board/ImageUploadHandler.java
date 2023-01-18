@@ -2,6 +2,7 @@ package com.example.myreform.controller.board;
 
 import com.example.myreform.domain.board.Image;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,9 @@ import static java.lang.System.getProperty;
 @Component
 
 public class ImageUploadHandler {
+
+    @Value("${img.path}")
+    private String IMG_PATH;
 
     public List<Image> parseImageInfo(Long boardId, @NonNull List<MultipartFile> multipartFiles) throws Exception {
 
@@ -37,13 +41,13 @@ public class ImageUploadHandler {
         if (multipartFiles.isEmpty()) {
             return fileList;
         }
-
+        System.out.println("getProperty() = " + IMG_PATH);
         // 프로젝트 폴더에 저장하기 위해 절대경로를 설정 (Window 의 Tomcat 은 Temp 파일을 이용한다)
-        String absolutePath = new File(getProperty("img.path")).getAbsolutePath() + "/";
+        String absolutePath = new File(IMG_PATH).getAbsolutePath() + "/";
 
         // 경로를 지정하고 그곳에다가 저장
         String path = current_date;
-        File file = new File(path);
+        File file = new File(IMG_PATH + "/" + path);
         // 저장할 위치의 디렉토리가 존지하지 않을 경우
         if (!file.exists()) {
             // mkdir() 함수와 다른 점은 상위 디렉토리가 존재하지 않을 때 그것까지 생성
