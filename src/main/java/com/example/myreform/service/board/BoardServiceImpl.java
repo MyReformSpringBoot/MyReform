@@ -142,6 +142,6 @@ public class BoardServiceImpl implements BoardService {
         System.out.println("lastPageId = " + lastBoardId);
 
         PageRequest pageRequest = PageRequest.of(0, size);
-        return boardRepository.findAllByBoardIdLessThanOrderByBoardIdDesc(lastBoardId, pageRequest);
+        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
     }
 }
