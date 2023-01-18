@@ -38,9 +38,11 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private final PostImageRepository postImageRepository;
 
+    private static final Integer MAX_CATEGORY_NUM = 5; // 카테고리 개수에 따라 수정?
+
     @Override
     public Post save(User user, PostSaveDto postSaveDto, List<MultipartFile> files) throws Exception {
-        //!!!!! imgae JOIN(Column) 전 !!!!!
+        //!!!!! image JOIN(Column) 전 !!!!!
         //post를 먼저 저장해야 postImage에 저장할 수 있음 => 따라서 save를 먼저 호출
         //이후 생성된 db에 이미 저장된, 방금 만든 post반환을 위해 findById를 호출함
         Post post = postSaveDto.toEntity();
@@ -74,12 +76,15 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public List<Post> fetchPostPagesBy(Long lastPostId, int size) {
         Page<Post> posts = fetchPages(lastPostId, size);
-
+        System.out.println("posts = " + posts.getTotalPages());
+        System.out.println("posts = " + posts.getContent());
         return posts.getContent();
     }
 
     private Page<Post> fetchPages(Long lastPageId, int size)  {
+        System.out.println("size = " + size);
+        System.out.println("lastPageId = " + lastPageId);
         PageRequest pageRequest = PageRequest.of(0, size);
-        return postRepository.findByPostIdOrderByPostIdDesc(lastPageId, pageRequest);
+        return postRepository.findAllByPostIdLessThanOrderByPostIdDesc(lastPageId, pageRequest);
     }
 }

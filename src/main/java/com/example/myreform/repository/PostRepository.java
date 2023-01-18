@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<Post> findByPostIdOrderByPostIdDesc(Long lastPostId, PageRequest pageRequest);
+    Page<Post> findAllByPostIdLessThanOrderByPostIdDesc(Long lastPostId, PageRequest pageRequest);
 }
