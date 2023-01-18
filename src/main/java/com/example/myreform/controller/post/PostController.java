@@ -40,4 +40,12 @@ public class PostController {
     public List<PostFindDto> getPost(@RequestParam Long lastPostId, @RequestParam int size) throws Exception {
         return postService.fetchPostPagesBy(lastPostId, size);
     }
+
+
+
+    @DeleteMapping("/{boardId}")
+    public String deletePost(@PathVariable("boardId") long postId){
+        postService.delete(postId);
+        return "Delete Post";
+    }
 }

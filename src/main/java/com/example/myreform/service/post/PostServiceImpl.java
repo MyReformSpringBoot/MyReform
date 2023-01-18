@@ -1,6 +1,6 @@
 package com.example.myreform.service.post;
 
-import com.example.myreform.controller.post.ImageHandler;
+import com.example.myreform.controller.post.ImageUploadHandler;
 import com.example.myreform.domain.Image;
 import com.example.myreform.domain.Post;
 import com.example.myreform.domain.User;
@@ -8,7 +8,6 @@ import com.example.myreform.domain.User;
 import com.example.myreform.domain.PostImage;
 import com.example.myreform.model.post.PostFindDto;
 import com.example.myreform.model.post.PostSaveDto;
-import com.example.myreform.repository.ImageRepository;
 import com.example.myreform.repository.PostImageRepository;
 import com.example.myreform.repository.PostRepository;
 import com.example.myreform.repository.UserRepository;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,9 +34,7 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private final UserRepository userRepository;
     @Autowired
-    private final ImageHandler imageHandler;
-    @Autowired
-    private final ImageRepository imageRepository;
+    private final ImageUploadHandler imageUploadHandler;
     @Autowired
     private final PostImageRepository postImageRepository;
 
@@ -51,22 +49,53 @@ public class PostServiceImpl implements PostService {
         post.confirmUser(user);
         postRepository.save(post);
 
-        List<Image> imageList = imageHandler.parseImageInfo(post.getPostId(), files);
+        postImageRepository.saveAll(savePostImage(post.getPostId(), files));
+
+        return findById(post.getPostId());
+    }
+    List<PostImage> savePostImage(Long postId, List<MultipartFile> files)throws Exception{
+        List<Image> imageList = imageUploadHandler.parseImageInfo(postId, files);
 
         List<PostImage> postImages = new ArrayList<>();
         for(Image image : imageList){
-            imageRepository.save(image);
-
             PostImage postImage = PostImage.builder()
-                    .imageId(image.getImageId())
-                    .postId(post.getPostId())
+                    .image(image)
+                    .postId(postId)
                     .build();
             postImages.add(postImage);
-
         }
-        postImageRepository.saveAll(postImages);
+        return postImages;
+    }
 
-        return findById(post.getPostId());
+
+
+    @Override
+    public void delete(Long postId) {
+        Post post;
+        if (postRepository.existsById(postId)) {
+           post = findById(postId);
+        } else {
+            return;
+        }
+
+        List<PostImage> postImages = postImageRepository.findAllByPostId(postId);
+        deletePostImages(postImages);
+
+        postImageRepository.deleteAll(postImages);
+        postRepository.delete(post);
+
+    }
+
+    void deletePostImages(List<PostImage> postImages){
+        for(PostImage postImage: postImages){
+            Image image =  postImage.getImage();
+
+            String path = new File("/Users/ihyein/hil/UMC/MyReform").getAbsolutePath() + "/" + image.getImageURL();
+            File file = new File(path);
+            if(file.exists()){
+                file.delete();
+            }
+        }
     }
 
     @Override

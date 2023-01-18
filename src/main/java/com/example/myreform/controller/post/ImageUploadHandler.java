@@ -1,9 +1,5 @@
 package com.example.myreform.controller.post;
 
-
-//import com.example.myreform.model.Post;
-//import com.example.myreform.model.Image;
-
 import com.example.myreform.domain.Image;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
@@ -19,7 +15,7 @@ import java.util.List;
 
 @Component
 
-public class ImageHandler {
+public class ImageUploadHandler {
 
     public List<Image> parseImageInfo(Long postId, @NonNull List<MultipartFile> multipartFiles) throws Exception {
 
@@ -52,7 +48,6 @@ public class ImageHandler {
             file.mkdirs();
         }
 
-        // 파일들을 이제 만져볼 것이다
         for (MultipartFile multipartFile : multipartFiles) {
             // 파일이 비어 있지 않을 때 작업을 시작해야 오류가 나지 않는다
             if (!multipartFile.isEmpty()) {
