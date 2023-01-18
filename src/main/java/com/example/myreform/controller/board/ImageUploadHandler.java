@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static java.lang.System.getProperty;
 
@@ -74,8 +73,9 @@ public class ImageUploadHandler {
                         break;
                     }
                 }
-                // 각 이름은 겹치면 안되므로 나노 초까지 동원하여 지정
-                String imageName = System.nanoTime() + originalFileExtension;
+                // 각 이름은 겹치면 안되므로 uuid(경로에 포함)
+                String uuid = UUID.randomUUID().toString();
+                String imageName = uuid + originalFileExtension;
 
                 // 생성 후 리스트에 추가
                 Image image = Image.builder()
