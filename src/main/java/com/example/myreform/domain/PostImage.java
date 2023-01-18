@@ -20,12 +20,13 @@ public class PostImage {//extends Image
 
     @Column(name = "post_id")
     private long postId;
-    @Column(name = "image_id")
-    private long imageId;
+    @ManyToOne(cascade = CascadeType.ALL)//부모 객체에서 자식 객체를 바인딩하여 한번에 저장하려는데 자식 객체가 아직 데이터 베이스에 저장되지 않았기 때문에 error발생 가능 => 따라서  cascade 옵션을 추가
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     @Builder
-    public PostImage(long postId, long imageId){
+    public PostImage(long postId, Image image){
         this.postId = postId;
-        this.imageId = imageId;
+        this.image = image;
     }
 }
