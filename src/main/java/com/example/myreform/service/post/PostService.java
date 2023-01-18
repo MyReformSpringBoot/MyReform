@@ -12,6 +12,9 @@ public interface PostService {
     // 게시글 등록
     Object save(User user, PostSaveDto postSaveDto, List<MultipartFile> files) throws Exception;
 
+
+    void delete(Long postId);
+
     Post findById(Long postId);
 
     List<Post> fetchPostPagesBy(Long lastPostId, int size);
