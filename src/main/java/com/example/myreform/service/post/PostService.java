@@ -15,7 +15,7 @@ public interface PostService {
 
     Object update(Long postId,PostSaveDto postSaveDto, List<MultipartFile> files);
 
-    void delete(Long postId);
+    String delete(Long postId);
 
     Post findById(Long postId);
 

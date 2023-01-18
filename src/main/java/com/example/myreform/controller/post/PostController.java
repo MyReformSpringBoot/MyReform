@@ -54,7 +54,7 @@ public class PostController {
     //게시물 삭제
     @DeleteMapping("/{boardId}")
     public String deletePost(@PathVariable("boardId") long postId){
-        postService.delete(postId);
-        return "Delete Post";
+
+        return postService.delete(postId);
     }
 }
