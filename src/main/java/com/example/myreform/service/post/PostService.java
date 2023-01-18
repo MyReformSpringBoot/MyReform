@@ -13,6 +13,7 @@ public interface PostService {
     // 게시글 등록
     Object save(User user, PostSaveDto postSaveDto, List<MultipartFile> files) throws Exception;
 
+    Object update(Long postId,PostSaveDto postSaveDto, List<MultipartFile> files);
 
     void delete(Long postId);
 

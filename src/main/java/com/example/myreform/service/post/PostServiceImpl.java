@@ -11,6 +11,7 @@ import com.example.myreform.model.post.PostSaveDto;
 import com.example.myreform.repository.PostImageRepository;
 import com.example.myreform.repository.PostRepository;
 import com.example.myreform.repository.UserRepository;
+import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,17 +43,18 @@ public class PostServiceImpl implements PostService {
     private static final Integer MAX_CATEGORY_NUM = 5; // 카테고리 개수에 따라 수정?
 
     @Override
-    public Post save(User user, PostSaveDto postSaveDto, List<MultipartFile> files) throws Exception {
-        //!!!!! image JOIN(Column) 전 !!!!!
+    public Object save(User user, PostSaveDto postSaveDto, List<MultipartFile> files) throws Exception {
         //post를 먼저 저장해야 postImage에 저장할 수 있음 => 따라서 save를 먼저 호출
         //이후 생성된 db에 이미 저장된, 방금 만든 post반환을 위해 findById를 호출함
         Post post = postSaveDto.toEntity();
         post.confirmUser(user);
         postRepository.save(post);
 
-        postImageRepository.saveAll(savePostImage(post.getPostId(), files));
+        List<PostImage> postImages = postImageRepository.saveAll(savePostImage(post.getPostId(), files));
 
-        return findById(post.getPostId());
+        //post정보와 이미지 정보를 모두 출력하기 위해 pair사용 => key에는 post가 value에는 이미지 정보 배열이 들어있다.
+        Pair<Post, List<PostImage>> result = new Pair<>(post, postImages);
+        return result;
     }
     List<PostImage> savePostImage(Long postId, List<MultipartFile> files)throws Exception{
         List<Image> imageList = imageUploadHandler.parseImageInfo(postId, files);
@@ -67,6 +70,25 @@ public class PostServiceImpl implements PostService {
         return postImages;
     }
 
+    @Override
+    public Post update(Long postId, PostSaveDto postSaveDto, List<MultipartFile> files) {
+        Post post = findById(postId);
+        post.updateContents(postSaveDto.getContents());
+        post.updateTitle(postSaveDto.getTitle());
+
+        List<PostImage> postImages = postImageRepository.findAllByPostId(postId);
+        deletePostImages(postImages);
+
+        try {
+            savePostImage(postId, files);
+        } catch (Exception e) {
+            throw new RuntimeException(e);//수정
+        }
+
+        postRepository.save(post);
+        postImageRepository.saveAll(postImages);
+        return post;
+    }
 
 
     @Override

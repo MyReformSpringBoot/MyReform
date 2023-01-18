@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -41,8 +42,16 @@ public class PostController {
         return postService.fetchPostPagesBy(lastPostId, size);
     }
 
+    //게시물 수정
+    @PostMapping("/{boardId}")
+    public ResponseEntity<Object> updatePost(@PathVariable("boardId") long postId, @RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
+        ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
+        PostSaveDto postSaveDto = mapper.treeToValue(saveObj.get("post"), PostSaveDto.class);
 
+        return new ResponseEntity<>(postService.update(postId, postSaveDto, files), HttpStatus.OK);
+    }
 
+    //게시물 삭제
     @DeleteMapping("/{boardId}")
     public String deletePost(@PathVariable("boardId") long postId){
         postService.delete(postId);
