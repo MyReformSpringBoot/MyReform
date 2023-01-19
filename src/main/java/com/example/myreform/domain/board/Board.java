@@ -34,6 +34,9 @@ public class Board extends BaseEntity {
     @Column(nullable = false, name = "contents")
     private String contents;
 
+    @Column(nullable = false)
+    private Integer price;
+
 
     // 연관관계 편의 메서드
     public void confirmUser(User user) {
@@ -57,6 +60,7 @@ public class Board extends BaseEntity {
                 .categoryId(categoryId)
                 .title(title)
                 .contents(contents)
+                .price(price)
                 .createAt(super.getCreateAt())
                 .updateAt(super.getUpdateAt())
                 .status(super.getStatus())
@@ -64,10 +68,11 @@ public class Board extends BaseEntity {
     }
 
     @Builder
-    public Board(User user, Integer category_id, String title, String contents){
+    public Board(User user, Integer category_id, String title, String contents, Integer price){
         this.user = user;
         this.categoryId = category_id;
         this.title = title;
         this.contents = contents;
+        this.price = price;
     }
 }

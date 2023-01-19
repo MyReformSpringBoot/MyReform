@@ -17,6 +17,7 @@ public class BoardSaveDto extends BaseEntity {
     private Integer categoryId;
     private String title;
     private String contents;
+    private Integer price;
 
     public Board toEntity() {
         Board board = Board.builder()
@@ -24,15 +25,17 @@ public class BoardSaveDto extends BaseEntity {
                 .category_id(categoryId)
                 .title(title)
                 .contents(contents)
+                .price(price)
                 .build();
         return board;
     }
 
     @Builder
-    public BoardSaveDto(User user, Integer categoryId, String title, String contents) {
+    public BoardSaveDto(User user, Integer categoryId, String title, String contents, Integer price) {
         this.user = user;
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
+        this.price = price;
     }
 }

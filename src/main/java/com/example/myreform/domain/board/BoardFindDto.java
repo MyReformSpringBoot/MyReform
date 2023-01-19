@@ -24,8 +24,10 @@ public class BoardFindDto {
     private LocalDateTime updateAt;
     private int status;
 
+    private Integer price;
+
     @Builder
-    public BoardFindDto(Long boardId, User user, Integer categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status) {
+    public BoardFindDto(Long boardId, User user, Integer categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price) {
         this.boardId = boardId;
         this.user = user;
         this.categoryId = categoryId;
@@ -34,5 +36,6 @@ public class BoardFindDto {
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.status = status;
+        this.price = price;
     }
 }
