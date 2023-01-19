@@ -141,7 +141,6 @@ public class BoardServiceImpl implements BoardService {
         if (Optional.ofNullable(categoryId).isEmpty()) {
             return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
         }
-        System.out.println("categoryId = " + categoryId.intValue());
         return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), pageRequest);
     }
 }
