@@ -1,4 +1,4 @@
-package com.example.myreform.domain;
+package com.example.myreform.User.domain;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +27,6 @@ public class User {
     private String id;
     @Column(nullable = false)
     private String pw;
-    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false, unique = true)

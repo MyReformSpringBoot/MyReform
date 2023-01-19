@@ -1,8 +1,9 @@
-package com.example.myreform.controller;
+package com.example.myreform.User.controller;
 
-import com.example.myreform.domain.UserDTO;
-import com.example.myreform.domain.UserResponse;
-import com.example.myreform.service.UserService;
+import com.example.myreform.User.dto.LoginDTO;
+import com.example.myreform.User.dto.SignupDTO;
+import com.example.myreform.User.response.ResponseUser;
+import com.example.myreform.User.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/users/new-user")
-    public UserResponse signUp(@RequestBody UserDTO request) {
+    public ResponseUser signUp(@RequestBody SignupDTO request) {
         System.out.println("<sign up>");
         System.out.println(request.getNickname() + ", " + request.getId() + ", "
                 + request.getPw() + ", " + request.getEmail()+  ", " + request.getMarketing() + "\n");
@@ -32,10 +33,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public UserResponse login(@RequestBody UserDTO request) {
-        System.out.println("<sign up>");
-        System.out.println(request.getNickname() + ", " + request.getId() + ", "
-                + request.getPw() + ", " + request.getEmail()+  ", " + request.getMarketing() + "\n");
+    public ResponseUser login(@RequestBody LoginDTO request) {
+        System.out.println("<login>");
+        System.out.println(request.getId() + ", " + request.getPw() + "\n");
         return userService.login(request);
     }
 }

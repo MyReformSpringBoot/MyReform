@@ -1,12 +1,11 @@
-package com.example.myreform.domain;
+package com.example.myreform.User.dto;
 
+import com.example.myreform.User.domain.User;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-public class UserDTO {
+public class SignupDTO {
     private String id;
     private String email;
     private String pw;
@@ -14,7 +13,7 @@ public class UserDTO {
     private boolean marketing;
 
     @Builder
-    public UserDTO(String id, String pw, String nickname, String email, boolean marketing) {
+    public SignupDTO(String id, String pw, String nickname, String email, boolean marketing) {
         this.id = id;
         this.pw = pw;
         this.email = email;
