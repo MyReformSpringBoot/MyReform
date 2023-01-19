@@ -17,7 +17,7 @@ public class BoardFindDto {
     private Long boardId;
     private User user;
     @Column(name = "category_id")
-    private long categoryId;
+    private Integer categoryId;
     private String title;
     private String contents;
     private LocalDateTime createAt;
@@ -25,7 +25,7 @@ public class BoardFindDto {
     private int status;
 
     @Builder
-    public BoardFindDto(Long boardId, User user, long categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status) {
+    public BoardFindDto(Long boardId, User user, Integer categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status) {
         this.boardId = boardId;
         this.user = user;
         this.categoryId = categoryId;

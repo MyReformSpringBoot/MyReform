@@ -40,8 +40,6 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     private final BoardImageRepository boardImageRepository;
 
-    private static final Integer MAX_CATEGORY_NUM = 5; // 카테고리 개수에 따라 수정?
-
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
         //post를 먼저 저장해야 postImage에 저장할 수 있음 => 따라서 save를 먼저 호출
