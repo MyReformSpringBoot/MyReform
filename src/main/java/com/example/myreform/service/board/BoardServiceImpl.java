@@ -125,8 +125,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId) {
-        Page<Board> boards = fetchPages(lastBoardId, size, categoryId);
+    public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
+        Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
         List<BoardFindDto> boardFindDtos = boards.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList());
         List<Pair<BoardFindDto, List<BoardImage>>> result = new ArrayList<>();
         for (BoardFindDto boardFindDto: boardFindDtos) {
@@ -136,11 +136,18 @@ public class BoardServiceImpl implements BoardService {
         return result;
     }
 
-    private Page<Board> fetchPages(Long lastBoardId, int size, Integer categoryId)  {
+    private Page<Board> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {
         PageRequest pageRequest = PageRequest.of(0, size);
-        if (Optional.ofNullable(categoryId).isEmpty()) {
+        if (Optional.ofNullable(categoryId).isEmpty() && keyword == null) { // 카테고리나 검색안할 때
             return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
         }
-        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), pageRequest);
+        if (Optional.ofNullable(categoryId).isEmpty()) { // 모든 카테고리에 대해 검색만 할 때
+            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, keyword, pageRequest);
+        }
+        if (keyword == null) { // 검색을 안하고 카테고리만 찾아볼 때
+            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsOrderByBoardIdDesc(lastBoardId, 1, categoryId, pageRequest);
+        }
+        // 카테고리 설정 후 검색을 진행할 때
+        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), keyword, pageRequest);
     }
 }

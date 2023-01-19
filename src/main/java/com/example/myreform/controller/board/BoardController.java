@@ -38,8 +38,9 @@ public class BoardController {
     // 게시물 조회
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<Object> getBoard(@RequestParam Long lastBoardId, @RequestParam int size, @RequestParam(required = false) Integer categoryId) throws Exception {
-        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId), HttpStatus.OK);
+    public ResponseEntity<Object> getBoard(@RequestParam Long lastBoardId, @RequestParam int size,
+                                           @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String keyword) throws Exception {
+        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId, keyword), HttpStatus.OK);
     }
 
     //게시물 수정
@@ -47,7 +48,6 @@ public class BoardController {
     public ResponseEntity<Object> updatePost(@PathVariable("boardId") long boardId, @RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
         ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
         BoardSaveDto boardSaveDto = mapper.treeToValue(saveObj.get("board"), BoardSaveDto.class);
-
         return new ResponseEntity<>(boardService.update(boardId, boardSaveDto, files), HttpStatus.OK);
     }
 
