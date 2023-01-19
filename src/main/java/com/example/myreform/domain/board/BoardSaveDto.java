@@ -14,7 +14,7 @@ public class BoardSaveDto extends BaseEntity {
 
     private User user;
     @Column(name = "category_id")
-    private long categoryId;
+    private Integer categoryId;
     private String title;
     private String contents;
 
@@ -29,7 +29,7 @@ public class BoardSaveDto extends BaseEntity {
     }
 
     @Builder
-    public BoardSaveDto(User user, Long categoryId, String title, String contents) {
+    public BoardSaveDto(User user, Integer categoryId, String title, String contents) {
         this.user = user;
         this.categoryId = categoryId;
         this.title = title;

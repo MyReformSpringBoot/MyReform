@@ -26,7 +26,7 @@ class boardServiceImplTest {
     public void 게시글_업로드() throws Exception {
         Long post_id = 1l;
         User user = new User(1L, "gksqlsl11@khu.ac.kr", "kong", "test", "kong", "안녕" ,"Y");
-        Long category_id = 1L;
+        Integer category_id = 1;
         String title = "게시글 1";
         String contents = "내용";
 

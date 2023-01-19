@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,7 +87,6 @@ public class BoardServiceImpl implements BoardService {
         return new Pair<>(board, boardImageRepository.findAllByBoardId(boardId));
     }
 
-
     @Override
     public String delete(Long boardId) {
         Board board;
@@ -125,8 +125,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public Object fetchBoardPagesBy(Long lastBoardId, int size) {
-        Page<Board> boards = fetchPages(lastBoardId, size);
+    public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId) {
+        Page<Board> boards = fetchPages(lastBoardId, size, categoryId);
         List<BoardFindDto> boardFindDtos = boards.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList());
         List<Pair<BoardFindDto, List<BoardImage>>> result = new ArrayList<>();
         for (BoardFindDto boardFindDto: boardFindDtos) {
@@ -136,11 +136,12 @@ public class BoardServiceImpl implements BoardService {
         return result;
     }
 
-    private Page<Board> fetchPages(Long lastBoardId, int size)  {
-        System.out.println("size = " + size);
-        System.out.println("lastPageId = " + lastBoardId);
-
+    private Page<Board> fetchPages(Long lastBoardId, int size, Integer categoryId)  {
         PageRequest pageRequest = PageRequest.of(0, size);
-        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
+        if (Optional.ofNullable(categoryId).isEmpty()) {
+            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
+        }
+        System.out.println("categoryId = " + categoryId.intValue());
+        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), pageRequest);
     }
 }

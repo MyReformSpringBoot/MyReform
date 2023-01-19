@@ -26,7 +26,7 @@ public class Board extends BaseEntity {
     private User user;
 
     @Column(name = "category_id")
-    private Long categoryId;
+    private Integer categoryId;
 
     @Column(length = 45, nullable = false, name = "title") // 제목 길이 체크
     private String title;
@@ -64,7 +64,7 @@ public class Board extends BaseEntity {
     }
 
     @Builder
-    public Board(User user, Long category_id, String title, String contents){
+    public Board(User user, Integer category_id, String title, String contents){
         this.user = user;
         this.categoryId = category_id;
         this.title = title;

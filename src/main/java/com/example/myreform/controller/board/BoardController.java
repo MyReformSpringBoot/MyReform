@@ -35,11 +35,11 @@ public class BoardController {
         return new ResponseEntity<>(boardService.save(user, boardSaveDto, files), HttpStatus.OK);
     }
 
-    // 전체 게시물 조회
+    // 게시물 조회
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<Object> getPost(@RequestParam Long lastBoardId, @RequestParam int size) throws Exception {
-        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size), HttpStatus.OK);
+    public ResponseEntity<Object> getPost(@RequestParam Long lastBoardId, @RequestParam int size, @RequestParam(required = false) Integer categoryId) throws Exception {
+        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId), HttpStatus.OK);
     }
 
     //게시물 수정

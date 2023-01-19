@@ -19,5 +19,5 @@ public interface BoardService {
 
     Board findById(Long boardId);
 
-    Object fetchBoardPagesBy(Long lastBoardId, int size);
+    Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId);
 }

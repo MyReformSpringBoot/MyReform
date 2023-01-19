@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Page<Board> findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(Long lastBoardId, int status, PageRequest pageRequest);
+
+    Page<Board> findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsOrderByBoardIdDesc(Long lastBoardId, int status, Integer categoryId, PageRequest pageRequest);
 }
