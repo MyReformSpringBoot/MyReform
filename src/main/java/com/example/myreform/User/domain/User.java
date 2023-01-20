@@ -38,13 +38,15 @@ public class User {
     private boolean marketing;
 
     @CreatedDate
+    @Column(name = "create_at")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(name = "update_at")
     private LocalDateTime updatedAt;
 
     @ColumnDefault("1")
-    private int state;
+    private int status;
 
 
     public enum Role {
