@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -87,11 +86,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public String delete(Long boardId) {
+    public String delete(Long boardId, User user) {
         if (!boardRepository.existsById(boardId) || findById(boardId).getStatus() == 0) {
             return "해당 게시글이 없습니다.";
         }
         Board board = findById(boardId);
+        if (!board.getUser().getUserId().equals(user.getUserId())) {
+            System.out.println(board.getUser().getUserId());
+            System.out.println(user.getUserId());
+            return "게시물 삭제 권한이 없습니다.";
+        }
         board.delete(); // status만 수정
         List<BoardImage> postImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(postImages);

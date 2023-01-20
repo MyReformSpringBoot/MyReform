@@ -14,7 +14,7 @@ public interface BoardService {
 
     Object update(Long boardId, BoardSaveDto boardSaveDto, List<MultipartFile> files);
 
-    String delete(Long boardId);
+    String delete(Long boardId, User user);
 
     Board findById(Long boardId);
 
