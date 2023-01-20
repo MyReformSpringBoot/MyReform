@@ -1,7 +1,10 @@
-package com.example.myreform.domain.board;
+package com.example.myreform.Board.domain;
 
+import com.example.myreform.User.domain.User;
 import com.example.myreform.domain.BaseEntity;
-import com.example.myreform.domain.user.User;
+import com.example.myreform.Board.dto.BoardFindDto;
+import com.example.myreform.Board.dto.BoardUpdateDto;
+
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -75,24 +78,10 @@ public class Board extends BaseEntity {
                 .build();
     }
 
-    public BoardDeleteDto toBoardDeleteDto() {
-        System.out.println("super.getStatus() = " + super.getStatus());
-        return BoardDeleteDto.builder()
-                .boardId(boardId)
-                .user(user)
-                .categoryId(categoryId)
-                .title(title)
-                .contents(contents)
-                .price(price)
-                .createAt(super.getCreateAt())
-                .updateAt(super.getUpdateAt())
-                .status(super.getStatus())
-                .build();
-    }
-
 
     @Builder
-    public Board(Long boardId, User user, Integer categoryId, String title, String contents, Integer price){
+    public Board(Long boardId, User user, Integer categoryId, String title, String contents, Integer price, LocalDateTime createAt, LocalDateTime updateAt){
+        super(createAt, updateAt);
         this.boardId = boardId;
         this.user = user;
         this.boardId = boardId;

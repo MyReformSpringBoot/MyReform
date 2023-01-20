@@ -32,6 +32,11 @@ public abstract class BaseEntity {
     @Column(name = "status", columnDefinition = "int default 1") // 상속관계 자동 매핑으로 자동으로 insert됨
     private int status = 1;
 
+    public BaseEntity(LocalDateTime createAt, LocalDateTime updateAt) {
+        this.updateAt = updateAt;
+        this.createAt = createAt;
+    }
+
     protected void delete() {
         this.status = 0;
     }

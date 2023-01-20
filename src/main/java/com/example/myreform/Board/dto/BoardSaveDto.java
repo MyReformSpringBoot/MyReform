@@ -1,7 +1,9 @@
-package com.example.myreform.domain.board;
+package com.example.myreform.Board.dto;
 
+import com.example.myreform.Board.domain.Board;
+import com.example.myreform.User.domain.User;
 import com.example.myreform.domain.BaseEntity;
-import com.example.myreform.domain.user.User;
+
 import lombok.*;
 
 import javax.persistence.Column;

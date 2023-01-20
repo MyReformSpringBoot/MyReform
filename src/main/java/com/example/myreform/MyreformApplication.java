@@ -4,11 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-<<<<<<< HEAD
 //@EnableJpaAuditing // Time 관련 엔티티 부분 사용을 위해서
-=======
-@EnableJpaAuditing
->>>>>>> feature/post
+
 @SpringBootApplication
 @EnableJpaAuditing
 public class MyreformApplication {

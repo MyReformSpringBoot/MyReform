@@ -1,8 +1,9 @@
 package com.example.myreform.service.board;
 
-import com.example.myreform.domain.board.Board;
-import com.example.myreform.domain.user.User;
-import com.example.myreform.domain.board.BoardSaveDto;
+import com.example.myreform.Board.domain.Board;
+import com.example.myreform.Board.service.BoardService;
+import com.example.myreform.Board.dto.BoardSaveDto;
+import com.example.myreform.User.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +26,7 @@ class boardServiceImplTest {
     @Test
     public void 게시글_업로드() throws Exception {
         Long post_id = 1l;
-        User user = new User(1L, "gksqlsl11@khu.ac.kr", "kong", "test", "kong", "안녕" ,"Y");
+        User user = new User(1L, "gksqlsl11@khu.ac.kr", "kong", "test", "kong", User.Role.USER ,true);
         Integer category_id = 1;
         String title = "게시글 1";
         String contents = "내용";

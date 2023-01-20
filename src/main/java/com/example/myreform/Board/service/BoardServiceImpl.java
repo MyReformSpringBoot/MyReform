@@ -1,13 +1,23 @@
-package com.example.myreform.service.board;
+package com.example.myreform.Board.service;
 
-import com.example.myreform.controller.board.ImageUploadHandler;
-import com.example.myreform.domain.board.*;
-import com.example.myreform.domain.user.User;
+import com.example.myreform.Board.domain.Board;
+import com.example.myreform.Board.domain.BoardImage;
+import com.example.myreform.Image.domain.Image;
+import com.example.myreform.Board.dto.BoardFindDto;
+import com.example.myreform.Board.dto.BoardSaveDto;
+import com.example.myreform.Board.dto.BoardUpdateDto;
+import com.example.myreform.Image.dto.ImageDeleteDto;
+import com.example.myreform.Image.controller.ImageUploadHandler;
 
-import com.example.myreform.repository.BoardImageRepository;
-import com.example.myreform.repository.BoardRepository;
-import com.example.myreform.repository.ImageRepository;
-import com.example.myreform.repository.UserRepository;
+
+import com.example.myreform.Board.repository.BoardImageRepository;
+import com.example.myreform.Board.repository.BoardRepository;
+import com.example.myreform.Image.repository.ImageRepository;
+
+import com.example.myreform.User.domain.User;
+import com.example.myreform.User.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,8 +53,9 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
         //post를 먼저 저장해야 postImage에 저장할 수 있음 => 따라서 save를 먼저 호출
-
         Board board = boardSaveDto.toEntity();
+        user = userRepository.findById(user.getUserId()).get();
+        //!!!!!(1/20)수정 사항: 넘어온 유저 유저아이디 같은 객체로 넣어줌 => createAt, updateAt이 null로 나오는 것 막기 위해!!!!!!
         board.confirmUser(user);
         boardRepository.save(board);
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
@@ -66,11 +79,27 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Object update(Long boardId, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
+    public Object update(Long boardId, BoardSaveDto boardSaveDto, User user,List<MultipartFile> files) throws JsonProcessingException {
+        if (!boardRepository.existsById(boardId) || findById(boardId).getStatus() == 0) {
+            return "해당 게시글이 없습니다.";
+        }
+
         BoardUpdateDto boardUpdateDto = findById(boardId).toBoardUpdateDto();
+        System.out.println(boardUpdateDto.getCreateAt());
+        if (!boardUpdateDto.getUser().getUserId().equals(user.getUserId())) {
+            System.out.println(boardUpdateDto.getUser().getUserId());
+            System.out.println(user.getUserId());
+
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("result: ", "게시물 수정 권한이 없습니다.");
+            return new ObjectMapper().writeValueAsString(hashMap);
+        }
+
         boardUpdateDto.setContents(boardSaveDto.getContents());
         boardUpdateDto.setTitle(boardSaveDto.getTitle());
         boardUpdateDto.setPrice(boardSaveDto.getPrice());
+
+
         Board board = boardUpdateDto.ToEntity(boardId);
 
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
@@ -82,7 +111,7 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
         deleteBoardImages(boardImages);
-        return new Pair<>(board, boardImageRepository.findAllByBoardId(boardId));
+        return new Pair<>(findById(board.getBoardId()), boardImageRepository.findAllByBoardId(boardId));
     }
 
     @Override
@@ -106,16 +135,20 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     void deleteBoardImages(List<BoardImage> boardImages){
-        List<Image> deletedImages = new ArrayList<>();
         for(BoardImage boardImage: boardImages) {
             Image image = boardImage.getImage();
-            ImageDeleteDto imageDeleteDto = image.toImageDeleteDto();
-            //imageDeleteDto.setStatus(0);
-            image = imageDeleteDto.toEntity(boardImage.getImage().getImageId());
-            deletedImages.add(image);
+            //실제로 폴더에서 삭제하는 코드 => status로 진행 시 실제로 삭제 안하기에 주석처리
+            String path = new File("/Users/ihyein/hil/UMC/MyReform").getAbsolutePath() + "/" + image.getImageURL();
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
         }
-        imageRepository.saveAll(deletedImages);
+        boardImageRepository.deleteAll(boardImages);
     }
+
+
+
 
     @Override
     public Board findById(Long boardId) {

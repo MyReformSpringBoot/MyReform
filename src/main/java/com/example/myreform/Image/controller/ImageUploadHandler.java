@@ -1,6 +1,6 @@
-package com.example.myreform.controller.board;
+package com.example.myreform.Image.controller;
 
-import com.example.myreform.domain.board.Image;
+import com.example.myreform.Image.domain.Image;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

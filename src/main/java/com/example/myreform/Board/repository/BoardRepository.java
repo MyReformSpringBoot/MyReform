@@ -1,6 +1,6 @@
-package com.example.myreform.repository;
+package com.example.myreform.Board.repository;
 
-import com.example.myreform.domain.board.Board;
+import com.example.myreform.Board.domain.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,5 +1,6 @@
-package com.example.myreform.domain.board;
+package com.example.myreform.Image.dto;
 
+import com.example.myreform.Image.domain.Image;
 import com.example.myreform.domain.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;

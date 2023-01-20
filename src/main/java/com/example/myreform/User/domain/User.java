@@ -1,8 +1,8 @@
 package com.example.myreform.User.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.myreform.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,19 +13,21 @@ import java.time.LocalDateTime;
 
 
 @Getter
-@Entity
-@NoArgsConstructor
+@Entity(name = "user")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+
 @EntityListeners(AuditingEntityListener.class) // 자동으로 날짜, 시간
-public class User {
+public class User extends BaseEntity {
 
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-
     @Column(length = 10, unique = true)
     private String id;
     @Column(nullable = false)
+    @JsonIgnore//json으로 보내는 객체에 포함되지 않게 해줌
     private String pw;
     private String email;
 
@@ -35,18 +37,19 @@ public class User {
     private String introduction;
 
     @Column(nullable = false)
+    @JsonIgnore
     private boolean marketing;
 
-    @CreatedDate
-    @Column(name = "create_at")
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "update_at")
-    private LocalDateTime updatedAt;
-
-    @ColumnDefault("1")
-    private int status;
+//    @CreatedDate
+//    @Column(name = "create_at")
+//    private LocalDateTime createdAt;
+//
+//    @LastModifiedDate
+//    @Column(name = "update_at")
+//    private LocalDateTime updatedAt;
+//
+//    @ColumnDefault("1")
+//    private int status;
 
 
     public enum Role {
@@ -58,8 +61,9 @@ public class User {
 
 
     @Builder
-    public User(String id, String pw, String nickname, String email,
+    public User(Long userId, String id, String pw, String nickname, String email,
                 Role role, boolean marketing) {
+        this.userId = userId; // 어떤 정보를 클라이언트에서 갖는지 알지 못해서 이를 유저 정보와 게시물 정보 통합 이후에 처리
         this.id = id;
         this.pw = pw;
         this.email = email;

@@ -1,8 +1,10 @@
-package com.example.myreform.service.board;
+package com.example.myreform.Board.service;
 
-import com.example.myreform.domain.board.Board;
-import com.example.myreform.domain.user.User;
-import com.example.myreform.domain.board.BoardSaveDto;
+import com.example.myreform.Board.domain.Board;
+
+import com.example.myreform.Board.dto.BoardSaveDto;
+import com.example.myreform.User.domain.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,7 +14,7 @@ public interface BoardService {
     // 게시글 등록
     Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception;
 
-    Object update(Long boardId, BoardSaveDto boardSaveDto, List<MultipartFile> files);
+    Object update(Long boardId, BoardSaveDto boardSaveDto, User user, List<MultipartFile> files) throws JsonProcessingException;
 
     String delete(Long boardId, User user);
 

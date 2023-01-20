@@ -1,8 +1,8 @@
-package com.example.myreform.domain.board;
+package com.example.myreform.Board.domain;
 
+import com.example.myreform.Image.domain.Image;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

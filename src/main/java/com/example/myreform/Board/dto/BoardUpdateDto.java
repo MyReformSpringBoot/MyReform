@@ -1,7 +1,8 @@
-package com.example.myreform.domain.board;
+package com.example.myreform.Board.dto;
 
+import com.example.myreform.Board.domain.Board;
+import com.example.myreform.User.domain.User;
 import com.example.myreform.domain.BaseEntity;
-import com.example.myreform.domain.user.User;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BoardUpdateDto {
+public class BoardUpdateDto extends BaseEntity{
     @Column(name = "board_id")
     private Long boardId;
     private User user;
@@ -32,6 +33,8 @@ public class BoardUpdateDto {
                 .title(title)
                 .contents(contents)
                 .price(price)
+                .createAt(createAt)
+                .updateAt(updateAt)
                 .build();
         return board;
     }
