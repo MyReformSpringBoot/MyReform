@@ -1,6 +1,8 @@
 package com.example.myreform.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @DiscriminatorColumn
+@NoArgsConstructor
 @DynamicInsert
 public abstract class BaseEntity {
     @CreatedDate
@@ -28,4 +31,5 @@ public abstract class BaseEntity {
 
     @Column(name = "status", columnDefinition = "int default 1") // 상속관계 자동 매핑으로 자동으로 insert됨
     private int status = 1;
+
 }

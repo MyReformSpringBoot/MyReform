@@ -22,7 +22,7 @@ public class BoardSaveDto extends BaseEntity {
     public Board toEntity() {
         Board board = Board.builder()
                 .user(user)
-                .category_id(categoryId)
+                .categoryId(categoryId)
                 .title(title)
                 .contents(contents)
                 .price(price)

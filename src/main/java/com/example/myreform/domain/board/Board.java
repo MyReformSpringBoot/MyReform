@@ -2,16 +2,15 @@ package com.example.myreform.domain.board;
 
 import com.example.myreform.domain.BaseEntity;
 import com.example.myreform.domain.user.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity(name = "board")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DynamicInsert
@@ -37,21 +36,12 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
-
     // 연관관계 편의 메서드
     public void confirmUser(User user) {
         this.user = user;
         // 유저 게시글 추가
     }
 
-    // 게시글 수정 메서드
-    public void updateTitle(String title) {
-        this.title = title;
-    }
-
-    public void updateContents(String contents) {
-        this.contents = contents;
-    }
 
     public BoardFindDto toDto() {
         return BoardFindDto.builder()
@@ -67,12 +57,45 @@ public class Board extends BaseEntity {
                 .build();
     }
 
+
+    public BoardUpdateDto toBoardUpdateDto() {
+        return BoardUpdateDto.builder()
+                .boardId(boardId)
+                .user(user)
+                .categoryId(categoryId)
+                .title(title)
+                .contents(contents)
+                .price(price)
+                .createAt(super.getCreateAt())
+                .updateAt(super.getUpdateAt())
+                .status(super.getStatus())
+                .build();
+    }
+
+    public BoardDeleteDto toBoardDeleteDto() {
+        return BoardDeleteDto.builder()
+                .boardId(boardId)
+                .user(user)
+                .categoryId(categoryId)
+                .title(title)
+                .contents(contents)
+                .price(price)
+                .createAt(super.getCreateAt())
+                .updateAt(super.getUpdateAt())
+                .status(super.getStatus())
+                .build();
+    }
+
+
     @Builder
-    public Board(User user, Integer category_id, String title, String contents, Integer price){
+    public Board(Long boardId, User user, Integer categoryId, String title, String contents, Integer price){
+        this.boardId = boardId;
         this.user = user;
-        this.categoryId = category_id;
+        this.boardId = boardId;
+        this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
         this.price = price;
     }
+
 }

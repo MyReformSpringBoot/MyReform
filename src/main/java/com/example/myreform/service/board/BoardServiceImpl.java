@@ -1,15 +1,12 @@
 package com.example.myreform.service.board;
 
 import com.example.myreform.controller.board.ImageUploadHandler;
-import com.example.myreform.domain.board.Image;
-import com.example.myreform.domain.board.Board;
+import com.example.myreform.domain.board.*;
 import com.example.myreform.domain.user.User;
 
-import com.example.myreform.domain.board.BoardImage;
-import com.example.myreform.domain.board.BoardFindDto;
-import com.example.myreform.domain.board.BoardSaveDto;
 import com.example.myreform.repository.BoardImageRepository;
 import com.example.myreform.repository.BoardRepository;
+import com.example.myreform.repository.ImageRepository;
 import com.example.myreform.repository.UserRepository;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
@@ -39,14 +36,16 @@ public class BoardServiceImpl implements BoardService {
     private final ImageUploadHandler imageUploadHandler;
     @Autowired
     private final BoardImageRepository boardImageRepository;
+    @Autowired
+    private final ImageRepository imageRepository;
 
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
         //post를 먼저 저장해야 postImage에 저장할 수 있음 => 따라서 save를 먼저 호출
+
         Board board = boardSaveDto.toEntity();
         board.confirmUser(user);
         boardRepository.save(board);
-
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
 
         //post정보와 이미지 정보를 모두 출력하기 위해 pair사용 => key에는 post가 value에는 이미지 정보 배열이 들어있다.
@@ -69,9 +68,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object update(Long boardId, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
-        Board board = findById(boardId);
-        board.updateContents(boardSaveDto.getContents());
-        board.updateTitle(boardSaveDto.getTitle());
+        BoardUpdateDto boardUpdateDto = findById(boardId).toBoardUpdateDto();
+        boardUpdateDto.setContents(boardSaveDto.getContents());
+        boardUpdateDto.setTitle(boardSaveDto.getTitle());
+        boardUpdateDto.setPrice(boardSaveDto.getPrice());
+        Board board = boardUpdateDto.ToEntity(boardId);
 
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
 
@@ -88,32 +89,35 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public String delete(Long boardId) {
         Board board;
-        if (boardRepository.existsById(boardId)) {
+        if (boardRepository.existsById(boardId) && findById(boardId).getStatus() != 0) {
            board = findById(boardId);
+
         } else {
             return "해당 게시글이 없습니다.";
         }
+        BoardDeleteDto boardDeleteDto = findById(boardId).toBoardDeleteDto();
+        boardDeleteDto.setStatus(0);
+        board = boardDeleteDto.toEntity();
 
         List<BoardImage> postImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(postImages);
 
-        boardRepository.delete(board);
+        boardRepository.save(board);
         return "해당 게시글을 삭제했습니다.";
 
     }
 
     @Transactional
     void deleteBoardImages(List<BoardImage> boardImages){
-        for(BoardImage boardImage: boardImages){
-            Image image =  boardImage.getImage();
-
-            String path = new File("/Users/ihyein/hil/UMC/MyReform").getAbsolutePath() + "/" + image.getImageURL();
-            File file = new File(path);
-            if(file.exists()){
-                file.delete();
-            }
+        List<Image> deletedImages = new ArrayList<>();
+        for(BoardImage boardImage: boardImages) {
+            Image image = boardImage.getImage();
+            ImageDeleteDto imageDeleteDto = image.toImageDeleteDto();
+            //imageDeleteDto.setStatus(0);
+            image = imageDeleteDto.toEntity(boardImage.getImage().getImageId());
+            deletedImages.add(image);
         }
-        boardImageRepository.deleteAll(boardImages);
+        imageRepository.saveAll(deletedImages);
     }
 
     @Override

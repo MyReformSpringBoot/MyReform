@@ -9,11 +9,10 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)//access 속성을 이용해서 동일한 패키지 내의 클래스에서만 객체를 생성할 수 있도록 제어합니다.
 @Getter
 @Table(name = "BOARD_IMAGE")
-public class BoardImage {//extends Image
+public class BoardImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//id 값을 null로 하면 DB가 알아서 AUTO_INCREMENT 해준다.
     @Column(name = "board_image_id")
@@ -26,7 +25,8 @@ public class BoardImage {//extends Image
     private Image image;
 
     @Builder
-    public BoardImage(Long boardId, Image image){
+    public BoardImage(long boardImageId, Long boardId, Image image){
+        this.boardImageId = boardImageId;
         this.boardId = boardId;
         this.image = image;
     }

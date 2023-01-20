@@ -2,7 +2,6 @@ package com.example.myreform.service.board;
 
 import com.example.myreform.domain.board.Board;
 import com.example.myreform.domain.user.User;
-import com.example.myreform.domain.board.BoardFindDto;
 import com.example.myreform.domain.board.BoardSaveDto;
 import org.springframework.web.multipart.MultipartFile;
 
