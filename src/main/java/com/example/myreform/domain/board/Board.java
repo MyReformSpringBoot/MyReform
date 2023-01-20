@@ -42,6 +42,9 @@ public class Board extends BaseEntity {
         // 유저 게시글 추가
     }
 
+    public void delete() {
+        super.delete();
+    }
 
     public BoardFindDto toDto() {
         return BoardFindDto.builder()
@@ -73,6 +76,7 @@ public class Board extends BaseEntity {
     }
 
     public BoardDeleteDto toBoardDeleteDto() {
+        System.out.println("super.getStatus() = " + super.getStatus());
         return BoardDeleteDto.builder()
                 .boardId(boardId)
                 .user(user)

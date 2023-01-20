@@ -88,23 +88,16 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public String delete(Long boardId) {
-        Board board;
-        if (boardRepository.existsById(boardId) && findById(boardId).getStatus() != 0) {
-           board = findById(boardId);
-
-        } else {
+        if (!boardRepository.existsById(boardId) || findById(boardId).getStatus() == 0) {
             return "해당 게시글이 없습니다.";
         }
-        BoardDeleteDto boardDeleteDto = findById(boardId).toBoardDeleteDto();
-        boardDeleteDto.setStatus(0);
-        board = boardDeleteDto.toEntity();
-
+        Board board = findById(boardId);
+        board.delete(); // status만 수정
         List<BoardImage> postImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(postImages);
 
         boardRepository.save(board);
         return "해당 게시글을 삭제했습니다.";
-
     }
 
     @Transactional
