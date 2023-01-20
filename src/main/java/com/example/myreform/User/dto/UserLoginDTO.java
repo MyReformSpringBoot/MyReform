@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class LoginDTO {
+public class UserLoginDTO {
     private String id;
     private String pw;
 
     @Builder
-    public LoginDTO(String id, String pw) {
+    public UserLoginDTO(String id, String pw) {
         this.id = id;
         this.pw = pw;
     }

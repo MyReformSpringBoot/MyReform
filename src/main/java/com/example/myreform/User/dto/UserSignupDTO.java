@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class SignupDTO {
+public class UserSignupDTO {
     private String id;
     private String email;
     private String pw;
@@ -15,7 +15,7 @@ public class SignupDTO {
     private boolean marketing;
 
     @Builder
-    public SignupDTO(String id, String pw, String nickname, String email, boolean marketing) {
+    public UserSignupDTO(String id, String pw, String nickname, String email, boolean marketing) {
         this.id = id;
         this.pw = pw;
         this.email = email;

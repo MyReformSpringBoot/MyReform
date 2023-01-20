@@ -1,7 +1,7 @@
 package com.example.myreform.User.service;
 
-import com.example.myreform.User.dto.LoginDTO;
-import com.example.myreform.User.dto.SignupDTO;
+import com.example.myreform.User.dto.UserLoginDTO;
+import com.example.myreform.User.dto.UserSignupDTO;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.response.ResponseUser;
@@ -23,16 +23,16 @@ public class UserService {
 
 
     @Transactional
-    public ResponseUser signUp(SignupDTO signupDTO) {
+    public ResponseUser signUp(UserSignupDTO userSignupDTO) {
         ResponseUser response;
 
-        response = validateDuplicateUser(signupDTO);
+        response = validateDuplicateUser(userSignupDTO);
         if (response.getStatus() == 409) {
             return response;
         }
 
         // encode User 생성
-        User user = signupDTO.toUser(passwordEncoder.encode(signupDTO.getPw()));
+        User user = userSignupDTO.toUser(passwordEncoder.encode(userSignupDTO.getPw()));
 
         userRepository.save(user);
 
@@ -41,18 +41,18 @@ public class UserService {
         return response;
     }
 
-    private ResponseUser validateDuplicateUser(SignupDTO signupDTO) {
+    private ResponseUser validateDuplicateUser(UserSignupDTO userSignupDTO) {
         ResponseUser responseUser = new ResponseUser();
         String description;
 
-        if (userRepository.findById(signupDTO.getId()).isPresent()){
+        if (userRepository.findById(userSignupDTO.getId()).isPresent()){
             responseUser.setStatus(409);
             responseUser.setCode("A001");
             responseUser.setDescription("중복 id");
             return responseUser;
         }
         
-        if (userRepository.findByNickname(signupDTO.getNickname()).isPresent()){
+        if (userRepository.findByNickname(userSignupDTO.getNickname()).isPresent()){
             responseUser.setStatus(409);
             responseUser.setCode("A002");
             responseUser.setDescription("중복 nickname");
@@ -63,7 +63,7 @@ public class UserService {
     }
 
 
-    public ResponseUser login(LoginDTO loginDTO) {
+    public ResponseUser login(UserLoginDTO userLoginDTO) {
         /*
             1. 회원이 입력한 이메일로 DB에서 조회를 함
             2. DB에서 조회한 비밀번호와 사용자가 입력한 비밀번호가 일치하는지 판단
@@ -71,14 +71,14 @@ public class UserService {
 
         ResponseUser responseUser = new ResponseUser();
 
-        Optional<User> user = userRepository.findById(loginDTO.getId());
+        Optional<User> user = userRepository.findById(userLoginDTO.getId());
         if (user.isPresent()) { // 조회 결과가 있다(해당 이메일을 가진 회원 정보가 있다)
-            LoginDTO checkIdUser = LoginDTO.builder()
+            UserLoginDTO checkIdUser = UserLoginDTO.builder()
                     .id(user.get().getId())
                     .pw(user.get().getPw())
                     .build();
 
-            if (passwordEncoder.matches(loginDTO.getPw(), checkIdUser.getPw())) { // 비밀번호 일치
+            if (passwordEncoder.matches(userLoginDTO.getPw(), checkIdUser.getPw())) { // 비밀번호 일치
                 responseUser.setStatus(200);
                 responseUser.setDescription("로그인 성공");
             } else {
