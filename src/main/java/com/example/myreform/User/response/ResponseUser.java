@@ -1,13 +1,28 @@
 package com.example.myreform.User.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.example.myreform.User.validation.ExceptionCode;
+import org.springframework.http.HttpStatus;
 
-@Getter
-@Setter
 public class ResponseUser {
-    private int status; // enum
-    private String code;
-    private String description;
-    private String token;
+    private final HttpStatus status;
+    private final String code;
+    private final String message;
+
+    public ResponseUser(ExceptionCode exceptionCode) {
+        this.status = exceptionCode.getStatus();
+        this.code = exceptionCode.getCode();
+        this.message = exceptionCode.getMessage();
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
