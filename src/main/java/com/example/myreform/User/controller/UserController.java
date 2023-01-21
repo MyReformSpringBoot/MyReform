@@ -1,7 +1,7 @@
 package com.example.myreform.User.controller;
 
-import com.example.myreform.User.dto.UserLoginDTO;
-import com.example.myreform.User.dto.UserSignupDTO;
+import com.example.myreform.User.dto.UserLoginDto;
+import com.example.myreform.User.dto.UserSignupDto;
 import com.example.myreform.User.response.ResponseUser;
 import com.example.myreform.User.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/users/new-user")
-    public ResponseUser signUp(@RequestBody UserSignupDTO request) {
+    public ResponseUser signUp(@RequestBody UserSignupDto request) {
         System.out.println("<sign up>");
         System.out.println(request.getNickname() + ", " + request.getId() + ", "
                 + request.getPw() + ", " + request.getEmail()+  ", " + request.getMarketing() + "\n");
@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseUser login(@RequestBody UserLoginDTO request) {
+    public ResponseUser login(@RequestBody UserLoginDto request) {
         System.out.println("<login>");
         System.out.println(request.getId() + ", " + request.getPw() + "\n");
         return userService.login(request);

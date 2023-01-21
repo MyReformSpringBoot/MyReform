@@ -1,7 +1,7 @@
 package com.example.myreform.User.service;
 
-import com.example.myreform.User.dto.UserLoginDTO;
-import com.example.myreform.User.dto.UserSignupDTO;
+import com.example.myreform.User.dto.UserLoginDto;
+import com.example.myreform.User.dto.UserSignupDto;
 import com.example.myreform.validation.ExceptionCode;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.User.domain.User;
@@ -24,7 +24,7 @@ public class UserService {
 
 
     @Transactional
-    public ResponseUser signUp(UserSignupDTO signupDTO) {
+    public ResponseUser signUp(UserSignupDto signupDTO) {
 
         if (userRepository.findById(signupDTO.getId()).isPresent()){
             return new ResponseUser(ExceptionCode.SIGNUP_ID);
@@ -41,11 +41,11 @@ public class UserService {
     }
 
 
-    public ResponseUser login(UserLoginDTO loginDTO) {
+    public ResponseUser login(UserLoginDto loginDTO) {
 
         Optional<User> user = userRepository.findById(loginDTO.getId());
         if (user.isPresent()) { // 조회 결과가 있다(해당 이메일을 가진 회원 정보가 있다)
-            UserLoginDTO checkIdUser = UserLoginDTO.builder()
+            UserLoginDto checkIdUser = UserLoginDto.builder()
                     .id(user.get().getId())
                     .pw(user.get().getPw())
                     .build();

@@ -1,5 +1,6 @@
 package com.example.myreform.User.domain;
 
+import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -58,5 +59,15 @@ public class User extends BaseEntity {
         this.role = role;
         this.nickname = nickname;
         this.marketing = marketing;
+    }
+
+    public UserFindDto toDto() {
+        return UserFindDto.builder()
+                .userId(userId)
+                .email(email)
+                .id(id)
+                .nickname(nickname)
+                .introduction(introduction)
+                .build();
     }
 }
