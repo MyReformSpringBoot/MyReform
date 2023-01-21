@@ -7,10 +7,11 @@ public enum HttpStatus {
     /**
      * 200: 요청 성공
      */
-    Success(200),
+    SUCCESS(200),
     CREATED(201),
-    FAIL_LOGIN(404),
-    DUPLICATED_VALUE(409);
+    NOT_FOUND_VALUE(404),
+    DUPLICATED_VALUE(409),
+    INVALID_ACCESS(403);
 
     public int value;
 
