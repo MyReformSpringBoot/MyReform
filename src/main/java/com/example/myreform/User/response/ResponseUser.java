@@ -1,10 +1,9 @@
 package com.example.myreform.User.response;
 
 import com.example.myreform.User.validation.ExceptionCode;
-import org.springframework.http.HttpStatus;
 
 public class ResponseUser {
-    private final HttpStatus status;
+    private final int status;
     private final String code;
     private final String message;
 
@@ -14,7 +13,7 @@ public class ResponseUser {
         this.message = exceptionCode.getMessage();
     }
 
-    public HttpStatus getStatus() {
+    public int getStatus() {
         return status;
     }
 
