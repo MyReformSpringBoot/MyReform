@@ -5,10 +5,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-<<<<<<< HEAD
-=======
 
->>>>>>> feature/post
     #    각자 PC에 만들어놓은 Database이름을 써야 합니다.
     url: jdbc:mysql://localhost:3306/mydb
     #    mysql에 생성한 사용자 계정 정보를 써야 합니다.
@@ -17,12 +14,7 @@ spring:
   thymeleaf:
     cache: false
 
-
   jpa:
     hibernate:
-<<<<<<< HEAD
-      ddl-auto=update: update
-=======
       ddl-auto=update: update
 
->>>>>>> feature/post

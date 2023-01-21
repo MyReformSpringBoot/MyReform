@@ -9,11 +9,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -63,5 +68,11 @@ public class BoardController {
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("result: ", boardService.delete(boardId, user));
         return new ObjectMapper().writeValueAsString(hashMap);
+    }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat,true));
     }
 }

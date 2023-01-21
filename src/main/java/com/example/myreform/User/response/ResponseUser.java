@@ -1,6 +1,6 @@
 package com.example.myreform.User.response;
 
-import com.example.myreform.User.validation.ExceptionCode;
+import com.example.myreform.validation.ExceptionCode;
 
 public class ResponseUser {
     private final int status;
@@ -8,7 +8,7 @@ public class ResponseUser {
     private final String message;
 
     public ResponseUser(ExceptionCode exceptionCode) {
-        this.status = exceptionCode.getStatus();
+        this.status = exceptionCode.getStatus().getValue();
         this.code = exceptionCode.getCode();
         this.message = exceptionCode.getMessage();
     }

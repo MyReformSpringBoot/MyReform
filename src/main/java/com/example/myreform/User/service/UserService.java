@@ -2,7 +2,7 @@ package com.example.myreform.User.service;
 
 import com.example.myreform.User.dto.UserLoginDTO;
 import com.example.myreform.User.dto.UserSignupDTO;
-import com.example.myreform.User.validation.ExceptionCode;
+import com.example.myreform.validation.ExceptionCode;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.response.ResponseUser;
