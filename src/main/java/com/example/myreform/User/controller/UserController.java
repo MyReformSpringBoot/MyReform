@@ -3,7 +3,7 @@ package com.example.myreform.User.controller;
 import com.example.myreform.User.dto.UserLoginDto;
 import com.example.myreform.User.dto.UserSignupDto;
 import com.example.myreform.User.response.ResponseUser;
-import com.example.myreform.User.service.UserService;
+import com.example.myreform.User.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @GetMapping("/home")
     public String test() {
