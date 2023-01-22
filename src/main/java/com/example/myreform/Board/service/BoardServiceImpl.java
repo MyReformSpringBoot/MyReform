@@ -147,11 +147,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Board findById(Long boardId) {
-        return boardRepository.findById(boardId).get();
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);

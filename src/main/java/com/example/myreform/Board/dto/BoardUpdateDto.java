@@ -34,14 +34,4 @@ public class BoardUpdateDto extends BaseEntity {
                 .build();
         return board;
     }
-
-    @Builder
-    public BoardUpdateDto(Long boardId, User user, int categoryId, String title, String contents, Integer price) {
-        this.boardId = boardId;
-        this.user = user;
-        this.categoryId = categoryId;
-        this.title = title;
-        this.contents = contents;
-        this.price = price;
-    }
 }
