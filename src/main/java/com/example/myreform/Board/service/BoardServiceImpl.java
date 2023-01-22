@@ -7,7 +7,6 @@ import com.example.myreform.Image.domain.Image;
 import com.example.myreform.Board.dto.BoardFindDto;
 import com.example.myreform.Board.dto.BoardSaveDto;
 import com.example.myreform.Board.dto.BoardUpdateDto;
-import com.example.myreform.Image.dto.ImageDeleteDto;
 import com.example.myreform.Image.controller.ImageUploadHandler;
 
 
@@ -18,9 +17,7 @@ import com.example.myreform.Image.repository.ImageRepository;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.validation.ExceptionCode;
-import com.example.myreform.validation.HttpStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,7 +64,7 @@ public class BoardServiceImpl implements BoardService {
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
 
         //post정보와 이미지 정보를 모두 출력하기 위해 pair사용 => key에는 post가 value에는 이미지 정보 배열이 들어있다.
-        Pair<Board, List<BoardImage>> result = new Pair<>(board, boardImages);
+        Pair<BoardFindDto, List<BoardImage>> result = new Pair<>(board.toFindDto(), boardImages);
         return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, result);
     }
 
@@ -109,7 +104,7 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
         deleteBoardImages(boardImages);
-        Object data = new Pair<>(findById(board.getBoardId()).toDto(), boardImageRepository.findAllByBoardId(boardId));
+        Object data = new Pair<>(findById(board.getBoardId()).toFindDto(), boardImageRepository.findAllByBoardId(boardId));
         return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, data);
     }
 
@@ -154,7 +149,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
-        List<BoardFindDto> boardFindDtos = boards.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList());
+        List<BoardFindDto> boardFindDtos = boards.getContent().stream().map((x) -> x.toFindDto()).collect(Collectors.toList());
         List<Pair<BoardFindDto, List<BoardImage>>> result = new ArrayList<>();
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
         if (boardFindDtos.isEmpty()) {

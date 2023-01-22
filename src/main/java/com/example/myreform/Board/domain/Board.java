@@ -49,7 +49,7 @@ public class Board extends BaseEntity {
         super.delete();
     }
 
-    public BoardFindDto toDto() {
+    public BoardFindDto toFindDto() {
         return BoardFindDto.builder()
                 .boardId(boardId)
                 .user(user)
