@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BoardUpdateDto extends BaseEntity{
+public class BoardUpdateDto extends BaseEntity {
     @Column(name = "board_id")
     private Long boardId;
     private User user;
@@ -23,6 +23,7 @@ public class BoardUpdateDto extends BaseEntity{
     private Integer price;
 
     public Board ToEntity(Long boardId){
+
         Board board = Board.builder()
                 .user(user)
                 .boardId(boardId)
@@ -30,8 +31,6 @@ public class BoardUpdateDto extends BaseEntity{
                 .title(title)
                 .contents(contents)
                 .price(price)
-                .createAt(super.getCreateAt())
-                .updateAt(super.getUpdateAt())
                 .build();
         return board;
     }

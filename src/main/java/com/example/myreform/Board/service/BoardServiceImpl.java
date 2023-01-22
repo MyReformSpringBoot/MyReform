@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,11 +94,12 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoard(ExceptionCode.BOARD_UPDATE_INVALID, new ArrayList());
         }
 
+        LocalDateTime createAt = boardRepository.findBoardByBoardId(boardId).getCreateAt();
         Board board = boardUpdateDto.ToEntity(boardId);
         board.confirmUser(user);
+        boardRepository.save(board);
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(boardImages);
-        boardRepository.save(board);
 
         try {
             boardImageRepository.saveAllAndFlush(saveBoardImage(boardId, files));
@@ -105,11 +107,11 @@ public class BoardServiceImpl implements BoardService {
             System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
         }
-
         BoardFindDto boardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
-        System.out.println(boardRepository.findById(boardId).get().getCreateAt());
+        boardFindDto.setCreateAt(createAt);
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         Object data = new Pair<>(boardFindDto, boardImages);
+
         return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, data);
     }
 

@@ -80,8 +80,7 @@ public class Board extends BaseEntity {
 
 
     @Builder
-    public Board(Long boardId, User user, Integer categoryId, String title, String contents, Integer price, LocalDateTime createAt, LocalDateTime updateAt){
-        super(createAt, updateAt);
+    public Board(Long boardId, User user, Integer categoryId, String title, String contents, Integer price){
         this.boardId = boardId;
         this.user = user;
         this.categoryId = categoryId;
