@@ -64,8 +64,8 @@ public class BoardServiceImpl implements BoardService {
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
 
         //post정보와 이미지 정보를 모두 출력하기 위해 pair사용 => key에는 post가 value에는 이미지 정보 배열이 들어있다.
-        Pair<BoardFindDto, List<BoardImage>> result = new Pair<>(board.toFindDto(), boardImages);
-        return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, result);
+        Pair<BoardFindDto, List<BoardImage>> data = new Pair<>(board.toFindDto(), boardImages);
+        return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, data);
     }
 
     List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files)throws Exception{
@@ -86,7 +86,7 @@ public class BoardServiceImpl implements BoardService {
     public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) throws JsonProcessingException {
 
         Optional<Board> boardOptional = boardRepository.findById(boardId);
-        if (!boardOptional.isPresent() || boardOptional.get().getStatus() == 0) {
+        if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
             return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
         }
         if (!boardOptional.get().getUser().getUserId().equals(user.getUserId())) {
@@ -96,32 +96,35 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardUpdateDto.ToEntity(boardId);
         board.confirmUser(user);
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
-
+        deleteBoardImages(boardImages);
         boardRepository.save(board);
+
         try {
             boardImageRepository.saveAllAndFlush(saveBoardImage(boardId, files));
         } catch (Exception e) {
+            System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
         }
-        deleteBoardImages(boardImages);
-        Object data = new Pair<>(findById(board.getBoardId()).toFindDto(), boardImageRepository.findAllByBoardId(boardId));
+
+        BoardFindDto boardFindDto = boardRepository.findById(boardId).get().toFindDto();
+        boardImages = boardImageRepository.findAllByBoardId(boardId);
+        Object data = new Pair<>(boardFindDto, boardImages);
         return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, data);
     }
 
     @Override
     public Object delete(Long boardId, User user) {
-        if (!boardRepository.existsById(boardId) || findById(boardId).getStatus() == 0) {
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
             return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
         }
-        Board board = findById(boardId);
-        if (!board.getUser().getUserId().equals(user.getUserId())) {
-            System.out.println(board.getUser().getUserId());
-            System.out.println(user.getUserId());
+        if (!boardOptional.get().getUser().getUserId().equals(user.getUserId())) {
             return new ResponseBoard(ExceptionCode.BOARD_DELETE_INVALID, new ArrayList());
         }
+        Board board = boardOptional.get();
         board.delete(); // status만 수정
-        List<BoardImage> postImages = boardImageRepository.findAllByBoardId(boardId);
-        deleteBoardImages(postImages);
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+        deleteBoardImages(boardImages);
         boardRepository.save(board);
         return new ResponseBoard(ExceptionCode.BOARD_DELETE_OK, new ArrayList());
     }
