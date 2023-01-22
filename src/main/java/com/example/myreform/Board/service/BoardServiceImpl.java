@@ -106,7 +106,8 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
 
-        BoardFindDto boardFindDto = boardRepository.findById(boardId).get().toFindDto();
+        BoardFindDto boardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
+        System.out.println(boardRepository.findById(boardId).get().getCreateAt());
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         Object data = new Pair<>(boardFindDto, boardImages);
         return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, data);
@@ -156,7 +157,6 @@ public class BoardServiceImpl implements BoardService {
         List<Pair<BoardFindDto, List<BoardImage>>> result = new ArrayList<>();
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
         if (boardFindDtos.isEmpty()) {
-            System.out.println("result = " + boardFindDtos.size());
             exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
         }
         for (BoardFindDto boardFindDto: boardFindDtos) {

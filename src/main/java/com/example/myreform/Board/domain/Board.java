@@ -50,6 +50,9 @@ public class Board extends BaseEntity {
     }
 
     public BoardFindDto toFindDto() {
+        System.out.println("super.getCreateAt() = " + super.getCreateAt());
+        System.out.println("super.getUpdateAt() = " + super.getUpdateAt());
+
         return BoardFindDto.builder()
                 .boardId(boardId)
                 .user(user)

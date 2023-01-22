@@ -2,6 +2,7 @@ package com.example.myreform.Board.dto;
 
 
 import com.example.myreform.User.domain.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -20,7 +21,9 @@ public class BoardFindDto {
     private Integer categoryId;
     private String title;
     private String contents;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
     private int status;
 
