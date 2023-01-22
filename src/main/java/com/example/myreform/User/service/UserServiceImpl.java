@@ -49,16 +49,12 @@ public class UserServiceImpl implements UserService {
                     .id(user.get().getId())
                     .pw(user.get().getPw())
                     .build();
-
             if (passwordEncoder.matches(loginDTO.getPw(), checkIdUser.getPw())) { // 비밀번호 일치
                 return new ResponseUser(ExceptionCode.LOGIN_OK);
-            } else {
-                return new ResponseUser(ExceptionCode.LOGIN_PW);
             }
-
-        } else {
-            // 조회 결과가 없다(해당 이메일을 가진 회원이 없다)
-            return new ResponseUser(ExceptionCode.LOGIN_ID);
+            return new ResponseUser(ExceptionCode.LOGIN_PW);
         }
+        // 조회 결과가 없다(해당 이메일을 가진 회원이 없다)
+        return new ResponseUser(ExceptionCode.LOGIN_ID);
     }
 }
