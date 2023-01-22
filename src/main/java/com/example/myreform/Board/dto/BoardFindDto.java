@@ -2,6 +2,7 @@ package com.example.myreform.Board.dto;
 
 
 import com.example.myreform.User.domain.User;
+import com.example.myreform.User.dto.UserFindDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -16,7 +17,7 @@ public class BoardFindDto {
 
     @Column(name = "board_id")
     private Long boardId;
-    private User user;
+    private UserFindDto user;
     @Column(name = "category_id")
     private Integer categoryId;
     private String title;
@@ -32,7 +33,7 @@ public class BoardFindDto {
     @Builder
     public BoardFindDto(Long boardId, User user, Integer categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price) {
         this.boardId = boardId;
-        this.user = user;
+        this.user = user.toDto();
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
