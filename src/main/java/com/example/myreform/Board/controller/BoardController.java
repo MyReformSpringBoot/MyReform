@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/boards")
@@ -67,7 +68,7 @@ public class BoardController {
 
     @InitBinder
     protected void initBinder(WebDataBinder binder){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat,true));
     }
 }

@@ -84,7 +84,6 @@ public class Board extends BaseEntity {
         super(createAt, updateAt);
         this.boardId = boardId;
         this.user = user;
-        this.boardId = boardId;
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
