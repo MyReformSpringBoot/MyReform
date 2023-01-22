@@ -88,23 +88,18 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Object update(Long boardId, BoardSaveDto boardSaveDto, User user, List<MultipartFile> files) throws JsonProcessingException {
-        if (!boardRepository.existsById(boardId) || findById(boardId).getStatus() == 0) {
+    public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) throws JsonProcessingException {
+
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if (!boardOptional.isPresent() || boardOptional.get().getStatus() == 0) {
             return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
         }
-
-        BoardUpdateDto boardUpdateDto = findById(boardId).toBoardUpdateDto();
-        if (!boardUpdateDto.getUser().getUserId().equals(user.getUserId())) {
+        if (!boardOptional.get().getUser().getUserId().equals(user.getUserId())) {
             return new ResponseBoard(ExceptionCode.BOARD_UPDATE_INVALID, new ArrayList());
         }
 
-        boardUpdateDto.setContents(boardSaveDto.getContents());
-        boardUpdateDto.setTitle(boardSaveDto.getTitle());
-        boardUpdateDto.setPrice(boardSaveDto.getPrice());
-
-
         Board board = boardUpdateDto.ToEntity(boardId);
-
+        board.confirmUser(user);
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
 
         boardRepository.save(board);
@@ -114,7 +109,7 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
         deleteBoardImages(boardImages);
-        Object data = new Pair<>(findById(board.getBoardId()), boardImageRepository.findAllByBoardId(boardId));
+        Object data = new Pair<>(findById(board.getBoardId()).toDto(), boardImageRepository.findAllByBoardId(boardId));
         return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, data);
     }
 

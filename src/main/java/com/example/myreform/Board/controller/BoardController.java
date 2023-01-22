@@ -2,6 +2,7 @@ package com.example.myreform.Board.controller;
 
 
 import com.example.myreform.Board.dto.BoardSaveDto;
+import com.example.myreform.Board.dto.BoardUpdateDto;
 import com.example.myreform.Board.response.ResponseBoard;
 import com.example.myreform.Board.service.BoardService;
 import com.example.myreform.User.domain.User;
@@ -54,9 +55,9 @@ public class BoardController {
     @PostMapping("/{boardId}")
     public ResponseEntity<Object> updatePost(@PathVariable("boardId") long boardId, @RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
         ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-        BoardSaveDto boardSaveDto = mapper.treeToValue(saveObj.get("board"), BoardSaveDto.class);
+        BoardUpdateDto boardUpdateDto = mapper.treeToValue(saveObj.get("board"), BoardUpdateDto.class);
         User user = mapper.treeToValue(saveObj.get("user"), User.class);
-        return new ResponseEntity<>(boardService.update(boardId, boardSaveDto, user, files), HttpStatus.OK);
+        return new ResponseEntity<>(boardService.update(boardId, boardUpdateDto, user, files), HttpStatus.OK);
     }
 
     //게시물 삭제
