@@ -1,6 +1,5 @@
 package com.example.myreform.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,14 +21,12 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
     @CreatedDate
     @Column(updatable = false, name = "create_at", nullable = false)
-    @JsonFormat(pattern="yyyy.MM.dd", shape = JsonFormat.Shape.STRING)
     //db의 콜럼명 변경함  createAt  =>  create_at
     //Unknown column 'create_at' in 'field list' 에러가 나서 create_at로 변경
     private LocalDateTime createAt;
 
     @LastModifiedDate
     @Column(updatable = true, name = "update_at")
-    @JsonFormat(pattern="yyyy.MM.dd", shape = JsonFormat.Shape.STRING)
     private LocalDateTime updateAt;
 
     @Column(name = "status", columnDefinition = "int default 1") // 상속관계 자동 매핑으로 자동으로 insert됨
