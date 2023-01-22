@@ -26,16 +26,11 @@ public class UserController {
     // 회원가입
     @PostMapping("/users/new-user")
     public ResponseUser signUp(@RequestBody UserSignupDto request) {
-        System.out.println("<sign up>");
-        System.out.println(request.getNickname() + ", " + request.getId() + ", "
-                + request.getPw() + ", " + request.getEmail()+  ", " + request.getMarketing() + "\n");
         return userService.signUp(request);
     }
 
     @PostMapping("/users")
     public ResponseUser login(@RequestBody UserLoginDto request) {
-        System.out.println("<login>");
-        System.out.println(request.getId() + ", " + request.getPw() + "\n");
         return userService.login(request);
     }
 }

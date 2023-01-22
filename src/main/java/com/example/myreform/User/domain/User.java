@@ -4,13 +4,9 @@ import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 
 @Getter
@@ -61,7 +57,7 @@ public class User extends BaseEntity {
         this.marketing = marketing;
     }
 
-    public UserFindDto toDto() {
+    public UserFindDto toFindDto() {
         return UserFindDto.builder()
                 .userId(userId)
                 .email(email)

@@ -69,7 +69,7 @@ public class BoardServiceImpl implements BoardService {
         return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, data);
     }
 
-    List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files)throws Exception{
+    List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files) throws Exception{
         List<Image> imageList = imageUploadHandler.parseImageInfo(boardId, files);
 
         List<BoardImage> boardImages = new ArrayList<>();
@@ -94,7 +94,7 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoard(ExceptionCode.BOARD_UPDATE_INVALID, new ArrayList());
         }
 
-        LocalDateTime createAt = boardRepository.findBoardByBoardId(boardId).getCreateAt();
+        LocalDateTime createAt = boardOptional.get().getCreateAt();
         Board board = boardUpdateDto.ToEntity(boardId);
         board.confirmUser(user);
         boardRepository.save(board);
@@ -121,10 +121,11 @@ public class BoardServiceImpl implements BoardService {
         if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
             return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
         }
-        if (!boardOptional.get().getUser().getUserId().equals(user.getUserId())) {
+        Board board = boardOptional.get();
+        if (!board.getUser().getUserId().equals(user.getUserId())) {
             return new ResponseBoard(ExceptionCode.BOARD_DELETE_INVALID, new ArrayList());
         }
-        Board board = boardOptional.get();
+
         board.delete(); // status만 수정
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(boardImages);
@@ -133,8 +134,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Transactional
-    public void deleteBoardImages(List<BoardImage> boardImages){
-        for(BoardImage boardImage: boardImages) {
+    public void deleteBoardImages(List<BoardImage> boardImages) {
+        for (BoardImage boardImage: boardImages) {
             Image image = boardImage.getImage();
             //실제로 폴더에서 삭제하는 코드 => status로 진행 시 실제로 삭제 안하기에 주석처리
             String path = new File(IMG_PATH).getAbsolutePath() + "/" + image.getImageURL();
@@ -151,16 +152,16 @@ public class BoardServiceImpl implements BoardService {
     public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
         List<BoardFindDto> boardFindDtos = boards.getContent().stream().map((x) -> x.toFindDto()).collect(Collectors.toList());
-        List<Pair<BoardFindDto, List<BoardImage>>> result = new ArrayList<>();
+        List<Pair<BoardFindDto, List<BoardImage>>> data = new ArrayList<>();
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
         if (boardFindDtos.isEmpty()) {
             exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
         }
         for (BoardFindDto boardFindDto: boardFindDtos) {
             Long boardId = boardFindDto.getBoardId();
-            result.add(new Pair<>(boardFindDto, boardImageRepository.findAllByBoardId(boardId)));
+            data.add(new Pair<>(boardFindDto, boardImageRepository.findAllByBoardId(boardId)));
         }
-        return new ResponseBoard(exceptionCode, result);
+        return new ResponseBoard(exceptionCode, data);
     }
 
     private Page<Board> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {
@@ -177,5 +178,4 @@ public class BoardServiceImpl implements BoardService {
         // 카테고리 설정 후 검색을 진행할 때
         return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), keyword, pageRequest);
     }
-
 }
