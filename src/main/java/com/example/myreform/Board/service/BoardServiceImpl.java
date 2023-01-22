@@ -2,6 +2,7 @@ package com.example.myreform.Board.service;
 
 import com.example.myreform.Board.domain.Board;
 import com.example.myreform.Board.domain.BoardImage;
+import com.example.myreform.Board.response.ResponseBoard;
 import com.example.myreform.Image.domain.Image;
 import com.example.myreform.Board.dto.BoardFindDto;
 import com.example.myreform.Board.dto.BoardSaveDto;
@@ -16,6 +17,7 @@ import com.example.myreform.Image.repository.ImageRepository;
 
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
+import com.example.myreform.validation.ExceptionCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.util.Pair;
@@ -81,7 +83,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Object update(Long boardId, BoardSaveDto boardSaveDto, User user,List<MultipartFile> files) throws JsonProcessingException {
         if (!boardRepository.existsById(boardId) || findById(boardId).getStatus() == 0) {
-            return "해당 게시글이 없습니다.";
+            return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
         }
 
         BoardUpdateDto boardUpdateDto = findById(boardId).toBoardUpdateDto();
