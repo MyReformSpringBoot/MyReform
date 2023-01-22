@@ -18,17 +18,20 @@ import com.example.myreform.Image.repository.ImageRepository;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.validation.ExceptionCode;
+import com.example.myreform.validation.HttpStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +55,9 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     private final ImageRepository imageRepository;
 
+    @Value("${img.path}")
+    private String IMG_PATH;
+
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
         //post를 먼저 저장해야 postImage에 저장할 수 있음 => 따라서 save를 먼저 호출
@@ -64,8 +70,9 @@ public class BoardServiceImpl implements BoardService {
 
         //post정보와 이미지 정보를 모두 출력하기 위해 pair사용 => key에는 post가 value에는 이미지 정보 배열이 들어있다.
         Pair<Board, List<BoardImage>> result = new Pair<>(board, boardImages);
-        return result;
+        return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, result);
     }
+
     List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files)throws Exception{
         List<Image> imageList = imageUploadHandler.parseImageInfo(boardId, files);
 
@@ -81,20 +88,14 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Object update(Long boardId, BoardSaveDto boardSaveDto, User user,List<MultipartFile> files) throws JsonProcessingException {
+    public Object update(Long boardId, BoardSaveDto boardSaveDto, User user, List<MultipartFile> files) throws JsonProcessingException {
         if (!boardRepository.existsById(boardId) || findById(boardId).getStatus() == 0) {
             return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
         }
 
         BoardUpdateDto boardUpdateDto = findById(boardId).toBoardUpdateDto();
-        System.out.println(boardUpdateDto.getCreateAt());
         if (!boardUpdateDto.getUser().getUserId().equals(user.getUserId())) {
-            System.out.println(boardUpdateDto.getUser().getUserId());
-            System.out.println(user.getUserId());
-
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("result: ", "게시물 수정 권한이 없습니다.");
-            return new ObjectMapper().writeValueAsString(hashMap);
+            return new ResponseBoard(ExceptionCode.BOARD_UPDATE_INVALID, new ArrayList());
         }
 
         boardUpdateDto.setContents(boardSaveDto.getContents());
@@ -113,34 +114,34 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
         deleteBoardImages(boardImages);
-        return new Pair<>(findById(board.getBoardId()), boardImageRepository.findAllByBoardId(boardId));
+        Object data = new Pair<>(findById(board.getBoardId()), boardImageRepository.findAllByBoardId(boardId));
+        return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, data);
     }
 
     @Override
-    public String delete(Long boardId, User user) {
+    public Object delete(Long boardId, User user) {
         if (!boardRepository.existsById(boardId) || findById(boardId).getStatus() == 0) {
-            return "해당 게시글이 없습니다.";
+            return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
         }
         Board board = findById(boardId);
         if (!board.getUser().getUserId().equals(user.getUserId())) {
             System.out.println(board.getUser().getUserId());
             System.out.println(user.getUserId());
-            return "게시물 삭제 권한이 없습니다.";
+            return new ResponseBoard(ExceptionCode.BOARD_DELETE_INVALID, new ArrayList());
         }
         board.delete(); // status만 수정
         List<BoardImage> postImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(postImages);
-
         boardRepository.save(board);
-        return "해당 게시글을 삭제했습니다.";
+        return new ResponseBoard(ExceptionCode.BOARD_DELETE_OK, new ArrayList());
     }
 
     @Transactional
-    void deleteBoardImages(List<BoardImage> boardImages){
+    public void deleteBoardImages(List<BoardImage> boardImages){
         for(BoardImage boardImage: boardImages) {
             Image image = boardImage.getImage();
             //실제로 폴더에서 삭제하는 코드 => status로 진행 시 실제로 삭제 안하기에 주석처리
-            String path = new File("/Users/ihyein/hil/UMC/MyReform").getAbsolutePath() + "/" + image.getImageURL();
+            String path = new File(IMG_PATH).getAbsolutePath() + "/" + image.getImageURL();
             File file = new File(path);
             if (file.exists()) {
                 file.delete();
@@ -148,9 +149,6 @@ public class BoardServiceImpl implements BoardService {
         }
         boardImageRepository.deleteAll(boardImages);
     }
-
-
-
 
     @Override
     public Board findById(Long boardId) {
@@ -163,11 +161,16 @@ public class BoardServiceImpl implements BoardService {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
         List<BoardFindDto> boardFindDtos = boards.getContent().stream().map((x) -> x.toDto()).collect(Collectors.toList());
         List<Pair<BoardFindDto, List<BoardImage>>> result = new ArrayList<>();
+        ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
+        if (boardFindDtos.isEmpty()) {
+            System.out.println("result = " + boardFindDtos.size());
+            exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
+        }
         for (BoardFindDto boardFindDto: boardFindDtos) {
             Long boardId = boardFindDto.getBoardId();
             result.add(new Pair<>(boardFindDto, boardImageRepository.findAllByBoardId(boardId)));
         }
-        return result;
+        return new ResponseBoard(exceptionCode, result);
     }
 
     private Page<Board> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {
@@ -184,4 +187,5 @@ public class BoardServiceImpl implements BoardService {
         // 카테고리 설정 후 검색을 진행할 때
         return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), keyword, pageRequest);
     }
+
 }

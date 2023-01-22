@@ -2,6 +2,7 @@ package com.example.myreform.Board.controller;
 
 
 import com.example.myreform.Board.dto.BoardSaveDto;
+import com.example.myreform.Board.response.ResponseBoard;
 import com.example.myreform.Board.service.BoardService;
 import com.example.myreform.User.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -60,14 +61,8 @@ public class BoardController {
 
     //게시물 삭제
     @DeleteMapping("/{boardId}")
-    public Object deletePost(@PathVariable("boardId") long boardId, @RequestBody User user) throws JsonProcessingException {
-//        ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-//        User user = mapper.treeToValue(saveObj.get("user"), User.class);
-        System.out.println("user = " + user.getUserId());
-        System.out.println(user.getId());
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("result: ", boardService.delete(boardId, user));
-        return new ObjectMapper().writeValueAsString(hashMap);
+    public Object deletePost(@PathVariable("boardId") long boardId, @RequestBody User user) {
+        return new ResponseEntity<>(boardService.delete(boardId, user), HttpStatus.OK);
     }
 
     @InitBinder

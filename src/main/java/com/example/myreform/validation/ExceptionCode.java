@@ -20,11 +20,11 @@ public enum ExceptionCode {
     BOARD_GET_OK(SUCCESS, "C000", "게시물"),
     BOARD_NOT_FOUND(NOT_FOUND_VALUE, "C001", "게시물을 찾을 수 없습니다."),
     BOARD_CREATE_OK(SUCCESS, "D000", "게시물 작성에 성공했습니다."),
-    BOARD_CREATE_ERROR(SUCCESS, "D001", "게시물 작성에 실패했습니다."), // NOT NULL 정보를 기입하도록 서버에서 처리할지 프론트엔드에서 처리할지 합의해야함
+    BOARD_CREATE_ERROR(SUCCESS, "D001", "게시물 작성에 실패했습니다."),
     BOARD_DELETE_OK(SUCCESS, "E000", "게시물을 삭제했습니다."),
-    BOARD_DELETE_INVALID(INVALID_ACCESS, "E001", "게시물을 삭제할 수 없습니다."),
+    BOARD_DELETE_INVALID(INVALID_ACCESS, "E001", "게시물을 삭제할 수 있는 권한이 없습니다."),
     BOARD_UPDATE_OK(SUCCESS, "F000", "게시물 업데이트에 성공했습니다."),
-    BOARD_UPDATE_INVALID(INVALID_ACCESS, "F001", "게시물 업데이트에 성공하지 못했습니다.");
+    BOARD_UPDATE_INVALID(INVALID_ACCESS, "F001", "게시물을 변경할 수 있는 권한이 없습니다.");
 
 
     private final HttpStatus status;

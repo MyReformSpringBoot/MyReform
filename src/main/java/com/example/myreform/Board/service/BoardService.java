@@ -16,7 +16,7 @@ public interface BoardService {
 
     Object update(Long boardId, BoardSaveDto boardSaveDto, User user, List<MultipartFile> files) throws JsonProcessingException;
 
-    String delete(Long boardId, User user);
+    Object delete(Long boardId, User user);
 
     Board findById(Long boardId);
 
