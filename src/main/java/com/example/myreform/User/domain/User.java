@@ -49,8 +49,8 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Override
-    public String getUsername() {//식별name => email or userId 인데 이때까지 userId로 진행했기에 userId로 진행
-        return userId.toString();
+    public String getUsername() {//식별name => login에서 email로 user존재 파악
+        return email;
     }
 
 
