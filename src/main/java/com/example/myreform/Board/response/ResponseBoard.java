@@ -4,22 +4,11 @@ import com.example.myreform.validation.ExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class ResponseBoard {
-    private final int status;
-    private final String code;
-    private final String message;
+public class ResponseBoard extends ResponseBoardEmpty {
     private Object data;
 
     public ResponseBoard(ExceptionCode exceptionCode, Object data) {
-        this.status = exceptionCode.getStatus().getValue();
-        this.code = exceptionCode.getCode();
-        this.message = exceptionCode.getMessage();
+        super(exceptionCode);
         this.data = data;
-    }
-
-    public ResponseBoard(ExceptionCode exceptionCode) {
-        this.status = exceptionCode.getStatus().getValue();
-        this.code = exceptionCode.getCode();
-        this.message = exceptionCode.getMessage();
     }
 }
