@@ -3,7 +3,7 @@ package com.example.myreform.Board.domain;
 import com.example.myreform.Board.dto.AllBoardFindDto;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.config.BaseEntity;
-import com.example.myreform.Board.dto.BoardFindDto;
+import com.example.myreform.Board.dto.OneBoardFindDto;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -48,8 +48,8 @@ public class Board extends BaseEntity {
         super.delete();
     }
 
-    public BoardFindDto toFindDto() {
-        return BoardFindDto.builder()
+    public OneBoardFindDto toFindDto() {
+        return OneBoardFindDto.builder()
                 .boardId(boardId)
                 .user(user)
                 .categoryId(categoryId)
@@ -72,7 +72,6 @@ public class Board extends BaseEntity {
         this.price = price;
     }
 
-    @Builder
     public AllBoardFindDto toAllBoardFindDto() {
         return AllBoardFindDto.builder()
                 .boardId(boardId)

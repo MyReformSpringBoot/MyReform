@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-public class BoardFindDto {
+public class OneBoardFindDto {
 
     @Column(name = "board_id")
     private Long boardId;
@@ -31,7 +31,7 @@ public class BoardFindDto {
     private Integer price;
 
     @Builder
-    public BoardFindDto(Long boardId, User user, Integer categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price) {
+    public OneBoardFindDto(Long boardId, User user, Integer categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price) {
         this.boardId = boardId;
         this.user = user.toFindDto();
         this.categoryId = categoryId;

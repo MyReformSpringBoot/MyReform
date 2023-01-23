@@ -1,6 +1,6 @@
 package com.example.myreform.Image.domain;
 
-import com.example.myreform.Image.dto.OneImageFindDto;
+import com.example.myreform.Image.dto.ImageFindDto;
 import com.example.myreform.config.BaseEntity;
 import com.example.myreform.Image.dto.ImageDeleteDto;
 import lombok.*;
@@ -35,8 +35,8 @@ public class Image extends BaseEntity {
                 .build();
     }
 
-    public OneImageFindDto toOneImageFindDto() {
-        return OneImageFindDto.builder()
+    public ImageFindDto toOneImageFindDto() {
+        return ImageFindDto.builder()
                 .imageURL(imageURL)
                 .build();
     }

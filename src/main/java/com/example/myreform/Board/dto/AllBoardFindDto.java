@@ -1,7 +1,5 @@
 package com.example.myreform.Board.dto;
 
-import com.example.myreform.Image.dto.OneImageFindDto;
-import com.example.myreform.User.dto.UserFindDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 

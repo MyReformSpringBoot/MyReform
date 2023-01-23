@@ -6,7 +6,7 @@ import com.example.myreform.Board.dto.AllBoardFindDto;
 import com.example.myreform.Board.response.ResponseBoard;
 import com.example.myreform.Board.response.ResponseBoardEmpty;
 import com.example.myreform.Image.domain.Image;
-import com.example.myreform.Board.dto.BoardFindDto;
+import com.example.myreform.Board.dto.OneBoardFindDto;
 import com.example.myreform.Board.dto.BoardSaveDto;
 import com.example.myreform.Board.dto.BoardUpdateDto;
 import com.example.myreform.Image.controller.ImageUploadHandler;
@@ -14,7 +14,7 @@ import com.example.myreform.Image.controller.ImageUploadHandler;
 
 import com.example.myreform.Board.repository.BoardImageRepository;
 import com.example.myreform.Board.repository.BoardRepository;
-import com.example.myreform.Image.dto.OneImageFindDto;
+import com.example.myreform.Image.dto.ImageFindDto;
 import com.example.myreform.Image.repository.ImageRepository;
 
 import com.example.myreform.User.domain.User;
@@ -68,22 +68,8 @@ public class BoardServiceImpl implements BoardService {
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
 
         //post정보와 이미지 정보를 모두 출력하기 위해 pair사용 => key에는 post가 value에는 이미지 정보 배열이 들어있다.
-        Pair<BoardFindDto, List<BoardImage>> data = new Pair<>(board.toFindDto(), boardImages);
+        Pair<OneBoardFindDto, List<BoardImage>> data = new Pair<>(board.toFindDto(), boardImages);
         return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, data);
-    }
-
-    List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files) throws Exception{
-        List<Image> imageList = imageUploadHandler.parseImageInfo(boardId, files);
-
-        List<BoardImage> boardImages = new ArrayList<>();
-        for(Image image : imageList){
-            BoardImage boardImage = BoardImage.builder()
-                    .image(image)
-                    .boardId(boardId)
-                    .build();
-            boardImages.add(boardImage);
-        }
-        return boardImages;
     }
 
     @Override
@@ -110,7 +96,7 @@ public class BoardServiceImpl implements BoardService {
             System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
         }
-        BoardFindDto boardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
+        OneBoardFindDto boardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
         boardFindDto.setCreateAt(createAt);
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         Object data = new Pair<>(boardFindDto, boardImages);
@@ -162,7 +148,7 @@ public class BoardServiceImpl implements BoardService {
         }
         for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
             Long boardId = allBoardFindDto.getBoardId();
-            OneImageFindDto oneImageFindDto = boardImageRepository.findByBoardId(boardId).getImage().toOneImageFindDto();
+            ImageFindDto oneImageFindDto = boardImageRepository.findByBoardId(boardId).getImage().toOneImageFindDto();
             allBoardFindDto.setImageUrl(oneImageFindDto.getImageURL());
         }
         return new ResponseBoard(exceptionCode, allBoardFindDtos);
@@ -182,4 +168,19 @@ public class BoardServiceImpl implements BoardService {
         // 카테고리 설정 후 검색을 진행할 때
         return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), keyword, pageRequest);
     }
+
+    List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files) throws Exception{
+        List<Image> imageList = imageUploadHandler.parseImageInfo(boardId, files);
+
+        List<BoardImage> boardImages = new ArrayList<>();
+        for(Image image : imageList){
+            BoardImage boardImage = BoardImage.builder()
+                    .image(image)
+                    .boardId(boardId)
+                    .build();
+            boardImages.add(boardImage);
+        }
+        return boardImages;
+    }
+
 }

@@ -10,13 +10,13 @@ import javax.persistence.Column;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OneImageFindDto {
+public class ImageFindDto {
 
     @Column(name = "image_url")
     private String imageURL;
 
     @Builder
-    public OneImageFindDto(String imageURL) {
+    public ImageFindDto(String imageURL) {
         this.imageURL = imageURL;
     }
 }
