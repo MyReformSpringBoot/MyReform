@@ -8,12 +8,18 @@ public class ResponseBoard {
     private final int status;
     private final String code;
     private final String message;
-    private final Object data;
+    private Object data;
 
     public ResponseBoard(ExceptionCode exceptionCode, Object data) {
         this.status = exceptionCode.getStatus().getValue();
         this.code = exceptionCode.getCode();
         this.message = exceptionCode.getMessage();
         this.data = data;
+    }
+
+    public ResponseBoard(ExceptionCode exceptionCode) {
+        this.status = exceptionCode.getStatus().getValue();
+        this.code = exceptionCode.getCode();
+        this.message = exceptionCode.getMessage();
     }
 }

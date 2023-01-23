@@ -88,10 +88,10 @@ public class BoardServiceImpl implements BoardService {
 
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
-            return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
+            return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND);
         }
         if (!boardOptional.get().getUser().getUserId().equals(user.getUserId())) {
-            return new ResponseBoard(ExceptionCode.BOARD_UPDATE_INVALID, new ArrayList());
+            return new ResponseBoard(ExceptionCode.BOARD_UPDATE_INVALID);
         }
 
         LocalDateTime createAt = boardOptional.get().getCreateAt();
@@ -119,18 +119,18 @@ public class BoardServiceImpl implements BoardService {
     public Object delete(Long boardId, User user) {
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
-            return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND, new ArrayList());
+            return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND);
         }
         Board board = boardOptional.get();
         if (!board.getUser().getUserId().equals(user.getUserId())) {
-            return new ResponseBoard(ExceptionCode.BOARD_DELETE_INVALID, new ArrayList());
+            return new ResponseBoard(ExceptionCode.BOARD_DELETE_INVALID);
         }
 
         board.delete(); // status만 수정
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(boardImages);
         boardRepository.save(board);
-        return new ResponseBoard(ExceptionCode.BOARD_DELETE_OK, new ArrayList());
+        return new ResponseBoard(ExceptionCode.BOARD_DELETE_OK);
     }
 
     @Transactional
