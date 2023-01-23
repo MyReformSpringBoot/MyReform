@@ -1,7 +1,7 @@
 package com.example.myreform.User.domain;
 
 import com.example.myreform.User.dto.UserFindDto;
-import com.example.myreform.domain.BaseEntity;
+import com.example.myreform.config.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
