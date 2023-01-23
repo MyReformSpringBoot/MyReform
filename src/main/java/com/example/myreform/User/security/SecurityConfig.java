@@ -1,6 +1,8 @@
 package com.example.myreform.User.security;
 
 
+import com.example.myreform.utils.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,8 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
-
+public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -21,7 +22,7 @@ public class SecurityConfig{
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {//원래 returnType: SecurityFilterChain
         return httpSecurity
                 .httpBasic().disable()
                 .csrf().disable()
