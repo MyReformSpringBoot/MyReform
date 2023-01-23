@@ -1,27 +1,12 @@
 package com.example.myreform.User.response;
 
+import com.example.myreform.config.ResponseType;
 import com.example.myreform.validation.ExceptionCode;
+import lombok.Getter;
 
-public class ResponseUser {
-    private final int status;
-    private final String code;
-    private final String message;
-
+@Getter
+public class ResponseUser extends ResponseType {
     public ResponseUser(ExceptionCode exceptionCode) {
-        this.status = exceptionCode.getStatus().getValue();
-        this.code = exceptionCode.getCode();
-        this.message = exceptionCode.getMessage();
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
+        super(exceptionCode);
     }
 }

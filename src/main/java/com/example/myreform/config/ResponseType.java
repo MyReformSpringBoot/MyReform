@@ -1,7 +1,9 @@
 package com.example.myreform.config;
 
 import com.example.myreform.validation.ExceptionCode;
+import lombok.Getter;
 
+@Getter
 public class ResponseType {
     private final int status;
     private final String code;
