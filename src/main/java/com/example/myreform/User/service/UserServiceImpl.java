@@ -2,6 +2,7 @@ package com.example.myreform.User.service;
 
 import com.example.myreform.User.dto.UserLoginDto;
 import com.example.myreform.User.dto.UserSignupDto;
+import com.example.myreform.utils.JwtTokenProvider;
 import com.example.myreform.validation.ExceptionCode;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.User.domain.User;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     @Transactional
@@ -50,7 +52,8 @@ public class UserServiceImpl implements UserService {
                     .pw(user.get().getPw())
                     .build();
             if (passwordEncoder.matches(loginDTO.getPw(), checkIdUser.getPw())) { // 비밀번호 일치
-                return new ResponseUser(ExceptionCode.LOGIN_OK);
+                String accessToken = jwtTokenProvider.createJwt(user.get().getUsername(), user.get().getRole());
+                return new ResponseUser(ExceptionCode.LOGIN_OK, accessToken);
             }
             return new ResponseUser(ExceptionCode.LOGIN_PW);
         }
