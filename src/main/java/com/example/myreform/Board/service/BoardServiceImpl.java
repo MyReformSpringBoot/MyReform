@@ -3,6 +3,7 @@ package com.example.myreform.Board.service;
 import com.example.myreform.Board.domain.Board;
 import com.example.myreform.Board.domain.BoardImage;
 import com.example.myreform.Board.response.ResponseBoard;
+import com.example.myreform.Board.response.ResponseBoardEmpty;
 import com.example.myreform.Image.domain.Image;
 import com.example.myreform.Board.dto.BoardFindDto;
 import com.example.myreform.Board.dto.BoardSaveDto;
@@ -88,10 +89,10 @@ public class BoardServiceImpl implements BoardService {
 
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
-            return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND);
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
         }
         if (!boardOptional.get().getUser().getUserId().equals(user.getUserId())) {
-            return new ResponseBoard(ExceptionCode.BOARD_UPDATE_INVALID);
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_UPDATE_INVALID);
         }
 
         LocalDateTime createAt = boardOptional.get().getCreateAt();
@@ -119,18 +120,18 @@ public class BoardServiceImpl implements BoardService {
     public Object delete(Long boardId, User user) {
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
-            return new ResponseBoard(ExceptionCode.BOARD_NOT_FOUND);
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
         }
         Board board = boardOptional.get();
         if (!board.getUser().getUserId().equals(user.getUserId())) {
-            return new ResponseBoard(ExceptionCode.BOARD_DELETE_INVALID);
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_DELETE_INVALID);
         }
 
         board.delete(); // status만 수정
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(boardImages);
         boardRepository.save(board);
-        return new ResponseBoard(ExceptionCode.BOARD_DELETE_OK);
+        return new ResponseBoardEmpty(ExceptionCode.BOARD_DELETE_OK);
     }
 
     @Transactional
@@ -156,6 +157,7 @@ public class BoardServiceImpl implements BoardService {
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
         if (boardFindDtos.isEmpty()) {
             exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
+            return new ResponseBoardEmpty(exceptionCode);
         }
         for (BoardFindDto boardFindDto: boardFindDtos) {
             Long boardId = boardFindDto.getBoardId();
