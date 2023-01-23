@@ -6,7 +6,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 @Getter
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseUser {
     private final int status;
     private final String code;
