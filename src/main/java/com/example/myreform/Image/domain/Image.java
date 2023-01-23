@@ -1,5 +1,6 @@
 package com.example.myreform.Image.domain;
 
+import com.example.myreform.Image.dto.OneImageFindDto;
 import com.example.myreform.config.BaseEntity;
 import com.example.myreform.Image.dto.ImageDeleteDto;
 import lombok.*;
@@ -30,6 +31,12 @@ public class Image extends BaseEntity {
     public ImageDeleteDto toImageDeleteDto() {
         return ImageDeleteDto.builder()
                 .imageId(imageId)
+                .imageURL(imageURL)
+                .build();
+    }
+
+    public OneImageFindDto oneImageFindDto() {
+        return OneImageFindDto.builder()
                 .imageURL(imageURL)
                 .build();
     }
