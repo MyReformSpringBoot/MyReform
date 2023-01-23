@@ -1,12 +1,18 @@
 package com.example.myreform.User.domain;
 
 import com.example.myreform.User.dto.UserFindDto;
-import com.example.myreform.domain.BaseEntity;
+import com.example.myreform.config.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 @Getter
@@ -15,7 +21,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 
 @EntityListeners(AuditingEntityListener.class) // 자동으로 날짜, 시간
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
 
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +43,37 @@ public class User extends BaseEntity {
     @JsonIgnore
     private boolean marketing;
 
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {//식별name => email or userId 인데 이때까지 userId로 진행했기에 userId로 진행
+        return userId.toString();
+    }
+
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public enum Role {
         USER, MANAGER, ADMIN
     }
@@ -44,6 +81,12 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(new SimpleGrantedAuthority((this.role.toString())));
+        return authorities;
+    }
 
     @Builder
     public User(Long userId, String id, String pw, String nickname, String email,
