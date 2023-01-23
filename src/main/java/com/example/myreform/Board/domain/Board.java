@@ -1,15 +1,13 @@
 package com.example.myreform.Board.domain;
 
 import com.example.myreform.User.domain.User;
-import com.example.myreform.domain.BaseEntity;
+import com.example.myreform.config.BaseEntity;
 import com.example.myreform.Board.dto.BoardFindDto;
-import com.example.myreform.Board.dto.BoardUpdateDto;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity(name = "board")
 @Getter

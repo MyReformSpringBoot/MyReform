@@ -1,6 +1,6 @@
 package com.example.myreform.Image.domain;
 
-import com.example.myreform.domain.BaseEntity;
+import com.example.myreform.config.BaseEntity;
 import com.example.myreform.Image.dto.ImageDeleteDto;
 import lombok.*;
 

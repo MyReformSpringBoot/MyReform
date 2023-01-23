@@ -2,7 +2,7 @@ package com.example.myreform.Board.dto;
 
 import com.example.myreform.Board.domain.Board;
 import com.example.myreform.User.domain.User;
-import com.example.myreform.domain.BaseEntity;
+import com.example.myreform.config.BaseEntity;
 
 import lombok.*;
 
