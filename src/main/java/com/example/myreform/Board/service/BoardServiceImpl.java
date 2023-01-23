@@ -2,6 +2,7 @@ package com.example.myreform.Board.service;
 
 import com.example.myreform.Board.domain.Board;
 import com.example.myreform.Board.domain.BoardImage;
+import com.example.myreform.Board.dto.AllBoardFindDto;
 import com.example.myreform.Board.response.ResponseBoard;
 import com.example.myreform.Board.response.ResponseBoardEmpty;
 import com.example.myreform.Image.domain.Image;
@@ -13,6 +14,7 @@ import com.example.myreform.Image.controller.ImageUploadHandler;
 
 import com.example.myreform.Board.repository.BoardImageRepository;
 import com.example.myreform.Board.repository.BoardRepository;
+import com.example.myreform.Image.dto.OneImageFindDto;
 import com.example.myreform.Image.repository.ImageRepository;
 
 import com.example.myreform.User.domain.User;
@@ -152,18 +154,18 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
-        List<BoardFindDto> boardFindDtos = boards.getContent().stream().map((x) -> x.toFindDto()).collect(Collectors.toList());
-        List<Pair<BoardFindDto, List<BoardImage>>> data = new ArrayList<>();
+        List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream().map((x) -> x.toAllBoardFindDto()).collect(Collectors.toList());
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
-        if (boardFindDtos.isEmpty()) {
+        if (allBoardFindDtos.isEmpty()) {
             exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
             return new ResponseBoardEmpty(exceptionCode);
         }
-        for (BoardFindDto boardFindDto: boardFindDtos) {
-            Long boardId = boardFindDto.getBoardId();
-            data.add(new Pair<>(boardFindDto, boardImageRepository.findAllByBoardId(boardId)));
+        for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
+            Long boardId = allBoardFindDto.getBoardId();
+            OneImageFindDto oneImageFindDto = boardImageRepository.findByBoardId(boardId).getImage().toOneImageFindDto();
+            allBoardFindDto.setImageUrl(oneImageFindDto.getImageURL());
         }
-        return new ResponseBoard(exceptionCode, data);
+        return new ResponseBoard(exceptionCode, allBoardFindDtos);
     }
 
     private Page<Board> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {

@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface BoardImageRepository extends JpaRepository<BoardImage, Long> {
     List<BoardImage> findAllByBoardId(Long boardId);
+
+    BoardImage findByBoardId(Long boardId);
 }

@@ -35,7 +35,7 @@ public class Image extends BaseEntity {
                 .build();
     }
 
-    public OneImageFindDto oneImageFindDto() {
+    public OneImageFindDto toOneImageFindDto() {
         return OneImageFindDto.builder()
                 .imageURL(imageURL)
                 .build();
