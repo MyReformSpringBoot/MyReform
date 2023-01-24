@@ -68,7 +68,11 @@ public class BoardServiceImpl implements BoardService {
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
 
         OneBoardFindDto oneBoardFindDto = board.toFindDto();
-        oneBoardFindDto.setImages(boardImages.stream().map(x -> x.toImageFindDto().getImageURL()).collect(Collectors.toList()));
+        List<String> imageUrls = boardImages.stream()
+                .map(x -> x.toImageFindDto()
+                        .getImageURL())
+                .collect(Collectors.toList());
+        oneBoardFindDto.setImages(imageUrls);
         return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, oneBoardFindDto);
     }
 
@@ -83,7 +87,6 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_UPDATE_INVALID);
         }
 
-        LocalDateTime createAt = boardOptional.get().getCreateAt();
         Board board = boardUpdateDto.ToEntity(boardId);
         board.confirmUser(user);
         boardRepository.save(board);
@@ -96,11 +99,15 @@ public class BoardServiceImpl implements BoardService {
             System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
         }
-        OneBoardFindDto boardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
+        OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
         boardImages = boardImageRepository.findAllByBoardId(boardId);
-        Object data = new Pair<>(boardFindDto, boardImages);
+        List<String> imageUrls = boardImages.stream()
+                .map(x -> x.toImageFindDto()
+                        .getImageURL())
+                .collect(Collectors.toList());
+        oneBoardFindDto.setImages(imageUrls);
 
-        return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, data);
+        return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, oneBoardFindDto);
     }
 
     @Override
