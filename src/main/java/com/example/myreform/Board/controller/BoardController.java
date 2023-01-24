@@ -71,4 +71,11 @@ public class BoardController {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat,true));
     }
+
+    @GetMapping("/images")
+    @ResponseBody
+    public ResponseEntity<Object> getImages(@RequestParam(required = false) Long lastBoardId, @RequestParam int size,
+                                            @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String keyword) throws Exception {
+        return new ResponseEntity<>(boardService.getAllImages(lastBoardId, size, categoryId, keyword), HttpStatus.OK);
+    }
 }
