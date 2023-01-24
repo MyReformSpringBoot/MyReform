@@ -196,6 +196,8 @@ public class BoardServiceImpl implements BoardService {
         return boardImages;
     }
 
+    //이미지 URL만 return하기 위한 method들
+
     public Object getAllImages(Long lastBoardId, int size, Integer categoryId, String keyword){
         List<ImageFindDto> imageFindDtos = fetchBoardPagesByForImages(lastBoardId, size, categoryId, keyword);
         ExceptionCode exceptionCode = ExceptionCode.IMAGE_GET_OK;
