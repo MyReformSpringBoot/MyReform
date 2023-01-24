@@ -72,7 +72,7 @@ public class BoardController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat,true));
     }
 
-    @GetMapping("/images")
+    @GetMapping("/search")
     @ResponseBody
     public ResponseEntity<Object> getImages(@RequestParam(required = false) Long lastBoardId, @RequestParam int size,
                                             @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String keyword) throws Exception {
