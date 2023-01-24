@@ -152,6 +152,9 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private Page<Board> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {
+        if (Optional.ofNullable(lastBoardId).isEmpty()) {
+            lastBoardId = boardRepository.count() + 1;
+        }
         PageRequest pageRequest = PageRequest.of(0, size);
         if (Optional.ofNullable(categoryId).isEmpty() && keyword == null) { // 카테고리나 검색안할 때
             return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);

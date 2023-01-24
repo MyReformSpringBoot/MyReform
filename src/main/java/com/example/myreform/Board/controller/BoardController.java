@@ -46,7 +46,7 @@ public class BoardController {
     // 게시물 조회
     @GetMapping("")
     @ResponseBody
-    public ResponseEntity<Object> getBoard(@RequestParam Long lastBoardId, @RequestParam int size,
+    public ResponseEntity<Object> getBoard(@RequestParam(required = false) Long lastBoardId, @RequestParam int size,
                                            @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String keyword) throws Exception {
         return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId, keyword), HttpStatus.OK);
     }
