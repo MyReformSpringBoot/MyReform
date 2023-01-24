@@ -97,7 +97,6 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
         OneBoardFindDto boardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
-        boardFindDto.setCreateAt(createAt);
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         Object data = new Pair<>(boardFindDto, boardImages);
 
