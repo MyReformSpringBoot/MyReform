@@ -17,7 +17,6 @@ import com.example.myreform.Board.repository.BoardRepository;
 import com.example.myreform.Image.dto.ImageFindDto;
 import com.example.myreform.Image.repository.ImageRepository;
 
-import com.example.myreform.Image.service.ImageService;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.validation.ExceptionCode;
@@ -53,8 +52,6 @@ public class BoardServiceImpl implements BoardService {
     private final BoardImageRepository boardImageRepository;
     @Autowired
     private final ImageRepository imageRepository;
-    @Autowired
-    private final ImageService imageService;
 
     @Value("${img.path}")
     private String IMG_PATH;
@@ -148,7 +145,6 @@ public class BoardServiceImpl implements BoardService {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
         List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream().map((x) -> x.toAllBoardFindDto()).collect(Collectors.toList());
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
-        List<ImageFindDto> imageFindDtos = new ArrayList<>();
 
         if (allBoardFindDtos.isEmpty()) {
             exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
@@ -160,14 +156,12 @@ public class BoardServiceImpl implements BoardService {
             for(BoardImage boardImage : boardImages){
                 if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
                     ImageFindDto oneImageFindDto = boardImage.getImage().toOneImageFindDto();
-                    imageFindDtos.add(oneImageFindDto);
                     allBoardFindDto.setImageUrl(oneImageFindDto.getImageURL());
                     break;
                 }
             }
         }
-        imageService.getAllImages(imageFindDtos);
-        return new ResponseBoard(exceptionCode, allBoardFindDtos);
+        return new ResponseBoard(exceptionCode,allBoardFindDtos);
     }
 
     private Page<Board> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {
@@ -202,4 +196,40 @@ public class BoardServiceImpl implements BoardService {
         return boardImages;
     }
 
+    public Object getAllImages(Long lastBoardId, int size, Integer categoryId, String keyword){
+        List<ImageFindDto> imageFindDtos = fetchBoardPagesByForImages(lastBoardId, size, categoryId, keyword);
+        ExceptionCode exceptionCode = ExceptionCode.IMAGE_GET_OK;
+
+        if (imageFindDtos.isEmpty()) {
+            exceptionCode = ExceptionCode.IMAGE_NOT_FOUND;
+            return new ResponseBoardEmpty(exceptionCode);
+        }
+
+
+        return new ResponseBoard(exceptionCode,imageFindDtos);
+    }
+
+    public List<ImageFindDto> getRepresentativeImages(List<AllBoardFindDto> allBoardFindDtos){
+        List<ImageFindDto> imageFindDtos = new ArrayList<>();
+        if(allBoardFindDtos.isEmpty()){
+            return imageFindDtos;
+        }
+        for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
+            Long boardId = allBoardFindDto.getBoardId();
+            List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+            for(BoardImage boardImage : boardImages){
+                if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
+                    imageFindDtos.add(boardImage.getImage().toOneImageFindDto());
+                    break;
+                }
+            }
+        }
+        return imageFindDtos;
+    }
+    public List<ImageFindDto> fetchBoardPagesByForImages(Long lastBoardId, int size, Integer categoryId, String keyword) {
+        Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
+        List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream().map((x) -> x.toAllBoardFindDto()).collect(Collectors.toList());
+
+        return getRepresentativeImages(allBoardFindDtos);
+    }
 }

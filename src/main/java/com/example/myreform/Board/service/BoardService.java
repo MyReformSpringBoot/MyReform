@@ -20,4 +20,6 @@ public interface BoardService {
     Object delete(Long boardId, User user);
 
     Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword);
+    Object getAllImages( Long lastBoardId, int size, Integer categoryId, String keyword);
+
 }
