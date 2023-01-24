@@ -1,6 +1,5 @@
 package com.example.myreform.Image.service;
 
-import com.example.myreform.Image.domain.Image;
 import com.example.myreform.Image.dto.ImageFindDto;
 
 import java.util.List;

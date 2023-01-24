@@ -22,7 +22,7 @@ import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.validation.ExceptionCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import javafx.util.Pair;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +53,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardImageRepository boardImageRepository;
     @Autowired
     private final ImageRepository imageRepository;
+    @Autowired
     private final ImageService imageService;
 
     @Value("${img.path}")
