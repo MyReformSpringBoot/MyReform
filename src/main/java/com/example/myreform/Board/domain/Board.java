@@ -56,9 +56,7 @@ public class Board extends BaseEntity {
                 .title(title)
                 .contents(contents)
                 .price(price)
-                .createAt(super.getCreateAt())
                 .updateAt(super.getUpdateAt())
-                .status(super.getStatus())
                 .build();
     }
 
