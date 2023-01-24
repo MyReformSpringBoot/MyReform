@@ -59,17 +59,15 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
-        //post를 먼저 저장해야 postImage에 저장할 수 있음 => 따라서 save를 먼저 호출
         Board board = boardSaveDto.toEntity();
         user = userRepository.findById(user.getUserId()).get();
-        //!!!!!(1/20)수정 사항: 넘어온 유저 유저아이디 같은 객체로 넣어줌 => createAt, updateAt이 null로 나오는 것 막기 위해!!!!!!
         board.confirmUser(user);
         boardRepository.save(board);
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
 
-        //post정보와 이미지 정보를 모두 출력하기 위해 pair사용 => key에는 post가 value에는 이미지 정보 배열이 들어있다.
-        Pair<OneBoardFindDto, List<BoardImage>> data = new Pair<>(board.toFindDto(), boardImages);
-        return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, data);
+        OneBoardFindDto oneBoardFindDto = board.toFindDto();
+        oneBoardFindDto.setImages(boardImages.stream().map(x -> x.toImageFindDto().getImageURL()).collect(Collectors.toList()));
+        return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, oneBoardFindDto);
     }
 
     @Override

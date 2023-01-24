@@ -28,7 +28,7 @@ public class OneBoardFindDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
     private Integer price;
-    private List<ImageFindDto> images;
+    private List<String> images;
 
     @Builder
     public OneBoardFindDto(Long boardId, User user, Integer categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price) {

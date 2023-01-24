@@ -12,10 +12,8 @@ public class ImageFindDto {
     @Column(name = "image_url")
     private String imageURL;
 
-    private final String uploadPath = "/img/";
-
     @Builder
     public ImageFindDto(String imageURL) {
-        this.imageURL = uploadPath + imageURL;
+        this.imageURL = "/img/" + imageURL;
     }
 }
