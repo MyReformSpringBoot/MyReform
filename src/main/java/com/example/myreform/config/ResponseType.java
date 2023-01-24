@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class ResponseType {
-    private final int status;
+    private final Integer status;
     private final String code;
     private final String message;
 
