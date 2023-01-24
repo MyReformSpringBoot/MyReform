@@ -17,6 +17,7 @@ import com.example.myreform.Board.repository.BoardRepository;
 import com.example.myreform.Image.dto.ImageFindDto;
 import com.example.myreform.Image.repository.ImageRepository;
 
+import com.example.myreform.Image.service.ImageService;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.validation.ExceptionCode;
@@ -53,6 +54,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardImageRepository boardImageRepository;
     @Autowired
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     @Value("${img.path}")
     private String IMG_PATH;
@@ -145,9 +147,16 @@ public class BoardServiceImpl implements BoardService {
         }
         for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
             Long boardId = allBoardFindDto.getBoardId();
-            ImageFindDto oneImageFindDto = boardImageRepository.findByBoardId(boardId).getImage().toOneImageFindDto();
-            allBoardFindDto.setImageUrl(oneImageFindDto.getImageURL());
+            List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+            for(BoardImage boardImage : boardImages){
+                if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
+                    ImageFindDto oneImageFindDto = boardImage.getImage().toOneImageFindDto();
+                    allBoardFindDto.setImageUrl(oneImageFindDto.getImageURL());
+                    break;
+                }
+            }
         }
+        imageService.getAllImages(lastBoardId, size, categoryId, keyword);
         return new ResponseBoard(exceptionCode, allBoardFindDtos);
     }
 

@@ -78,7 +78,7 @@ public class ImageUploadHandler {
                 String imageName;
                 String uuid = UUID.randomUUID().toString();
                 if(first){//대표이미지
-                    imageName = "first_" +uuid + originalFileExtension;
+                    imageName = "first-" +uuid + originalFileExtension;
                     first = false;
                 }
                 else{
