@@ -2,7 +2,7 @@ package com.example.myreform.Image.domain;
 
 import com.example.myreform.Image.dto.ImageFindDto;
 import com.example.myreform.config.BaseEntity;
-import com.example.myreform.Image.dto.ImageDeleteDto;
+//import com.example.myreform.Image.dto.ImageDeleteDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,13 +26,6 @@ public class Image extends BaseEntity {
 
         this.imageURL = imageURL;
         this.imageId = imageId;
-    }
-
-    public ImageDeleteDto toImageDeleteDto() {
-        return ImageDeleteDto.builder()
-                .imageId(imageId)
-                .imageURL(imageURL)
-                .build();
     }
 
     public ImageFindDto toOneImageFindDto() {
