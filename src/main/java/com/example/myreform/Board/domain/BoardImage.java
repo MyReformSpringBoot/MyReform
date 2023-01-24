@@ -1,5 +1,6 @@
 package com.example.myreform.Board.domain;
 
+import com.example.myreform.Board.dto.BoardImageFindDto;
 import com.example.myreform.Image.domain.Image;
 import com.example.myreform.Image.dto.ImageFindDto;
 import lombok.AccessLevel;
@@ -34,6 +35,13 @@ public class BoardImage {
 
     public ImageFindDto toImageFindDto() {
         return ImageFindDto.builder()
+                .imageURL(image.getImageURL())
+                .build();
+    }
+
+    public BoardImageFindDto toBoardImageFindDto() {
+        return BoardImageFindDto.builder()
+                .boardId(boardId)
                 .imageURL(image.getImageURL())
                 .build();
     }
