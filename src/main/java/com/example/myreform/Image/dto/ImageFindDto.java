@@ -1,9 +1,6 @@
 package com.example.myreform.Image.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 
@@ -15,8 +12,10 @@ public class ImageFindDto {
     @Column(name = "image_url")
     private String imageURL;
 
+    private final String uploadPath = "/img/";
+
     @Builder
     public ImageFindDto(String imageURL) {
-        this.imageURL = imageURL;
+        this.imageURL = uploadPath + imageURL;
     }
 }
