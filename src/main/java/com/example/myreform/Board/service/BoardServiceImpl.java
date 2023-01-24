@@ -148,6 +148,8 @@ public class BoardServiceImpl implements BoardService {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
         List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream().map((x) -> x.toAllBoardFindDto()).collect(Collectors.toList());
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
+        List<ImageFindDto> imageFindDtos = new ArrayList<>();
+
         if (allBoardFindDtos.isEmpty()) {
             exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
             return new ResponseBoardEmpty(exceptionCode);
@@ -158,12 +160,13 @@ public class BoardServiceImpl implements BoardService {
             for(BoardImage boardImage : boardImages){
                 if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
                     ImageFindDto oneImageFindDto = boardImage.getImage().toOneImageFindDto();
+                    imageFindDtos.add(oneImageFindDto);
                     allBoardFindDto.setImageUrl(oneImageFindDto.getImageURL());
                     break;
                 }
             }
         }
-        imageService.getAllImages(lastBoardId, size, categoryId, keyword);
+        imageService.getAllImages(imageFindDtos);
         return new ResponseBoard(exceptionCode, allBoardFindDtos);
     }
 
