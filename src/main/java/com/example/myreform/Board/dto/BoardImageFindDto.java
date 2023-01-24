@@ -20,6 +20,6 @@ public class BoardImageFindDto{//어떤 게시글의 이미지url인지
     @Builder
     public BoardImageFindDto(Long boardId, String imageURL){
         this.boardId = boardId;
-        this.imageURL = imageURL;
+        this.imageURL = "/img/" + imageURL;
     }
 }
