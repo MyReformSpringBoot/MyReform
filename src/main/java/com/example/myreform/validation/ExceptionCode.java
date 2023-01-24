@@ -1,5 +1,7 @@
 package com.example.myreform.validation;
 
+import com.sun.net.httpserver.Authenticator;
+
 import static com.example.myreform.validation.HttpStatus.*;
 
 public enum ExceptionCode {
@@ -24,7 +26,13 @@ public enum ExceptionCode {
     BOARD_DELETE_OK(SUCCESS, "E000", "게시물을 삭제했습니다."),
     BOARD_DELETE_INVALID(INVALID_ACCESS, "E001", "게시물을 삭제할 수 있는 권한이 없습니다."),
     BOARD_UPDATE_OK(SUCCESS, "F000", "게시물 업데이트에 성공했습니다."),
-    BOARD_UPDATE_INVALID(INVALID_ACCESS, "F001", "게시물을 변경할 수 있는 권한이 없습니다.");
+    BOARD_UPDATE_INVALID(INVALID_ACCESS, "F001", "게시물을 변경할 수 있는 권한이 없습니다."),
+
+    /**
+     * 이미지
+     */
+    IMAGE_GET_OK(SUCCESS, "G000", "이미지"),
+    IMAGE_NOT_FOUND(NOT_FOUND_VALUE, "G001", "이미지를 찾을 수 없습니다.");
 
 
     private final HttpStatus status;
