@@ -120,7 +120,7 @@ public class BoardServiceImpl implements BoardService {
         }
         OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
         oneBoardFindDto.setCategoryId(boardUpdateDto.getCategoryId());
-        System.out.println(oneBoardFindDto.getCategoryId());
+        
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
@@ -210,6 +210,8 @@ public class BoardServiceImpl implements BoardService {
         }
         for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
             Long boardId = allBoardFindDto.getBoardId();
+            allBoardFindDto.setCategoryId(boardCategoryRepository.findAllByBoardId(boardId).stream()
+                    .map(x->x.getCategory().getCategoryId()).collect(Collectors.toList()));
             List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
             for(BoardImage boardImage : boardImages){
                 if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
