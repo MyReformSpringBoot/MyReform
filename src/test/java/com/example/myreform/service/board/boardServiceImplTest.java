@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -27,7 +31,7 @@ class boardServiceImplTest {
     public void 게시글_업로드() throws Exception {
         Long post_id = 1l;
         User user = new User(1L, "gksqlsl11@khu.ac.kr", "kong", "test", "kong", User.Role.USER ,true);
-        Integer category_id = 1;
+        List<Integer> category_id = new ArrayList<>(asList(1,2,3));
         String title = "게시글 1";
         String contents = "내용";
         Integer price = 10000;
