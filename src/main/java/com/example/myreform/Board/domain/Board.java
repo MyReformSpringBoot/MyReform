@@ -7,6 +7,7 @@ import com.example.myreform.Board.dto.OneBoardFindDto;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -26,9 +27,6 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "category_id")
-    private Integer categoryId;
-
     @Column(length = 45, nullable = false, name = "title") // 제목 길이 체크
     private String title;
 
@@ -37,6 +35,8 @@ public class Board extends BaseEntity {
 
     @Column(nullable = false)
     private Integer price;
+
+    private Integer categoryId;//조회를 위해
 
     // 연관관계 편의 메서드
     public void confirmUser(User user) {
@@ -52,7 +52,6 @@ public class Board extends BaseEntity {
         return OneBoardFindDto.builder()
                 .boardId(boardId)
                 .user(user)
-                .categoryId(categoryId)
                 .title(title)
                 .contents(contents)
                 .price(price)
