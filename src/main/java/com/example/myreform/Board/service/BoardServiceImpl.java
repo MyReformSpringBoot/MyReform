@@ -66,8 +66,8 @@ public class BoardServiceImpl implements BoardService {
         board.confirmUser(user);
         boardRepository.save(board);
 
-        List<BoardCategory> boardCategories  = new ArrayList<>();
-        for(Integer i : boardSaveDto.getCategoryId()){
+        List<BoardCategory> boardCategories = new ArrayList<>();
+        for (Integer i : boardSaveDto.getCategoryId()) {
             boardCategories.add(new BoardCategory(board.getBoardId(), categoryRepository.findByCategoryId(i)));
         }
 
@@ -99,6 +99,16 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardUpdateDto.ToEntity(boardId);
         board.confirmUser(user);
         boardRepository.save(board);
+
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoardId(boardId);
+        boardCategoryRepository.deleteAll(boardCategories);
+        boardCategoryRepository.flush();
+        boardCategories.clear();
+        for (Integer i : boardUpdateDto.getCategoryId()) {
+            boardCategories.add(new BoardCategory(board.getBoardId(), categoryRepository.findByCategoryId(i)));
+        }
+        boardCategoryRepository.saveAllAndFlush(boardCategories);
+
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(boardImages);
 
@@ -109,6 +119,7 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
         OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
+        oneBoardFindDto.setCategoryId(boardUpdateDto.getCategoryId());
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
@@ -156,7 +167,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     public void deleteBoardImages(List<BoardImage> boardImages) {
-        for (BoardImage boardImage: boardImages) {
+        for (BoardImage boardImage : boardImages) {
             Image image = boardImage.getImage();
             //실제로 폴더에서 삭제하는 코드 => status로 진행 시 실제로 삭제 안하기에 주석처리
             String path = new File(IMG_PATH).getAbsolutePath() + "/" + image.getImageURL();
@@ -166,6 +177,20 @@ public class BoardServiceImpl implements BoardService {
             }
         }
         boardImageRepository.deleteAll(boardImages);
+    }
+
+    List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files) throws Exception{
+        List<Image> imageList = imageUploadHandler.parseImageInfo(boardId, files);
+
+        List<BoardImage> boardImages = new ArrayList<>();
+        for(Image image : imageList){
+            BoardImage boardImage = BoardImage.builder()
+                    .image(image)
+                    .boardId(boardId)
+                    .build();
+            boardImages.add(boardImage);
+        }
+        return boardImages;
     }
 
     @Override
@@ -205,25 +230,14 @@ public class BoardServiceImpl implements BoardService {
             return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, keyword, pageRequest);
         }
         if (keyword == null) { // 검색을 안하고 카테고리만 찾아볼 때
+
             return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsOrderByBoardIdDesc(lastBoardId, 1, categoryId, pageRequest);
         }
         // 카테고리 설정 후 검색을 진행할 때
         return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), keyword, pageRequest);
     }
 
-    List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files) throws Exception{
-        List<Image> imageList = imageUploadHandler.parseImageInfo(boardId, files);
 
-        List<BoardImage> boardImages = new ArrayList<>();
-        for(Image image : imageList){
-            BoardImage boardImage = BoardImage.builder()
-                    .image(image)
-                    .boardId(boardId)
-                    .build();
-            boardImages.add(boardImage);
-        }
-        return boardImages;
-    }
 
     //이미지 URL만 return하기 위한 method들
 
