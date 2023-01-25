@@ -120,6 +120,7 @@ public class BoardServiceImpl implements BoardService {
         }
         OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
         oneBoardFindDto.setCategoryId(boardUpdateDto.getCategoryId());
+        System.out.println(oneBoardFindDto.getCategoryId());
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
@@ -140,8 +141,11 @@ public class BoardServiceImpl implements BoardService {
         if (!board.getUser().getUserId().equals(user.getUserId())) {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_DELETE_INVALID);
         }
-
         board.delete(); // status만 수정
+
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoardId(boardId);
+        boardCategoryRepository.deleteAll(boardCategories);
+
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(boardImages);
         boardRepository.save(board);
