@@ -129,6 +129,13 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
         }
         OneBoardFindDto oneBoardFindDto = boardOptional.get().toFindDto();
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+        List<String> imageUrls = boardImages.stream()
+                .map(x -> x.toImageFindDto()
+                        .getImageURL())
+                .collect(Collectors.toList());
+        oneBoardFindDto.setImages(imageUrls);
+
         return new ResponseBoard(ExceptionCode.BOARD_GET_OK, oneBoardFindDto);
     }
 
