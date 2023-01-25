@@ -122,6 +122,16 @@ public class BoardServiceImpl implements BoardService {
         return new ResponseBoardEmpty(ExceptionCode.BOARD_DELETE_OK);
     }
 
+    @Override
+    public Object getOneBoard(Long boardId) {
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
+        }
+        OneBoardFindDto oneBoardFindDto = boardOptional.get().toFindDto();
+        return new ResponseBoard(ExceptionCode.BOARD_GET_OK, oneBoardFindDto);
+    }
+
     @Transactional
     public void deleteBoardImages(List<BoardImage> boardImages) {
         for (BoardImage boardImage: boardImages) {

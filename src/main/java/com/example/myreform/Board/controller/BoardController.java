@@ -51,6 +51,12 @@ public class BoardController {
         return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId, keyword), HttpStatus.OK);
     }
 
+    @GetMapping("/{boardId}")
+    @ResponseBody
+    public ResponseEntity<Object> getOneBoard(@PathVariable("boardId") long boardId) {
+        return new ResponseEntity<>(boardService.getOneBoard(boardId), HttpStatus.OK);
+    }
+
     //게시물 수정
     @PostMapping("/{boardId}")
     public ResponseEntity<Object> updatePost(@PathVariable("boardId") long boardId, @RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
