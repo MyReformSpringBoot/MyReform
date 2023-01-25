@@ -1,6 +1,7 @@
 package com.example.myreform.Board.domain;
 
 
+import com.example.myreform.Board.category.Category;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +16,18 @@ public class BoardCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//id 값을 null로 하면 DB가 알아서 AUTO_INCREMENT 해준다.
     @Column(name = "board_category_id")
-    private long boardCategoryId;
+    private Long boardCategoryId;
 
     @Column(name = "board_id")
-    private long boardId;
+    private Long boardId;
 
-    @Column(name = "category_id")
-    private int categoryId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
+    public BoardCategory(Long boardId, Category category){
+        this.boardId = boardId;
+        this.category = category;
+    }
 
 }
