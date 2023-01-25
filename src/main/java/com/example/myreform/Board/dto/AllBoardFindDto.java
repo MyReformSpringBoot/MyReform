@@ -18,6 +18,7 @@ public class AllBoardFindDto {
 
     private List<Integer> categoryId;//조회를 위해
     private String title;
+    private String contents;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
     private Integer price;
@@ -26,10 +27,11 @@ public class AllBoardFindDto {
 
 
     @Builder
-    public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title, LocalDateTime updateAt, Integer price) {
+    public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title,String contents, LocalDateTime updateAt, Integer price) {
         this.boardId = boardId;
         this.categoryId = categoryId;
         this.title = title;
+        this.contents = contents;
         this.updateAt = updateAt;
         this.price = price;
     }

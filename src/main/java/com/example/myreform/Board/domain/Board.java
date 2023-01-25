@@ -73,8 +73,8 @@ public class Board extends BaseEntity {
     public AllBoardFindDto toAllBoardFindDto() {
         return AllBoardFindDto.builder()
                 .boardId(boardId)
-                //.categoryId(categoryId)
                 .title(title)
+                .contents(contents)
                 .updateAt(getUpdateAt())
                 .price(price)
                 .build();
