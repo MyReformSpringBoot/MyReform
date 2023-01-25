@@ -1,8 +1,11 @@
 package com.example.myreform.Board.service;
 
+import com.example.myreform.Board.category.CategoryRepository;
 import com.example.myreform.Board.domain.Board;
+import com.example.myreform.Board.domain.BoardCategory;
 import com.example.myreform.Board.domain.BoardImage;
 import com.example.myreform.Board.dto.*;
+import com.example.myreform.Board.repository.BoardCategoryRepository;
 import com.example.myreform.Board.response.ResponseBoard;
 import com.example.myreform.Board.response.ResponseBoardEmpty;
 import com.example.myreform.Image.domain.Image;
@@ -48,7 +51,9 @@ public class BoardServiceImpl implements BoardService {
     @Autowired
     private final BoardImageRepository boardImageRepository;
     @Autowired
-    private final ImageRepository imageRepository;
+    private final BoardCategoryRepository boardCategoryRepository;
+    @Autowired
+    private final CategoryRepository categoryRepository;
 
     @Value("${img.path}")
     private String IMG_PATH;
@@ -56,12 +61,22 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
         Board board = boardSaveDto.toEntity();
+
         user = userRepository.findById(user.getUserId()).get();
         board.confirmUser(user);
         boardRepository.save(board);
+
+        List<BoardCategory> boardCategories  = new ArrayList<>();
+        for(Integer i : boardSaveDto.getCategoryId()){
+            boardCategories.add(new BoardCategory(board.getBoardId(), categoryRepository.findByCategoryId(i)));
+        }
+
+        boardCategoryRepository.saveAll(boardCategories);
+
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
 
         OneBoardFindDto oneBoardFindDto = board.toFindDto();
+        oneBoardFindDto.setCategoryId(boardSaveDto.getCategoryId());
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
