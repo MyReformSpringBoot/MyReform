@@ -14,7 +14,6 @@ public class BoardUpdateDto extends BaseEntity {
     @Column(name = "board_id")
     private Long boardId;
     private User user;
-    @Column(name = "category_id")
     private int categoryId;
     private String title;
     private String contents;

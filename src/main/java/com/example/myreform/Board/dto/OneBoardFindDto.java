@@ -21,8 +21,8 @@ public class OneBoardFindDto {
     private Long boardId;
     private Long userId;
     private String nickname;
-    @Column(name = "category_id")
-    private Integer categoryId;
+
+    private List<Integer> categoryId;
     private String title;
     private String contents;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -31,11 +31,10 @@ public class OneBoardFindDto {
     private List<String> images;
 
     @Builder
-    public OneBoardFindDto(Long boardId, User user, Integer categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price) {
+    public OneBoardFindDto(Long boardId, User user, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price) {
         this.boardId = boardId;
         this.userId = user.getUserId();
         this.nickname = user.getNickname();
-        this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
         this.updateAt = updateAt;

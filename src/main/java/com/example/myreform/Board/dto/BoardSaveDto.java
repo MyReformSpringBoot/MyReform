@@ -7,6 +7,7 @@ import com.example.myreform.config.BaseEntity;
 import lombok.*;
 
 import javax.persistence.Column;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,8 +16,7 @@ import javax.persistence.Column;
 public class BoardSaveDto extends BaseEntity {
 
     private User user;
-    @Column(name = "category_id")
-    private Integer categoryId;
+    private List<Integer> categoryId;//배열 저장을 위해 List로 만듬
     private String title;
     private String contents;
     private Integer price;
@@ -24,7 +24,6 @@ public class BoardSaveDto extends BaseEntity {
     public Board toEntity() {
         Board board = Board.builder()
                 .user(user)
-                .categoryId(categoryId)
                 .title(title)
                 .contents(contents)
                 .price(price)
@@ -33,7 +32,7 @@ public class BoardSaveDto extends BaseEntity {
     }
 
     @Builder
-    public BoardSaveDto(User user, Integer categoryId, String title, String contents, Integer price) {
+    public BoardSaveDto(User user, List<Integer> categoryId, String title, String contents, Integer price) {
         this.user = user;
         this.categoryId = categoryId;
         this.title = title;
