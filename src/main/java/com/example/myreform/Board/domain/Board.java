@@ -36,6 +36,7 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
+    @Transient
     private Integer categoryId;//조회를 위해
 
     // 연관관계 편의 메서드
