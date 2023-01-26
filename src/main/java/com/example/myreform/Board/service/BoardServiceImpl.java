@@ -241,8 +241,12 @@ public class BoardServiceImpl implements BoardService {
             return boardPage;
         }
         // 카테고리 설정 후 검색을 진행할 때
-
-        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1,  keyword, pageRequest);
+        Page<BoardCategory> boardCategoryPage = boardCategoryRepository.findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc
+                (lastBoardId, categoryId, keyword,1, pageRequest);
+        Page<Board> boardPage = new PageImpl<>(boardCategoryPage.stream()
+                .map(x -> x.getBoard())
+                .collect(Collectors.toList()));
+        return boardPage;
     }
 
     public List<Integer> getCategoryId(Long boardId) {
