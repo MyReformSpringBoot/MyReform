@@ -247,8 +247,6 @@ public class BoardServiceImpl implements BoardService {
             exceptionCode = ExceptionCode.IMAGE_NOT_FOUND;
             return new ResponseBoardEmpty(exceptionCode);
         }
-
-
         return new ResponseBoard(exceptionCode,boardImageFindDto);
     }
 
