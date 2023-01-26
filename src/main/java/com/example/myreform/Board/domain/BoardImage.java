@@ -20,16 +20,17 @@ public class BoardImage {
     @Column(name = "board_image_id")
     private long boardImageId;
 
-    @Column(name = "board_id")
-    private Long boardId;
+    @ManyToOne()
+    @JoinColumn(name = "board_id")
+    private Board board;
     @ManyToOne(cascade = CascadeType.ALL)//부모 객체에서 자식 객체를 바인딩하여 한번에 저장하려는데 자식 객체가 아직 데이터 베이스에 저장되지 않았기 때문에 error발생 가능 => 따라서  cascade 옵션을 추가
     @JoinColumn(name = "image_id")
     private Image image;
 
     @Builder
-    public BoardImage(long boardImageId, Long boardId, Image image){
+    public BoardImage(long boardImageId, Board board, Image image){
         this.boardImageId = boardImageId;
-        this.boardId = boardId;
+        this.board = board;
         this.image = image;
     }
 
@@ -41,7 +42,7 @@ public class BoardImage {
 
     public BoardImageFindDto toBoardImageFindDto() {
         return BoardImageFindDto.builder()
-                .boardId(boardId)
+                .boardId(board.getBoardId())
                 .imageURL(image.getImageURL())
                 .build();
     }

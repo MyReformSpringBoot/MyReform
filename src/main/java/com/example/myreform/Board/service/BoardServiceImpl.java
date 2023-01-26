@@ -103,7 +103,7 @@ public class BoardServiceImpl implements BoardService {
         }
         boardCategoryRepository.saveAllAndFlush(boardCategories);
 
-        List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
         deleteBoardImages(boardImages);
 
         try {
@@ -115,7 +115,7 @@ public class BoardServiceImpl implements BoardService {
 
         List<Integer> categoryId = boardUpdateDto.getCategoryId();
 
-        boardImages = boardImageRepository.findAllByBoardId(boardId);
+        boardImages = boardImageRepository.findAllByBoard(board);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
@@ -140,7 +140,7 @@ public class BoardServiceImpl implements BoardService {
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
         boardCategoryRepository.deleteAll(boardCategories);
 
-        List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
         deleteBoardImages(boardImages);
         return new ResponseBoardEmpty(ExceptionCode.BOARD_DELETE_OK);
     }
@@ -155,7 +155,7 @@ public class BoardServiceImpl implements BoardService {
         List<Integer> categoryId = boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
                 .map(x -> x.getCategory().getCategoryId())
                 .collect(Collectors.toList());
-        List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
@@ -181,12 +181,12 @@ public class BoardServiceImpl implements BoardService {
 
     List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files) throws Exception{
         List<Image> imageList = imageUploadHandler.parseImageInfo(boardId, files);
-
+        Board board = boardRepository.findById(boardId).get();
         List<BoardImage> boardImages = new ArrayList<>();
         for(Image image : imageList){
             BoardImage boardImage = BoardImage.builder()
                     .image(image)
-                    .boardId(boardId)
+                    .board(board)
                     .build();
             boardImages.add(boardImage);
         }
@@ -197,6 +197,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
+        System.out.println("boards.getContent().get(0) = " + boards.getContent().get(0).getBoardImages().get(0).getImage().getImageURL());
         List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream()
                 .map((x) -> x.toAllBoardFindDto(getCategoryId(x.getBoardId())))
                 .collect(Collectors.toList());
@@ -206,18 +207,10 @@ public class BoardServiceImpl implements BoardService {
             exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
             return new ResponseBoardEmpty(exceptionCode);
         }
-        for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
-            Long boardId = allBoardFindDto.getBoardId();
-
-            List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
-            for(BoardImage boardImage : boardImages){
-                if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
-                    ImageFindDto oneImageFindDto = boardImage.getImage().toOneImageFindDto();
-                    allBoardFindDto.setImageUrl(oneImageFindDto.getImageURL());
-                    break;
-                }
-            }
-        }
+//        for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
+//            Long boardId = allBoardFindDto.getBoardId();
+//            List<BoardImage> boardImages = boardImageRepository.findAllByBoard(boardId);
+//        }
         return new ResponseBoard(exceptionCode,allBoardFindDtos);
     }
 
@@ -265,10 +258,10 @@ public class BoardServiceImpl implements BoardService {
         if(allBoardFindDtos.isEmpty()){
             return boardImageFindDtos;
         }
-        for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
-            Long boardId = allBoardFindDto.getBoardId();
-            List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
-        }
+//        for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
+//            Long boardId = allBoardFindDto.getBoardId();
+//            List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
+//        }
         return boardImageFindDtos;
     }
     public List<BoardImageFindDto> fetchBoardPagesByForImages(Long lastBoardId, int size, Integer categoryId, String keyword) {

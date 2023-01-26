@@ -21,17 +21,23 @@ public class AllBoardFindDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
     private Integer price;
-    //    private OneImageFindDto oneImageFindDto; // 빌드할 때에는 해당 데이터 x
-    private String imageUrl;
+
+    // user
+    private String nickname;
+
+    // image
+    private List<String> imageUrl;
 
 
     @Builder
-    public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title,String contents, LocalDateTime updateAt, Integer price) {
+    public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title,String contents, LocalDateTime updateAt, Integer price, String nickname, List<String> imageUrl) {
         this.boardId = boardId;
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
         this.updateAt = updateAt;
         this.price = price;
+        this.nickname = nickname;
+        this.imageUrl = imageUrl;
     }
 }

@@ -10,7 +10,9 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity(name = "board")
 @Getter
@@ -37,12 +39,8 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
-
-    // 연관관계 편의 메서드
-    public void confirmUser(User user) {
-        this.user = user;
-        // 유저 게시글 추가
-    }
+    @OneToMany(mappedBy = "board")
+    private List<BoardImage> boardImages = new ArrayList<>();
 
     public void delete() {
         super.delete();
@@ -78,6 +76,10 @@ public class Board extends BaseEntity {
                 .contents(contents)
                 .updateAt(getUpdateAt())
                 .price(price)
+                .nickname(user.getNickname())
+                .imageUrl(boardImages.stream()
+                        .map(x -> x.getImage().toOneImageFindDto().getImageURL())
+                        .collect(Collectors.toList()))
                 .build();
     }
 
