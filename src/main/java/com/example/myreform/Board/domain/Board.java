@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity(name = "board")
 @Getter
@@ -35,8 +36,6 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
-    @Transient
-    private Integer categoryId;//조회를 위해
 
     // 연관관계 편의 메서드
     public void confirmUser(User user) {
@@ -60,17 +59,17 @@ public class Board extends BaseEntity {
     }
 
     @Builder
-    public Board(Long boardId, User user, Integer categoryId, String title, String contents, Integer price){
+    public Board(Long boardId, User user, String title, String contents, Integer price){
         this.boardId = boardId;
         this.user = user;
-        this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
         this.price = price;
     }
 
-    public AllBoardFindDto toAllBoardFindDto() {
+    public AllBoardFindDto toAllBoardFindDto(List<Integer> categoryId) {
         return AllBoardFindDto.builder()
+                .categoryId(categoryId)
                 .boardId(boardId)
                 .title(title)
                 .contents(contents)

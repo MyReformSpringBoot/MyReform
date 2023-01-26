@@ -29,10 +29,11 @@ public class OneBoardFindDto {
     private List<String> imageUrls;
 
     @Builder
-    public OneBoardFindDto(Long boardId, User user, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price, List<String> imageUrls) {
+    public OneBoardFindDto(Long boardId, User user, List<Integer> categoryId, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price, List<String> imageUrls) {
         this.boardId = boardId;
         this.userId = user.getUserId();
         this.nickname = user.getNickname();
+        this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
         this.updateAt = updateAt;

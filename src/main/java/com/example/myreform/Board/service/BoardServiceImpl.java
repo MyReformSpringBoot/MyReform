@@ -199,7 +199,9 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
-        List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream().map((x) -> x.toAllBoardFindDto()).collect(Collectors.toList());
+        List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream()
+                .map((x) -> x.toAllBoardFindDto(getCategoryId(x.getBoardId())))
+                .collect(Collectors.toList());
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
 
         if (allBoardFindDtos.isEmpty()) {
@@ -208,8 +210,6 @@ public class BoardServiceImpl implements BoardService {
         }
         for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
             Long boardId = allBoardFindDto.getBoardId();
-            allBoardFindDto.setCategoryId(boardCategoryRepository.findAllByBoardId(boardId).stream()
-                    .map(x->x.getCategory().getCategoryId()).collect(Collectors.toList()));
             List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
             for(BoardImage boardImage : boardImages){
                 if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
@@ -235,10 +235,10 @@ public class BoardServiceImpl implements BoardService {
         }
         if (keyword == null) { // 검색을 안하고 카테고리만 찾아볼 때
 
-            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsOrderByBoardIdDesc(lastBoardId, 1, categoryId, pageRequest);
+            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
         }
         // 카테고리 설정 후 검색을 진행할 때
-        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndCategoryIdEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, categoryId.intValue(), keyword, pageRequest);
+        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1,  keyword, pageRequest);
     }
 
 
@@ -277,8 +277,17 @@ public class BoardServiceImpl implements BoardService {
     }
     public List<BoardImageFindDto> fetchBoardPagesByForImages(Long lastBoardId, int size, Integer categoryId, String keyword) {
         Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
-        List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream().map((x) -> x.toAllBoardFindDto()).collect(Collectors.toList());
+        List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream()
+                .map((x) -> x.toAllBoardFindDto(getCategoryId(x.getBoardId())))
+                .collect(Collectors.toList());
 
         return getRepresentativeImages(allBoardFindDtos);
+    }
+
+    public List<Integer> getCategoryId(Long boardId) {
+        return boardCategoryRepository.findAllByBoardId(boardId).stream()
+                .map(x ->
+                        x.getCategory().getCategoryId())
+                .collect(Collectors.toList());
     }
 }
