@@ -59,10 +59,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
-        Board board = boardSaveDto.toEntity();
-
         user = userRepository.findById(user.getUserId()).get();
-        board.confirmUser(user);
+        Board board = boardSaveDto.toEntity(user);
 
         List<BoardCategory> boardCategories = new ArrayList<>();
         for (Integer i : boardSaveDto.getCategoryId()) {
@@ -93,9 +91,8 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_UPDATE_INVALID);
         }
 
-        Board board = boardUpdateDto.ToEntity(boardId);
-        board.confirmUser(user);
-//        boardRepository.save(board);
+        Board board = boardOptional.get();
+        board.update(boardUpdateDto);
 
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
         boardCategoryRepository.deleteAll(boardCategories);

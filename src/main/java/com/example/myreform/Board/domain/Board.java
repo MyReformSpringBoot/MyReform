@@ -1,6 +1,7 @@
 package com.example.myreform.Board.domain;
 
 import com.example.myreform.Board.dto.AllBoardFindDto;
+import com.example.myreform.Board.dto.BoardUpdateDto;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.config.BaseEntity;
 import com.example.myreform.Board.dto.OneBoardFindDto;
@@ -76,5 +77,11 @@ public class Board extends BaseEntity {
                 .updateAt(getUpdateAt())
                 .price(price)
                 .build();
+    }
+
+    public void update(BoardUpdateDto boardUpdateDto) {
+        this.title = boardUpdateDto.getTitle();
+        this.contents = boardUpdateDto.getContents();
+        this.price = boardUpdateDto.getPrice();
     }
 }

@@ -15,13 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 public class BoardSaveDto extends BaseEntity {
 
-    private User user;
     private List<Integer> categoryId;//배열 저장을 위해 List로 만듬
     private String title;
     private String contents;
     private Integer price;
 
-    public Board toEntity() {
+    public Board toEntity(User user) {
         Board board = Board.builder()
                 .user(user)
                 .title(title)
@@ -32,8 +31,7 @@ public class BoardSaveDto extends BaseEntity {
     }
 
     @Builder
-    public BoardSaveDto(User user, List<Integer> categoryId, String title, String contents, Integer price) {
-        this.user = user;
+    public BoardSaveDto(List<Integer> categoryId, String title, String contents, Integer price) {
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
