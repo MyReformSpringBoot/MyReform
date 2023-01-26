@@ -16,10 +16,7 @@ public interface BoardService {
     Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception;
     Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) throws JsonProcessingException;
     Object delete(Long boardId, User user);
-
     Object getOneBoard(Long boardId);
-
     Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword);
-    Object getAllImages( Long lastBoardId, int size, Integer categoryId, String keyword);
 
 }
