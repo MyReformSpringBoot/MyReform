@@ -268,12 +268,6 @@ public class BoardServiceImpl implements BoardService {
         for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
             Long boardId = allBoardFindDto.getBoardId();
             List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
-            for(BoardImage boardImage : boardImages){
-                if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
-                    boardImageFindDtos.add(boardImage.toBoardImageFindDto());
-                    break;
-                }
-            }
         }
         return boardImageFindDtos;
     }
@@ -288,8 +282,7 @@ public class BoardServiceImpl implements BoardService {
 
     public List<Integer> getCategoryId(Long boardId) {
         return boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
-                .map(x ->
-                        x.getCategory().getCategoryId())
+                .map(x -> x.getCategory().getCategoryId())
                 .collect(Collectors.toList());
     }
 }

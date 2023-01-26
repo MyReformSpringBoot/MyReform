@@ -52,14 +52,14 @@ public class ImageUploadHandler {
             // mkdir() 함수와 다른 점은 상위 디렉토리가 존재하지 않을 때 그것까지 생성
             file.mkdirs();
         }
-        boolean first = true;
+
         for (MultipartFile multipartFile : multipartFiles) {
             // 파일이 비어 있지 않을 때 작업을 시작해야 오류가 나지 않는다
             if (!multipartFile.isEmpty()) {
                 // jpeg, png 파일들만 받아서 처리할 예정
                 String contentType = multipartFile.getContentType();
                 String originalFileExtension;
-                // 확장자 명이 없으면 이 파일은 잘 못 된 것이다
+                // 확장자 명이 없으면 이 파일은 잘 못 된 것
                 if (ObjectUtils.isEmpty(contentType)) {
                     break;
                 } else {
@@ -68,7 +68,7 @@ public class ImageUploadHandler {
                     } else if (contentType.contains("image/png")) {
                         originalFileExtension = ".png";
                     }
-                    // 다른 파일 명이면 아무 일 하지 않는다
+                    // 다른 파일 명이면 아무 일 하지 않음
                     else {
                         break;
                     }
@@ -77,13 +77,8 @@ public class ImageUploadHandler {
                 // 각 이름은 겹치면 안되므로 uuid(경로에 포함)
                 String imageName;
                 String uuid = UUID.randomUUID().toString();
-                if(first){//대표이미지
-                    imageName = "first-" +uuid + originalFileExtension;
-                    first = false;
-                }
-                else{
-                    imageName = uuid + originalFileExtension;
-                }
+                imageName = uuid + originalFileExtension;
+
                 // 생성 후 리스트에 추가
                 Image image = Image.builder()
                         .imageURL(path+"/"+imageName)
