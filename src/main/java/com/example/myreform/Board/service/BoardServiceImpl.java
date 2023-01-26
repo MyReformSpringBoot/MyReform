@@ -67,7 +67,7 @@ public class BoardServiceImpl implements BoardService {
 
         List<BoardCategory> boardCategories = new ArrayList<>();
         for (Integer i : boardSaveDto.getCategoryId()) {
-            boardCategories.add(new BoardCategory(board.getBoardId(), categoryRepository.findByCategoryId(i)));
+            boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(i)));
         }
 
         boardCategoryRepository.saveAll(boardCategories);
@@ -99,12 +99,12 @@ public class BoardServiceImpl implements BoardService {
         board.confirmUser(user);
         boardRepository.save(board);
 
-        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoardId(boardId);
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
         boardCategoryRepository.deleteAll(boardCategories);
         boardCategoryRepository.flush();
         boardCategories.clear();
         for (Integer i : boardUpdateDto.getCategoryId()) {
-            boardCategories.add(new BoardCategory(board.getBoardId(), categoryRepository.findByCategoryId(i)));
+            boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(i)));
         }
         boardCategoryRepository.saveAllAndFlush(boardCategories);
 
@@ -142,7 +142,7 @@ public class BoardServiceImpl implements BoardService {
         }
         board.delete(); // status만 수정
 
-        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoardId(boardId);
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
         boardCategoryRepository.deleteAll(boardCategories);
 
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
@@ -285,7 +285,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     public List<Integer> getCategoryId(Long boardId) {
-        return boardCategoryRepository.findAllByBoardId(boardId).stream()
+        return boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
                 .map(x ->
                         x.getCategory().getCategoryId())
                 .collect(Collectors.toList());

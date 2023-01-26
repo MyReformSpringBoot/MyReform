@@ -3,6 +3,7 @@ package com.example.myreform.Board.domain;
 
 import com.example.myreform.Board.category.Category;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,15 +19,17 @@ public class BoardCategory {
     @Column(name = "board_category_id")
     private Long boardCategoryId;
 
-    @Column(name = "board_id")
-    private Long boardId;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public BoardCategory(Long boardId, Category category){
-        this.boardId = boardId;
+    @Builder
+    public BoardCategory(Board board, Category category){
+        this.board = board;
         this.category = category;
     }
 
