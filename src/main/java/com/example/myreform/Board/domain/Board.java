@@ -7,7 +7,6 @@ import com.example.myreform.Board.dto.OneBoardFindDto;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -49,7 +48,7 @@ public class Board extends BaseEntity {
         super.delete();
     }
 
-    public OneBoardFindDto toFindDto() {
+    public OneBoardFindDto toOneBoardFindDto() {
         return OneBoardFindDto.builder()
                 .boardId(boardId)
                 .user(user)

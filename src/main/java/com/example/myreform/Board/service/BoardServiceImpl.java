@@ -15,7 +15,6 @@ import com.example.myreform.Image.controller.ImageUploadHandler;
 import com.example.myreform.Board.repository.BoardImageRepository;
 import com.example.myreform.Board.repository.BoardRepository;
 import com.example.myreform.Image.dto.ImageFindDto;
-import com.example.myreform.Image.repository.ImageRepository;
 
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
@@ -75,13 +74,13 @@ public class BoardServiceImpl implements BoardService {
 
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
 
-        OneBoardFindDto oneBoardFindDto = board.toFindDto();
+        OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto();
         oneBoardFindDto.setCategoryId(boardSaveDto.getCategoryId());
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
                 .collect(Collectors.toList());
-        oneBoardFindDto.setImages(imageUrls);
+        oneBoardFindDto.setImageUrls(imageUrls);
         return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, oneBoardFindDto);
     }
 
@@ -118,7 +117,7 @@ public class BoardServiceImpl implements BoardService {
             System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
         }
-        OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toFindDto();
+        OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toOneBoardFindDto();
         oneBoardFindDto.setCategoryId(boardUpdateDto.getCategoryId());
         
         boardImages = boardImageRepository.findAllByBoardId(boardId);
@@ -126,7 +125,7 @@ public class BoardServiceImpl implements BoardService {
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
                 .collect(Collectors.toList());
-        oneBoardFindDto.setImages(imageUrls);
+        oneBoardFindDto.setImageUrls(imageUrls);
 
         return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, oneBoardFindDto);
     }
@@ -148,7 +147,6 @@ public class BoardServiceImpl implements BoardService {
 
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         deleteBoardImages(boardImages);
-        boardRepository.save(board);
         return new ResponseBoardEmpty(ExceptionCode.BOARD_DELETE_OK);
     }
 
@@ -158,13 +156,13 @@ public class BoardServiceImpl implements BoardService {
         if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
         }
-        OneBoardFindDto oneBoardFindDto = boardOptional.get().toFindDto();
+        OneBoardFindDto oneBoardFindDto = boardOptional.get().toOneBoardFindDto();
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
                 .collect(Collectors.toList());
-        oneBoardFindDto.setImages(imageUrls);
+        oneBoardFindDto.setImageUrls(imageUrls);
 
         return new ResponseBoard(ExceptionCode.BOARD_GET_OK, oneBoardFindDto);
     }

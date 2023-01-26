@@ -1,9 +1,7 @@
 package com.example.myreform.Board.dto;
 
 
-import com.example.myreform.Image.dto.ImageFindDto;
 import com.example.myreform.User.domain.User;
-import com.example.myreform.User.dto.UserFindDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -28,10 +26,10 @@ public class OneBoardFindDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
     private Integer price;
-    private List<String> images;
+    private List<String> imageUrls;
 
     @Builder
-    public OneBoardFindDto(Long boardId, User user, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price) {
+    public OneBoardFindDto(Long boardId, User user, String title, String contents, LocalDateTime createAt, LocalDateTime updateAt, int status, Integer price, List<String> imageUrls) {
         this.boardId = boardId;
         this.userId = user.getUserId();
         this.nickname = user.getNickname();
@@ -39,5 +37,6 @@ public class OneBoardFindDto {
         this.contents = contents;
         this.updateAt = updateAt;
         this.price = price;
+        this.imageUrls = imageUrls;
     }
 }
