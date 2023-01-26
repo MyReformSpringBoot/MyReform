@@ -20,6 +20,5 @@ public interface BoardService {
     Object getOneBoard(Long boardId);
 
     Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword);
-    Object getAllImages( Long lastBoardId, int size, Integer categoryId, String keyword);
 
 }

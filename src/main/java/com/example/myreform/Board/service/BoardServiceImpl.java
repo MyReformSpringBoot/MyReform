@@ -241,43 +241,8 @@ public class BoardServiceImpl implements BoardService {
             return boardPage;
         }
         // 카테고리 설정 후 검색을 진행할 때
-        //수정필요..
+
         return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1,  keyword, pageRequest);
-    }
-
-
-
-    //이미지 URL만 return하기 위한 method들
-
-    public Object getAllImages(Long lastBoardId, int size, Integer categoryId, String keyword){
-        List<BoardImageFindDto> boardImageFindDto = fetchBoardPagesByForImages(lastBoardId, size, categoryId, keyword);
-        ExceptionCode exceptionCode = ExceptionCode.IMAGE_GET_OK;
-
-        if (boardImageFindDto.isEmpty()) {
-            exceptionCode = ExceptionCode.IMAGE_NOT_FOUND;
-            return new ResponseBoardEmpty(exceptionCode);
-        }
-        return new ResponseBoard(exceptionCode,boardImageFindDto);
-    }
-
-    public List<BoardImageFindDto> getRepresentativeImages(List<AllBoardFindDto> allBoardFindDtos){
-        List<BoardImageFindDto> boardImageFindDtos = new ArrayList<>();
-        if(allBoardFindDtos.isEmpty()){
-            return boardImageFindDtos;
-        }
-        for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
-            Long boardId = allBoardFindDto.getBoardId();
-            List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
-        }
-        return boardImageFindDtos;
-    }
-    public List<BoardImageFindDto> fetchBoardPagesByForImages(Long lastBoardId, int size, Integer categoryId, String keyword) {
-        Page<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
-        List<AllBoardFindDto> allBoardFindDtos = boards.getContent().stream()
-                .map((x) -> x.toAllBoardFindDto(getCategoryId(x.getBoardId())))
-                .collect(Collectors.toList());
-
-        return getRepresentativeImages(allBoardFindDtos);
     }
 
     public List<Integer> getCategoryId(Long boardId) {
