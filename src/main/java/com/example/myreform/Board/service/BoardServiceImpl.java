@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -233,10 +234,11 @@ public class BoardServiceImpl implements BoardService {
             return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, keyword, pageRequest);
         }
         if (keyword == null) { // 검색을 안하고 카테고리만 찾아볼 때
-            List<Long> boards = boardCategoryRepository.findAllByCategory_CategoryIdOrderByBoardDesc(categoryId).stream()
-                    .map(x->x.getBoard().getBoardId()).collect(Collectors.toList());
-            return boardRepository.findAllByBoardIdLessThanAndBoardIdInOrderByBoardIdDesc(lastBoardId, boards, pageRequest);
-
+            Page<BoardCategory> boardCategoryPage = boardCategoryRepository.findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, 1, pageRequest);
+            Page<Board> boardPage = new PageImpl<>(boardCategoryPage.stream()
+                    .map(x -> x.getBoard())
+                    .collect(Collectors.toList()));
+            return boardPage;
         }
         // 카테고리 설정 후 검색을 진행할 때
         //수정필요..
