@@ -11,5 +11,7 @@ import java.util.List;
 @Repository
 public interface BoardCategoryRepository extends JpaRepository<BoardCategory, Long> {
     List<BoardCategory> findAllByBoard_BoardId(Long boardId);
-    Page<BoardCategory> findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(Long lastBoardId, Integer categoryId, int status, PageRequest pageRequest);//, PageRequest pageRequest
+    Page<BoardCategory> findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(Long lastBoardId, Integer categoryId, int status, PageRequest pageRequest);
+
+    Page<BoardCategory> findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc(Long lastBoardId, Integer categoryId,String keyword, int status, PageRequest pageRequest);
 }

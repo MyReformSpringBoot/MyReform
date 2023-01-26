@@ -201,15 +201,11 @@ public class BoardServiceImpl implements BoardService {
                 .map((x) -> x.toAllBoardFindDto(getCategoryId(x.getBoardId())))
                 .collect(Collectors.toList());
         ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
-
         if (allBoardFindDtos.isEmpty()) {
             exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
             return new ResponseBoardEmpty(exceptionCode);
         }
-//        for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
-//            Long boardId = allBoardFindDto.getBoardId();
-//            List<BoardImage> boardImages = boardImageRepository.findAllByBoard(boardId);
-//        }
+
         return new ResponseBoard(exceptionCode,allBoardFindDtos);
     }
 
@@ -233,8 +229,13 @@ public class BoardServiceImpl implements BoardService {
             return boardPage;
         }
         // 카테고리 설정 후 검색을 진행할 때
-        //수정필요..
-        return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1,  keyword, pageRequest);
+        Page<BoardCategory> boardCategoryPage = boardCategoryRepository.findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc
+                (lastBoardId, categoryId, keyword,1, pageRequest);
+        Page<Board> boardPage = new PageImpl<>(boardCategoryPage.stream()
+                .map(x -> x.getBoard())
+                .collect(Collectors.toList()));
+        return boardPage;
+
     }
 
     public List<Integer> getCategoryId(Long boardId) {
