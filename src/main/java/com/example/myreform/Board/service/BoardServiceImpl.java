@@ -63,13 +63,11 @@ public class BoardServiceImpl implements BoardService {
 
         user = userRepository.findById(user.getUserId()).get();
         board.confirmUser(user);
-        boardRepository.save(board);
 
         List<BoardCategory> boardCategories = new ArrayList<>();
         for (Integer i : boardSaveDto.getCategoryId()) {
             boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(i)));
         }
-
         boardCategoryRepository.saveAll(boardCategories);
 
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
@@ -97,7 +95,7 @@ public class BoardServiceImpl implements BoardService {
 
         Board board = boardUpdateDto.ToEntity(boardId);
         board.confirmUser(user);
-        boardRepository.save(board);
+//        boardRepository.save(board);
 
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
         boardCategoryRepository.deleteAll(boardCategories);
