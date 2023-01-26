@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -110,7 +111,9 @@ public class BoardServiceImpl implements BoardService {
             System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
         }
+
         List<Integer> categoryId = boardUpdateDto.getCategoryId();
+
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
@@ -204,6 +207,7 @@ public class BoardServiceImpl implements BoardService {
         }
         for (AllBoardFindDto allBoardFindDto: allBoardFindDtos) {
             Long boardId = allBoardFindDto.getBoardId();
+
             List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
             for(BoardImage boardImage : boardImages){
                 if(boardImage.getImage().getImageURL().contains("first")){//first들어간게 대표이미지
@@ -221,6 +225,7 @@ public class BoardServiceImpl implements BoardService {
             lastBoardId = boardRepository.count() + 1;
         }
         PageRequest pageRequest = PageRequest.of(0, size);
+        Pageable pageable = PageRequest.of(0, size);
         if (Optional.ofNullable(categoryId).isEmpty() && keyword == null) { // 카테고리나 검색안할 때
             return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
         }
@@ -228,10 +233,13 @@ public class BoardServiceImpl implements BoardService {
             return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, keyword, pageRequest);
         }
         if (keyword == null) { // 검색을 안하고 카테고리만 찾아볼 때
+            List<Long> boards = boardCategoryRepository.findAllByCategory_CategoryIdOrderByBoardDesc(categoryId).stream()
+                    .map(x->x.getBoard().getBoardId()).collect(Collectors.toList());
+            return boardRepository.findAllByBoardIdLessThanAndBoardIdInOrderByBoardIdDesc(lastBoardId, boards, pageRequest);
 
-            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
         }
         // 카테고리 설정 후 검색을 진행할 때
+        //수정필요..
         return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1,  keyword, pageRequest);
     }
 

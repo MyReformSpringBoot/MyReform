@@ -15,7 +15,7 @@ public class AllBoardFindDto {
 
     @Column(name = "board_id")
     private Long boardId;
-    private List<Integer> categoryId;//조회를 위해
+    private List<Integer> categoryId;
     private String title;
     private String contents;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
