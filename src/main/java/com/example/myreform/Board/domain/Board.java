@@ -48,9 +48,10 @@ public class Board extends BaseEntity {
         super.delete();
     }
 
-    public OneBoardFindDto toOneBoardFindDto() {
+    public OneBoardFindDto toOneBoardFindDto(List<Integer> categoryId, List<String> imageUrls) {
         return OneBoardFindDto.builder()
                 .boardId(boardId)
+                .categoryId(categoryId)
                 .user(user)
                 .title(title)
                 .contents(contents)

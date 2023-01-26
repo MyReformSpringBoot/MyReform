@@ -36,7 +36,7 @@ class boardServiceImplTest {
         String contents = "내용";
         Integer price = 10000;
 
-        BoardSaveDto postSaveDto = new BoardSaveDto(user, category_id, title, contents, price);
+        BoardSaveDto postSaveDto = new BoardSaveDto(category_id, title, contents, price);
         //이미지 어떻게 테스트 케이스로 넣어야할지 몰라서 주석처리함 => postman으로 테스트 진행함
         //postService.save(user, postSaveDto, );
         em.flush();

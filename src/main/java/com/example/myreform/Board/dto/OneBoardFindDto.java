@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor
 public class OneBoardFindDto {

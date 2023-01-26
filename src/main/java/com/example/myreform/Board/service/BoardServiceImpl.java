@@ -69,14 +69,12 @@ public class BoardServiceImpl implements BoardService {
         boardCategoryRepository.saveAll(boardCategories);
 
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
-
-        OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto();
-        oneBoardFindDto.setCategoryId(boardSaveDto.getCategoryId());
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
                 .collect(Collectors.toList());
-        oneBoardFindDto.setImageUrls(imageUrls);
+        OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto(boardSaveDto.getCategoryId(), imageUrls);
+
         return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, oneBoardFindDto);
     }
 
@@ -112,15 +110,13 @@ public class BoardServiceImpl implements BoardService {
             System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
         }
-        OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toOneBoardFindDto();
-        oneBoardFindDto.setCategoryId(boardUpdateDto.getCategoryId());
-        
+        List<Integer> categoryId = boardUpdateDto.getCategoryId();
         boardImages = boardImageRepository.findAllByBoardId(boardId);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
                 .collect(Collectors.toList());
-        oneBoardFindDto.setImageUrls(imageUrls);
+        OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toOneBoardFindDto(categoryId, imageUrls);
 
         return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, oneBoardFindDto);
     }
@@ -151,13 +147,16 @@ public class BoardServiceImpl implements BoardService {
         if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
         }
-        OneBoardFindDto oneBoardFindDto = boardOptional.get().toOneBoardFindDto();
+        Board board = boardOptional.get();
+        List<Integer> categoryId = boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
+                .map(x -> x.getCategory().getCategoryId())
+                .collect(Collectors.toList());
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
                 .collect(Collectors.toList());
-        oneBoardFindDto.setImageUrls(imageUrls);
+        OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto(categoryId, imageUrls);
 
         return new ResponseBoard(ExceptionCode.BOARD_GET_OK, oneBoardFindDto);
     }

@@ -2,6 +2,7 @@ package com.example.myreform.Board.domain;
 
 
 import com.example.myreform.Board.category.Category;
+import com.example.myreform.Board.dto.OneBoardFindDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,5 +31,4 @@ public class BoardCategory {
         this.board = board;
         this.category = category;
     }
-
 }

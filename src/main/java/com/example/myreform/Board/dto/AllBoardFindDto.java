@@ -15,7 +15,6 @@ public class AllBoardFindDto {
 
     @Column(name = "board_id")
     private Long boardId;
-
     private List<Integer> categoryId;//조회를 위해
     private String title;
     private String contents;
