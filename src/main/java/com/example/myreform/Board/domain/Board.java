@@ -57,6 +57,7 @@ public class Board extends BaseEntity {
                 .contents(contents)
                 .price(price)
                 .updateAt(super.getUpdateAt())
+                .imageUrls(imageUrls)
                 .build();
     }
 
