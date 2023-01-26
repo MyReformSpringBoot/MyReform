@@ -236,11 +236,10 @@ public class BoardServiceImpl implements BoardService {
             List<Long> boards = boardCategoryRepository.findAllByCategory_CategoryIdOrderByBoardDesc(categoryId).stream()
                     .map(x->x.getBoard().getBoardId()).collect(Collectors.toList());
             return boardRepository.findAllByBoardIdLessThanAndBoardIdInOrderByBoardIdDesc(lastBoardId, boards, pageRequest);
-//            List<Long> boardIds = boardCategoryRepository.findAllByCategory_CategoryIdOrderByBoardDesc(categoryId, pageRequest).getContent().stream().map(x->x.getBoard().getBoardId()).collect(Collectors.toList());
-//            System.out.println(boardIds);
-//            return boardRepository.findAllByBoardIdInOrderByBoardIdDesc(boardIds,pageRequest);
+
         }
         // 카테고리 설정 후 검색을 진행할 때
+        //수정필요..
         return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1,  keyword, pageRequest);
     }
 

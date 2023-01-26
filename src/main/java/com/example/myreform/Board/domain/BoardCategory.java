@@ -4,6 +4,7 @@ package com.example.myreform.Board.domain;
 import com.example.myreform.Board.category.Category;
 import com.example.myreform.Board.dto.OneBoardFindDto;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import javax.persistence.*;
 
