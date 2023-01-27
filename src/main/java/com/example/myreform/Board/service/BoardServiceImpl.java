@@ -69,12 +69,8 @@ public class BoardServiceImpl implements BoardService {
             boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(categoryId)));
         }
         boardCategoryRepository.saveAll(boardCategories);
-
-        List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board, files));
-        List<String> imageUrls = getUrlString(boardImages);
-        OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto(boardSaveDto.getCategoryId(), imageUrls);
-
-        return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, oneBoardFindDto);
+        boardImageRepository.saveAll(saveBoardImage(board, files));
+        return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, board.toOneBoardFindDto());
     }
 
     @Override

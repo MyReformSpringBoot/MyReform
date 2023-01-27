@@ -78,6 +78,19 @@ public class Board extends BaseEntity {
                 .build();
     }
 
+    public OneBoardFindDto toOneBoardFindDto() {
+        return OneBoardFindDto.builder()
+                .boardId(boardId)
+                .categoryId(getCategoryId())
+                .user(user)
+                .title(title)
+                .contents(contents)
+                .price(price)
+                .updateAt(super.getUpdateAt())
+                .imageUrls(getUrlString())
+                .build();
+    }
+
     public AllBoardFindDto toAllBoardFindDto(List<Integer> categoryId) {
         return AllBoardFindDto.builder()
                 .categoryId(categoryId)
@@ -97,5 +110,17 @@ public class Board extends BaseEntity {
         this.title = boardUpdateDto.getTitle();
         this.contents = boardUpdateDto.getContents();
         this.price = boardUpdateDto.getPrice();
+    }
+
+    private List<String> getUrlString() {
+        return boardImages.stream()
+                .map(x -> x.toImageFindDto().getImageURL())
+                .collect(Collectors.toList());
+    }
+
+    private List<Integer> getCategoryId() {
+        return boardCategories.stream()
+                .map(x -> x.getCategory().getCategoryId())
+                .collect(Collectors.toList());
     }
 }

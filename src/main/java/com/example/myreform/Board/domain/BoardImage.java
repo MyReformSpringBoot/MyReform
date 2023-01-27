@@ -31,6 +31,7 @@ public class BoardImage {
     public BoardImage(long boardImageId, Board board, Image image){
         this.boardImageId = boardImageId;
         this.board = board;
+        board.getBoardImages().add(this);
         this.image = image;
     }
 

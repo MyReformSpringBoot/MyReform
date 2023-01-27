@@ -27,7 +27,9 @@ public class BoardCategory {
     @Builder
     public BoardCategory(Board board, Category category){
         this.board = board;
+        board.getBoardCategories().add(this);
         this.category = category;
+        category.getBoardCategories().add(this);
     }
 
     // 연관관계 편의 메서드, 수정 시 사용
