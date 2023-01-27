@@ -1,5 +1,6 @@
 package com.example.myreform.User.domain;
 
+import com.example.myreform.Board.domain.Board;
 import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.config.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,6 +8,8 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -44,6 +47,8 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    List<Board> board = new ArrayList<>();
 
     @Builder
     public User(Long userId, String id, String pw, String nickname, String email,

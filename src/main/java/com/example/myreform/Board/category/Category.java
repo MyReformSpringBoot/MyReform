@@ -1,10 +1,13 @@
 package com.example.myreform.Board.category;
 
+import com.example.myreform.Board.domain.BoardCategory;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)//access 속성을 이용해서 동일한 패키지 내의 클래스에서만 객체를 생성할 수 있도록 제어합니다.
@@ -18,4 +21,7 @@ public class Category {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "category")
+    List<BoardCategory> boardCategories = new ArrayList<>();
 }

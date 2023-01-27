@@ -42,6 +42,9 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board")
     private List<BoardImage> boardImages = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board")
+    private List<BoardCategory> boardCategories = new ArrayList<>();
+
     public void delete() {
         super.delete();
     }
