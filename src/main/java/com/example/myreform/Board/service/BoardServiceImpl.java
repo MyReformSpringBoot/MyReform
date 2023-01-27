@@ -65,16 +65,13 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardSaveDto.toEntity(user);
 
         List<BoardCategory> boardCategories = new ArrayList<>();
-        for (Integer i : boardSaveDto.getCategoryId()) {
-            boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(i)));
+        for (Integer categoryId : boardSaveDto.getCategoryId()) {
+            boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(categoryId)));
         }
         boardCategoryRepository.saveAll(boardCategories);
 
         List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board, files));
-        List<String> imageUrls = boardImages.stream()
-                .map(x -> x.toImageFindDto()
-                        .getImageURL())
-                .collect(Collectors.toList());
+        List<String> imageUrls = getUrlString(boardImages);
         OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto(boardSaveDto.getCategoryId(), imageUrls);
 
         return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, oneBoardFindDto);
@@ -240,6 +237,13 @@ public class BoardServiceImpl implements BoardService {
     public List<Integer> getCategoryId(Long boardId) {
         return boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
                 .map(x -> x.getCategory().getCategoryId())
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getUrlString(List<BoardImage> boardImages) {
+        return boardImages.stream()
+                .map(x -> x.toImageFindDto()
+                        .getImageURL())
                 .collect(Collectors.toList());
     }
 }

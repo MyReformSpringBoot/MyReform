@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)//access 속성을 이용해서 동일한 패키지 내의 클래스에서만 객체를 생성할 수 있도록 제어합니다.
 @Getter
-@Setter
 @Table(name = "BOARD_CATEGORY")
 public class BoardCategory {
     @Id
@@ -29,5 +28,16 @@ public class BoardCategory {
     public BoardCategory(Board board, Category category){
         this.board = board;
         this.category = category;
+    }
+
+    // 연관관계 편의 메서드, 수정 시 사용
+    public void setBoard(Board board) {
+        this.board = board;
+        board.getBoardCategories().add(this);
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+        category.getBoardCategories().add(this);
     }
 }

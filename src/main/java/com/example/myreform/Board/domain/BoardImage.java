@@ -39,4 +39,10 @@ public class BoardImage {
                 .imageURL(image.getImageURL())
                 .build();
     }
+
+    // 연관관계 편의 메서드, 수정 시 사용
+    public void setBoard(Board board) {
+        this.board = board;
+        board.getBoardImages().add(this);
+    }
 }

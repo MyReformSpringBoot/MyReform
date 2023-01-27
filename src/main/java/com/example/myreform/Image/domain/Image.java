@@ -23,7 +23,6 @@ public class Image extends BaseEntity {
 
     @Builder
     public Image(String imageURL, long imageId) {
-
         this.imageURL = imageURL;
         this.imageId = imageId;
     }

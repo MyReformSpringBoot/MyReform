@@ -45,8 +45,24 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board")
     private List<BoardCategory> boardCategories = new ArrayList<>();
 
+
+    // 연관관계 편의 메서드, 수정 시 사용
+    public void setUser(User user) {
+        this.user = user;
+        user.getBoard().add(this);
+    }
+
     public void delete() {
         super.delete();
+    }
+
+    @Builder
+    public Board(Long boardId, User user, String title, String contents, Integer price){
+        this.boardId = boardId;
+        this.user = user;
+        this.title = title;
+        this.contents = contents;
+        this.price = price;
     }
 
     public OneBoardFindDto toOneBoardFindDto(List<Integer> categoryId, List<String> imageUrls) {
@@ -60,15 +76,6 @@ public class Board extends BaseEntity {
                 .updateAt(super.getUpdateAt())
                 .imageUrls(imageUrls)
                 .build();
-    }
-
-    @Builder
-    public Board(Long boardId, User user, String title, String contents, Integer price){
-        this.boardId = boardId;
-        this.user = user;
-        this.title = title;
-        this.contents = contents;
-        this.price = price;
     }
 
     public AllBoardFindDto toAllBoardFindDto(List<Integer> categoryId) {
