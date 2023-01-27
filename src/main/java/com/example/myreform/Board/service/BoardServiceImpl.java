@@ -206,16 +206,9 @@ public class BoardServiceImpl implements BoardService {
 
     }
 
-    public List<Integer> getCategoryId(Long boardId) {
+    private List<Integer> getCategoryId(Long boardId) {
         return boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
                 .map(x -> x.getCategory().getCategoryId())
-                .collect(Collectors.toList());
-    }
-
-    private List<String> getUrlString(List<BoardImage> boardImages) {
-        return boardImages.stream()
-                .map(x -> x.toImageFindDto()
-                        .getImageURL())
                 .collect(Collectors.toList());
     }
 
