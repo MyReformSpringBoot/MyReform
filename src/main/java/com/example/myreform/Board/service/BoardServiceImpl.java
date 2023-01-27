@@ -70,7 +70,7 @@ public class BoardServiceImpl implements BoardService {
         }
         boardCategoryRepository.saveAll(boardCategories);
 
-        List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board.getBoardId(), files));
+        List<BoardImage> boardImages = boardImageRepository.saveAll(saveBoardImage(board, files));
         List<String> imageUrls = boardImages.stream()
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
@@ -107,7 +107,7 @@ public class BoardServiceImpl implements BoardService {
         deleteBoardImages(boardImages);
 
         try {
-            boardImageRepository.saveAllAndFlush(saveBoardImage(boardId, files));
+            boardImageRepository.saveAllAndFlush(saveBoardImage(board, files));
         } catch (Exception e) {
             System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
@@ -179,9 +179,8 @@ public class BoardServiceImpl implements BoardService {
         boardImageRepository.deleteAll(boardImages);
     }
 
-    List<BoardImage> saveBoardImage(Long boardId, List<MultipartFile> files) throws Exception{
-        List<Image> imageList = imageUploadHandler.parseImageInfo(boardId, files);
-        Board board = boardRepository.findById(boardId).get();
+    List<BoardImage> saveBoardImage(Board board, List<MultipartFile> files) throws Exception{
+        List<Image> imageList = imageUploadHandler.parseImageInfo(board.getBoardId(), files);
         List<BoardImage> boardImages = new ArrayList<>();
         for(Image image : imageList){
             BoardImage boardImage = BoardImage.builder()
