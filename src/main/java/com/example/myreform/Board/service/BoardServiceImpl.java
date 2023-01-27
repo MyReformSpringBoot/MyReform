@@ -14,7 +14,6 @@ import com.example.myreform.Image.controller.ImageUploadHandler;
 
 import com.example.myreform.Board.repository.BoardImageRepository;
 import com.example.myreform.Board.repository.BoardRepository;
-import com.example.myreform.Image.dto.ImageFindDto;
 
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
@@ -61,7 +60,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
-        user = userRepository.findById(user.getUserId()).get();
+        user = userRepository.findById(user.getUserId()).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
         Board board = boardSaveDto.toEntity(user);
 
         List<BoardCategory> boardCategories = new ArrayList<>();
@@ -76,46 +75,23 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) throws JsonProcessingException {
 
-        Optional<Board> boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
+        if (boardCategories.isEmpty()) {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
         }
-        if (!boardOptional.get().getUser().getUserId().equals(user.getUserId())) {
+        Board board = boardCategories.get(0).getBoard();
+        if (board.getStatus() == 0) {
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
+        }
+        if (!board.getUser().getUserId().equals(user.getUserId())) {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_UPDATE_INVALID);
         }
 
-        Board board = boardOptional.get();
         board.update(boardUpdateDto);
+        updateBoardCategory(boardCategories, boardUpdateDto, board); // boardCategory 업데이트
+        updateBoardImages(board, files); // Image 업데이트
 
-        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
-        boardCategoryRepository.deleteAll(boardCategories);
-        boardCategoryRepository.flush();
-        boardCategories.clear();
-        for (Integer i : boardUpdateDto.getCategoryId()) {
-            boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(i)));
-        }
-        boardCategoryRepository.saveAllAndFlush(boardCategories);
-
-        List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
-        deleteBoardImages(boardImages);
-
-        try {
-            boardImageRepository.saveAllAndFlush(saveBoardImage(board, files));
-        } catch (Exception e) {
-            System.out.println("파일을 업데이트하지 못했습니다.");
-            throw new RuntimeException(e);//수정
-        }
-
-        List<Integer> categoryId = boardUpdateDto.getCategoryId();
-
-        boardImages = boardImageRepository.findAllByBoard(board);
-        List<String> imageUrls = boardImages.stream()
-                .map(x -> x.toImageFindDto()
-                        .getImageURL())
-                .collect(Collectors.toList());
-        OneBoardFindDto oneBoardFindDto = boardRepository.findBoardByBoardId(boardId).toOneBoardFindDto(categoryId, imageUrls);
-
-        return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, oneBoardFindDto);
+        return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, board.toOneBoardFindDto());
     }
 
     @Override
@@ -241,5 +217,26 @@ public class BoardServiceImpl implements BoardService {
                 .map(x -> x.toImageFindDto()
                         .getImageURL())
                 .collect(Collectors.toList());
+    }
+
+    private void updateBoardCategory(List<BoardCategory> boardCategories, BoardUpdateDto boardUpdateDto, Board board) {
+        boardCategoryRepository.deleteAll(boardCategories);
+        boardCategoryRepository.flush();
+        boardCategories.clear();
+        for (Integer i : boardUpdateDto.getCategoryId()) {
+            boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(i)));
+        }
+        boardCategoryRepository.saveAllAndFlush(boardCategories);
+    }
+
+    private void updateBoardImages(Board board, List<MultipartFile> files) throws RuntimeException {
+        List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
+        deleteBoardImages(boardImages);
+        try {
+            boardImageRepository.saveAllAndFlush(saveBoardImage(board, files));
+        } catch (Exception e) {
+            System.out.println("파일을 업데이트하지 못했습니다.");
+            throw new RuntimeException(e);//수정
+        }
     }
 }
