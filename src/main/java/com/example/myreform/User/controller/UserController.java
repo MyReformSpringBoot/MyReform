@@ -35,9 +35,9 @@ public class UserController {
     public ResponseUser login(@RequestBody UserLoginDto request) {
         return userService.login(request);
     }
-    
+
     //프로필
-    @GetMapping("/users/{userId}/profile")
+    @GetMapping("/users/{userId}/profiles")
     public ResponseEntity<Object> find(@PathVariable("userId") long userId) {
         return new ResponseEntity<>(userService.find(userId), HttpStatus.OK);
     }
