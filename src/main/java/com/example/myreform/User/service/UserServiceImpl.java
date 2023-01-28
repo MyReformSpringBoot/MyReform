@@ -1,12 +1,15 @@
 package com.example.myreform.User.service;
 
+import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.User.dto.UserLoginDto;
 import com.example.myreform.User.dto.UserSignupDto;
+import com.example.myreform.User.response.ResponseProfile;
 import com.example.myreform.validation.ExceptionCode;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.response.ResponseUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -57,4 +61,20 @@ public class UserServiceImpl implements UserService {
         // 조회 결과가 없다(해당 이메일을 가진 회원이 없다)
         return new ResponseUser(ExceptionCode.LOGIN_ID);
     }
+
+
+    @Override
+    public Object find(Long userId) {
+        Optional<User> userOp = userRepository.findByUserId(userId);
+        if(userOp.isEmpty()){
+            return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
+        }
+        User user= userOp.get();
+        UserFindDto findDto = user.toFindDto(userOp);
+
+        return new ResponseProfile(ExceptionCode.USER_GET_OK, findDto);
+
+    }
+
+
 }

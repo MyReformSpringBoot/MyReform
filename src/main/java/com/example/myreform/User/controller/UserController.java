@@ -2,14 +2,15 @@ package com.example.myreform.User.controller;
 
 import com.example.myreform.User.dto.UserLoginDto;
 import com.example.myreform.User.dto.UserSignupDto;
+import com.example.myreform.User.response.ResponseProfile;
 import com.example.myreform.User.response.ResponseUser;
+import com.example.myreform.User.service.UserService;
 import com.example.myreform.User.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @ResponseBody
@@ -29,8 +30,16 @@ public class UserController {
         return userService.signUp(request);
     }
 
+    //로그인
     @PostMapping("/users")
     public ResponseUser login(@RequestBody UserLoginDto request) {
         return userService.login(request);
     }
+    
+    //프로필
+    @GetMapping("/users/{userId}/profile")
+    public ResponseEntity<Object> find(@PathVariable("userId") long userId) {
+        return new ResponseEntity<>(userService.find(userId), HttpStatus.OK);
+    }
+
 }

@@ -32,8 +32,16 @@ public enum ExceptionCode {
      * 이미지
      */
     IMAGE_GET_OK(SUCCESS, "G000", "이미지"),
-    IMAGE_NOT_FOUND(NOT_FOUND_VALUE, "G001", "이미지를 찾을 수 없습니다.");
+    IMAGE_NOT_FOUND(NOT_FOUND_VALUE, "G001", "이미지를 찾을 수 없습니다."),
 
+
+
+    /**
+     * 회원정보
+     */
+
+    USER_GET_OK(SUCCESS, "H000", "회원정보있음"),
+    USER_NOT_FOUND(NOT_FOUND_VALUE, "H001", "회원정보없음");
 
     private final HttpStatus status;
     private final String code;
