@@ -160,12 +160,6 @@ public class BoardServiceImpl implements BoardService {
                 .collect(Collectors.toList());
     }
 
-    private List<Integer> getCategoryId(Long boardId) {
-        return boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
-                .map(x -> x.getCategory().getCategoryId())
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public void deleteBoardImages(List<BoardImage> boardImages) {
         for (BoardImage boardImage : boardImages) {
@@ -216,6 +210,10 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
     }
+
+    /**
+     * 검증 메서드
+     */
 
     private void validateBoard(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
         checkNotFound(Arrays.asList(boardCategories.toArray()));
