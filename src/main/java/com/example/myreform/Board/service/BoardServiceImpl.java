@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -119,36 +120,44 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
-        List<BoardCategory> boards = fetchPages(lastBoardId, size, categoryId, keyword);
+        List<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
         List<AllBoardFindDto> allBoardFindDtos = boards.stream()
-                .map((x) -> x.getBoard().toAllBoardFindDto())
+                .map((x) -> x.toAllBoardFindDto())
                 .collect(Collectors.toList());
-        ExceptionCode exceptionCode = ExceptionCode.BOARD_GET_OK;
-        if (allBoardFindDtos.isEmpty()) {
-            exceptionCode = ExceptionCode.BOARD_NOT_FOUND;
+        try {
+            validateBoard(boards);
+        } catch (IllegalArgumentException exception) {
+            ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
             return new ResponseBoardEmpty(exceptionCode);
         }
 
-        return new ResponseBoard(exceptionCode,allBoardFindDtos);
+        return new ResponseBoard(ExceptionCode.BOARD_GET_OK, allBoardFindDtos);
     }
 
-    private List<BoardCategory> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {
+    private List<Board> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {
         if (Optional.ofNullable(lastBoardId).isEmpty()) {
             lastBoardId = boardRepository.count() + 1;
         }
         PageRequest pageRequest = PageRequest.of(0, size);
         if (Optional.ofNullable(categoryId).isEmpty() && keyword == null) { // 카테고리나 검색안할 때
-            return boardCategoryRepository.findDistinctByBoard_BoardIdLessThanAndBoard_StatusEqualsOrderByBoard_BoardIdDesc(lastBoardId, 1, pageRequest);
+            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
         }
         if (Optional.ofNullable(categoryId).isEmpty()) { // 모든 카테고리에 대해 검색만 할 때
-            return boardCategoryRepository.findAllByBoard_BoardIdLessThanAndBoard_StatusEqualsAndBoard_TitleContainingOrderByBoard_BoardIdDesc(lastBoardId, 1, keyword, pageRequest);
+            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, keyword, pageRequest);
         }
         if (keyword == null) { // 검색을 안하고 카테고리만 찾아볼 때
-            return boardCategoryRepository.findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, 1, pageRequest);
+            return boardCategoryRepository
+                    .findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, 1, pageRequest)
+                    .stream()
+                    .map(x -> x.getBoard())
+                    .collect(Collectors.toList());
         }
         // 카테고리 설정 후 검색을 진행할 때
-        return boardCategoryRepository.findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc
-                (lastBoardId, categoryId, keyword,1, pageRequest);
+        return boardCategoryRepository
+                .findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, keyword,1, pageRequest)
+                .stream()
+                .map(x -> x.getBoard())
+                .collect(Collectors.toList());
     }
 
     private List<Integer> getCategoryId(Long boardId) {
@@ -209,7 +218,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private void validateBoard(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
-        checkNotFound(boardCategories);
+        checkNotFound(Arrays.asList(boardCategories.toArray()));
         checkInvalidAccess(boardCategories, user, exceptionCodeOfService);
     }
 
@@ -217,11 +226,12 @@ public class BoardServiceImpl implements BoardService {
         checkNotFound(board);
     }
 
-    private void checkNotFound(List<BoardCategory> boardCategories) throws IllegalArgumentException {
+    private void validateBoard(List<Board> board) throws IllegalArgumentException {
+        checkNotFound(Arrays.asList(board.toArray()));
+    }
+
+    private void checkNotFound(List<Object> boardCategories) throws IllegalArgumentException {
         if (boardCategories.isEmpty()) {
-            throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
-        }
-        if (boardCategories.get(0).getBoard().getStatus() == 0) {
             throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
         }
     }
