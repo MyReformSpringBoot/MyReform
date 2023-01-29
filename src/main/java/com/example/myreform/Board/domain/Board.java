@@ -65,18 +65,6 @@ public class Board extends BaseEntity {
         this.price = price;
     }
 
-    public OneBoardFindDto toOneBoardFindDto(List<Integer> categoryId, List<String> imageUrls) {
-        return OneBoardFindDto.builder()
-                .boardId(boardId)
-                .categoryId(categoryId)
-                .user(user)
-                .title(title)
-                .contents(contents)
-                .price(price)
-                .updateAt(super.getUpdateAt())
-                .imageUrls(imageUrls)
-                .build();
-    }
 
     public OneBoardFindDto toOneBoardFindDto() {
         return OneBoardFindDto.builder()
@@ -86,7 +74,7 @@ public class Board extends BaseEntity {
                 .title(title)
                 .contents(contents)
                 .price(price)
-                .updateAt(super.getUpdateAt())
+                .updateAt(getUpdateAt())
                 .imageUrls(getUrlString())
                 .build();
     }

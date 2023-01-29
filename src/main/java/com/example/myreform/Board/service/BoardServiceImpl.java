@@ -57,21 +57,26 @@ public class BoardServiceImpl implements BoardService {
     private String IMG_PATH;
 
     @Override
-    public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception {
-        user = userRepository.findById(user.getUserId()).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
-        Board board = boardSaveDto.toEntity(user);
+    public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
 
-        List<BoardCategory> boardCategories = new ArrayList<>();
-        for (Integer categoryId : boardSaveDto.getCategoryId()) {
-            boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(categoryId)));
+            user = userRepository.findById(user.getUserId()).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
+            Board board = boardSaveDto.toEntity(user);
+        try {
+            List<BoardCategory> boardCategories = new ArrayList<>();
+            for (Integer categoryId : boardSaveDto.getCategoryId()) {
+                boardCategories.add(new BoardCategory(board, categoryRepository.findByCategoryId(categoryId)));
+            }
+            boardCategoryRepository.saveAll(boardCategories);
+            boardImageRepository.saveAll(saveBoardImage(board, files));
+        } catch (Exception exception) {
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_CREATE_ERROR);
         }
-        boardCategoryRepository.saveAll(boardCategories);
-        boardImageRepository.saveAll(saveBoardImage(board, files));
+
         return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, board.toOneBoardFindDto());
     }
 
     @Override
-    public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) throws JsonProcessingException {
+    public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) {
 
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
         try {
@@ -81,9 +86,14 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoardEmpty(exceptionCode);
         }
         Board board = boardCategories.get(0).getBoard();
-        board.update(boardUpdateDto);
-        updateBoardCategory(boardCategories, boardUpdateDto, board); // boardCategory 업데이트
-        updateBoardImages(board, files); // Image 업데이트
+
+        try {
+            board.update(boardUpdateDto);
+            updateBoardCategory(boardCategories, boardUpdateDto, board); // boardCategory 업데이트
+            updateBoardImages(board, files); // Image 업데이트
+        } catch (RuntimeException exception) {
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_CREATE_ERROR);
+        }
 
         return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, board.toOneBoardFindDto());
     }
@@ -157,12 +167,6 @@ public class BoardServiceImpl implements BoardService {
                 .findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, keyword,1, pageRequest)
                 .stream()
                 .map(x -> x.getBoard())
-                .collect(Collectors.toList());
-    }
-
-    private List<Integer> getCategoryId(Long boardId) {
-        return boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
-                .map(x -> x.getCategory().getCategoryId())
                 .collect(Collectors.toList());
     }
 
