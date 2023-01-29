@@ -106,9 +106,6 @@ public class BoardServiceImpl implements BoardService {
         }
         board.delete(); // status만 수정
 
-        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
-        boardCategoryRepository.deleteAll(boardCategories);
-
         List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
         deleteBoardImages(boardImages);
         return new ResponseBoardEmpty(ExceptionCode.BOARD_DELETE_OK);
@@ -132,33 +129,6 @@ public class BoardServiceImpl implements BoardService {
         OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto(categoryId, imageUrls);
 
         return new ResponseBoard(ExceptionCode.BOARD_GET_OK, oneBoardFindDto);
-    }
-
-    @Transactional
-    public void deleteBoardImages(List<BoardImage> boardImages) {
-        for (BoardImage boardImage : boardImages) {
-            Image image = boardImage.getImage();
-            //실제로 폴더에서 삭제하는 코드 => status로 진행 시 실제로 삭제 안하기에 주석처리
-            String path = new File(IMG_PATH).getAbsolutePath() + "/" + image.getImageURL();
-            File file = new File(path);
-            if (file.exists()) {
-                file.delete();
-            }
-        }
-        boardImageRepository.deleteAll(boardImages);
-    }
-
-    List<BoardImage> saveBoardImage(Board board, List<MultipartFile> files) throws Exception{
-        List<Image> imageList = imageUploadHandler.parseImageInfo(board.getBoardId(), files);
-        List<BoardImage> boardImages = new ArrayList<>();
-        for(Image image : imageList){
-            BoardImage boardImage = BoardImage.builder()
-                    .image(image)
-                    .board(board)
-                    .build();
-            boardImages.add(boardImage);
-        }
-        return boardImages;
     }
 
     @Override
@@ -212,6 +182,36 @@ public class BoardServiceImpl implements BoardService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteBoardImages(List<BoardImage> boardImages) {
+        for (BoardImage boardImage : boardImages) {
+            Image image = boardImage.getImage();
+            //실제로 폴더에서 삭제하는 코드 => status로 진행 시 실제로 삭제 안하기에 주석처리
+            String path = new File(IMG_PATH).getAbsolutePath() + "/" + image.getImageURL();
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+        boardImageRepository.deleteAll(boardImages);
+    }
+
+    List<BoardImage> saveBoardImage(Board board, List<MultipartFile> files) throws Exception{
+        List<Image> imageList = imageUploadHandler.parseImageInfo(board.getBoardId(), files);
+        List<BoardImage> boardImages = new ArrayList<>();
+        for(Image image : imageList){
+            BoardImage boardImage = BoardImage.builder()
+                    .image(image)
+                    .board(board)
+                    .build();
+            boardImages.add(boardImage);
+        }
+        return boardImages;
+    }
+
+    /**
+     * 업데이트 항목
+     */
     private void updateBoardCategory(List<BoardCategory> boardCategories, BoardUpdateDto boardUpdateDto, Board board) {
         boardCategoryRepository.deleteAll(boardCategories);
         boardCategoryRepository.flush();
