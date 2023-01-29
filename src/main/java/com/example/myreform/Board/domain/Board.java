@@ -91,18 +91,16 @@ public class Board extends BaseEntity {
                 .build();
     }
 
-    public AllBoardFindDto toAllBoardFindDto(List<Integer> categoryId) {
+    public AllBoardFindDto toAllBoardFindDto() {
         return AllBoardFindDto.builder()
-                .categoryId(categoryId)
+                .categoryId(getCategoryId())
                 .boardId(boardId)
                 .title(title)
                 .contents(contents)
                 .updateAt(getUpdateAt())
                 .price(price)
                 .nickname(user.getNickname())
-                .imageUrl(boardImages.stream()
-                        .map(x -> x.getImage().toOneImageFindDto().getImageURL())
-                        .collect(Collectors.toList()))
+                .imageUrl(getUrlString())
                 .build();
     }
 
