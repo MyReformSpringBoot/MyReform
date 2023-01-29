@@ -54,6 +54,8 @@ public class BoardServiceImpl implements BoardService {
     @Value("${img.path}")
     private String IMG_PATH;
 
+    private static final Integer STATUS = 1;
+
     @Override
     public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
 
@@ -76,7 +78,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) {
 
-        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, 1);
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, STATUS);
         try {
             validateBoard(boardCategories, user, ExceptionCode.BOARD_UPDATE_INVALID);
         } catch (IllegalArgumentException exception) {
@@ -98,7 +100,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object delete(Long boardId, User user) {
-        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, 1); // validate 통일성을 위해 리스트로 참조
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, STATUS); // validate 통일성을 위해 리스트로 참조
         try {
             validateBoard(boardCategories, user, ExceptionCode.BOARD_DELETE_INVALID);
         } catch (IllegalArgumentException exception) {
@@ -115,7 +117,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object getOneBoard(Long boardId) {
-        Board board = boardRepository.findBoardByBoardIdAndStatusEquals(boardId, 1);
+        Board board = boardRepository.findBoardByBoardIdAndStatusEquals(boardId, STATUS);
         try {
             validateBoard(board);
         } catch (IllegalArgumentException exception) {
@@ -148,21 +150,21 @@ public class BoardServiceImpl implements BoardService {
         }
         PageRequest pageRequest = PageRequest.of(0, size);
         if (Optional.ofNullable(categoryId).isEmpty() && keyword == null) { // 카테고리나 검색안할 때
-            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, 1, pageRequest);
+            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(lastBoardId, STATUS, pageRequest);
         }
         if (Optional.ofNullable(categoryId).isEmpty()) { // 모든 카테고리에 대해 검색만 할 때
-            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, 1, keyword, pageRequest);
+            return boardRepository.findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(lastBoardId, STATUS, keyword, pageRequest);
         }
         if (keyword == null) { // 검색을 안하고 카테고리만 찾아볼 때
             return boardCategoryRepository
-                    .findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, 1, pageRequest)
+                    .findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, STATUS, pageRequest)
                     .stream()
                     .map(x -> x.getBoard())
                     .collect(Collectors.toList());
         }
         // 카테고리 설정 후 검색을 진행할 때
         return boardCategoryRepository
-                .findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, keyword,1, pageRequest)
+                .findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc(lastBoardId, categoryId, keyword,STATUS, pageRequest)
                 .stream()
                 .map(x -> x.getBoard())
                 .collect(Collectors.toList());
