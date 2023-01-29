@@ -109,23 +109,15 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object getOneBoard(Long boardId) {
-
-        Optional<Board> boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
-            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
+        try {
+            validateBoard(boardCategories);
+        } catch (IllegalArgumentException exception) {
+            ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
+            return new ResponseBoardEmpty(exceptionCode);
         }
-        Board board = boardOptional.get();
-        List<Integer> categoryId = boardCategoryRepository.findAllByBoard_BoardId(boardId).stream()
-                .map(x -> x.getCategory().getCategoryId())
-                .collect(Collectors.toList());
-        List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
-        List<String> imageUrls = boardImages.stream()
-                .map(x -> x.toImageFindDto()
-                        .getImageURL())
-                .collect(Collectors.toList());
-        OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto(categoryId, imageUrls);
-
-        return new ResponseBoard(ExceptionCode.BOARD_GET_OK, oneBoardFindDto);
+        Board board = boardCategories.get(0).getBoard();
+        return new ResponseBoard(ExceptionCode.BOARD_GET_OK, board.toOneBoardFindDto());
     }
 
     @Override
