@@ -2,6 +2,8 @@ package com.example.myreform.validation;
 
 import com.sun.net.httpserver.Authenticator;
 
+import java.util.Arrays;
+
 import static com.example.myreform.validation.HttpStatus.*;
 
 public enum ExceptionCode {
@@ -41,7 +43,13 @@ public enum ExceptionCode {
      */
 
     USER_GET_OK(SUCCESS, "H000", "회원정보있음"),
-    USER_NOT_FOUND(NOT_FOUND_VALUE, "H001", "회원정보없음");
+    USER_NOT_FOUND(NOT_FOUND_VALUE, "H001", "회원정보없음"),
+
+
+    /**
+     * 잘못된 ExceptionCode
+     */
+    EMPTY(null, "", "");
 
     private final HttpStatus status;
     private final String code;
@@ -63,5 +71,12 @@ public enum ExceptionCode {
 
     public String getMessage() {
         return message;
+    }
+
+    public static ExceptionCode findExceptionCodeByCode(String code) {
+        return Arrays.stream(ExceptionCode.values())
+                .filter(x -> x.getCode().equals(code))
+                .findFirst()
+                .orElse(EMPTY);
     }
 }

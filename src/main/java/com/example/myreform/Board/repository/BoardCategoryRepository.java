@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface BoardCategoryRepository extends JpaRepository<BoardCategory, Long> {
+    BoardCategory findByBoard_BoardId(Long boardId);
     List<BoardCategory> findAllByBoard_BoardId(Long boardId);
     Page<BoardCategory> findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(Long lastBoardId, Integer categoryId, int status, PageRequest pageRequest);
-
     Page<BoardCategory> findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc(Long lastBoardId, Integer categoryId,String keyword, int status, PageRequest pageRequest);
 }

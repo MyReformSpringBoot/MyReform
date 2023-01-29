@@ -76,17 +76,13 @@ public class BoardServiceImpl implements BoardService {
     public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) throws JsonProcessingException {
 
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
-        if (boardCategories.isEmpty()) {
-            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
+        try {
+            validateBoard(boardCategories, user, ExceptionCode.BOARD_UPDATE_INVALID);
+        } catch (IllegalArgumentException exception) {
+            ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
+            return new ResponseBoardEmpty(exceptionCode);
         }
         Board board = boardCategories.get(0).getBoard();
-        if (board.getStatus() == 0) {
-            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
-        }
-        if (!board.getUser().getUserId().equals(user.getUserId())) {
-            return new ResponseBoardEmpty(ExceptionCode.BOARD_UPDATE_INVALID);
-        }
-
         board.update(boardUpdateDto);
         updateBoardCategory(boardCategories, boardUpdateDto, board); // boardCategory 업데이트
         updateBoardImages(board, files); // Image 업데이트
@@ -96,14 +92,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object delete(Long boardId, User user) {
-        Optional<Board> boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
-            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId); // validate 통일성을 위해 리스트로 참조
+        try {
+            validateBoard(boardCategories, user, ExceptionCode.BOARD_DELETE_INVALID);
+        } catch (IllegalArgumentException exception) {
+            ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
+            return new ResponseBoardEmpty(exceptionCode);
         }
-        Board board = boardOptional.get();
-        if (!board.getUser().getUserId().equals(user.getUserId())) {
-            return new ResponseBoardEmpty(ExceptionCode.BOARD_DELETE_INVALID);
-        }
+        Board board = boardCategories.get(0).getBoard();
         board.delete(); // status만 수정
 
         List<BoardImage> boardImages = boardImageRepository.findAllByBoard(board);
@@ -230,6 +226,19 @@ public class BoardServiceImpl implements BoardService {
         } catch (Exception e) {
             System.out.println("파일을 업데이트하지 못했습니다.");
             throw new RuntimeException(e);//수정
+        }
+    }
+
+    private void validateBoard(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+        if (boardCategories.isEmpty()) {
+            throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
+        }
+        Board board = boardCategories.get(0).getBoard();
+        if (board.getStatus() == 0) {
+            throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
+        }
+        if (!board.getUser().getUserId().equals(user.getUserId())) {
+            throw new IllegalArgumentException(exceptionCodeOfService.getCode());
         }
     }
 }
