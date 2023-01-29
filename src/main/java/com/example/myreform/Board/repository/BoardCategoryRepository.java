@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface BoardCategoryRepository extends JpaRepository<BoardCategory, Long> {
-    List<BoardCategory> findAllByBoard_BoardId(Long boardId);
+    List<BoardCategory> findAllByBoard_BoardIdAndBoard_Status(Long boardId, int status);
     List<BoardCategory> findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_StatusEqualsOrderByBoardDesc(Long lastBoardId, Integer categoryId, int status, PageRequest pageRequest);
     List<BoardCategory> findAllByBoard_BoardIdLessThanAndCategory_CategoryIdEqualsAndBoard_TitleContainingAndBoard_StatusEqualsOrderByBoardDesc(Long lastBoardId, Integer categoryId, String keyword, int status, PageRequest pageRequest);
 }

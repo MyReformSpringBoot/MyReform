@@ -18,7 +18,6 @@ import com.example.myreform.Board.repository.BoardRepository;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.validation.ExceptionCode;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,7 +76,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) {
 
-        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId);
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, 1);
         try {
             validateBoard(boardCategories, user, ExceptionCode.BOARD_UPDATE_INVALID);
         } catch (IllegalArgumentException exception) {
@@ -100,7 +98,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object delete(Long boardId, User user) {
-        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardId(boardId); // validate 통일성을 위해 리스트로 참조
+        List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, 1); // validate 통일성을 위해 리스트로 참조
         try {
             validateBoard(boardCategories, user, ExceptionCode.BOARD_DELETE_INVALID);
         } catch (IllegalArgumentException exception) {
@@ -117,7 +115,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object getOneBoard(Long boardId) {
-        Board board = boardRepository.findBoardByBoardId(boardId);
+        Board board = boardRepository.findBoardByBoardIdAndStatusEquals(boardId, 1);
         try {
             validateBoard(board);
         } catch (IllegalArgumentException exception) {
@@ -222,7 +220,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private void validateBoard(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
-        checkNotFound(Arrays.asList(boardCategories.toArray()));
+        checkNotFound(boardCategories);
         checkInvalidAccess(boardCategories, user, exceptionCodeOfService);
     }
 
@@ -231,20 +229,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private void validateBoard(List<Board> board) throws IllegalArgumentException {
-        checkNotFound(Arrays.asList(board.toArray()));
+        checkNotFound(board);
     }
 
-    private void checkNotFound(List<Object> boardCategories) throws IllegalArgumentException {
-        if (boardCategories.isEmpty()) {
-            throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
-        }
-    }
-
-    private void checkNotFound(Board board) throws IllegalArgumentException {
-        if (board == null) {
-            throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
-        }
-        if (board.getStatus() == 0) {
+    private void checkNotFound(Object board) throws IllegalArgumentException {
+        if (board == null || board.toString().equals("[]")) {
             throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
         }
     }
