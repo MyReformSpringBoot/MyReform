@@ -109,6 +109,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Object getOneBoard(Long boardId) {
+
         Optional<Board> boardOptional = boardRepository.findById(boardId);
         if (boardOptional.isEmpty() || boardOptional.get().getStatus() == 0) {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
@@ -230,14 +231,25 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private void validateBoard(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+        checkNotFound(boardCategories);
+        checkInvalidAccess(boardCategories, user, exceptionCodeOfService);
+    }
+
+    private void validateBoard(List<BoardCategory> boardCategories) throws IllegalArgumentException { // 직접 점검 시 사용
+        checkNotFound(boardCategories);
+    }
+
+    private void checkNotFound(List<BoardCategory> boardCategories) throws IllegalArgumentException {
         if (boardCategories.isEmpty()) {
             throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
         }
-        Board board = boardCategories.get(0).getBoard();
-        if (board.getStatus() == 0) {
+        if (boardCategories.get(0).getBoard().getStatus() == 0) {
             throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
         }
-        if (!board.getUser().getUserId().equals(user.getUserId())) {
+    }
+
+    private void checkInvalidAccess(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+        if (!boardCategories.get(0).getBoard().getUser().getUserId().equals(user.getUserId())) {
             throw new IllegalArgumentException(exceptionCodeOfService.getCode());
         }
     }
