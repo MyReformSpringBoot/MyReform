@@ -32,17 +32,17 @@ public class UserServiceImpl implements UserService {
     public ResponseUser signUp(UserSignupDto signupDTO) {
 
         if (userRepository.findById(signupDTO.getId()).isPresent()){
-            return new ResponseUser(ExceptionCode.SIGNUP_ID);
+            return new ResponseUser(ExceptionCode.SIGNUP_DUPLICATED_ID);
         }
 
         if (userRepository.findByNickname(signupDTO.getNickname()).isPresent()){
-            return new ResponseUser(ExceptionCode.SIGNUP_NICKNAME);
+            return new ResponseUser(ExceptionCode.SIGNUP_DUPLICATED_NICKNAME);
         }
         // encode User 생성
         User user = signupDTO.toUser(passwordEncoder.encode(signupDTO.getPw()));
         userRepository.save(user);
 
-        return new ResponseUser(ExceptionCode.SIGNUP_CREATED);
+        return new ResponseUser(ExceptionCode.SIGNUP_CREATED_OK);
     }
 
 
@@ -57,10 +57,10 @@ public class UserServiceImpl implements UserService {
             if (passwordEncoder.matches(loginDTO.getPw(), checkIdUser.getPw())) { // 비밀번호 일치
                 return new ResponseUser(ExceptionCode.LOGIN_OK);
             }
-            return new ResponseUser(ExceptionCode.LOGIN_PW);
+            return new ResponseUser(ExceptionCode.LOGIN_NOT_FOUND_PW);
         }
         // 조회 결과가 없다(해당 이메일을 가진 회원이 없다)
-        return new ResponseUser(ExceptionCode.LOGIN_ID);
+        return new ResponseUser(ExceptionCode.LOGIN_NOT_FOUND_ID);
     }
 
 
@@ -86,10 +86,10 @@ public class UserServiceImpl implements UserService {
         }
 
         if (userRepository.findByNickname(userUpdateDto.getNickname()).isPresent()){
-            return new ResponseUser(ExceptionCode.SIGNUP_NICKNAME);
+            return new ResponseUser(ExceptionCode.SIGNUP_DUPLICATED_NICKNAME);
         }
 
-        User user =userOp.get();
+        User user = userOp.get();
         try {
             user.update(userUpdateDto);
         } catch (RuntimeException exception) {

@@ -71,10 +71,4 @@ public class BoardController {
     public Object deletePost(@PathVariable("boardId") long boardId, @RequestBody User user) {
         return new ResponseEntity<>(boardService.delete(boardId, user), HttpStatus.OK);
     }
-
-    @InitBinder
-    protected void initBinder(WebDataBinder binder){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat,true));
-    }
 }

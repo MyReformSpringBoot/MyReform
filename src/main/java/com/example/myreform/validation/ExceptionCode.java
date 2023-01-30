@@ -1,7 +1,5 @@
 package com.example.myreform.validation;
 
-import com.sun.net.httpserver.Authenticator;
-
 import java.util.Arrays;
 
 import static com.example.myreform.validation.HttpStatus.*;
@@ -10,12 +8,13 @@ public enum ExceptionCode {
     /**
      * 회원가입 및 로그인
      */
+    SIGNUP_CREATED_OK(CREATED, "A000", "회원가입 성공"),
+    SIGNUP_DUPLICATED_ID(DUPLICATED_VALUE, "A001", "ID 중복"),
+    SIGNUP_DUPLICATED_NICKNAME(DUPLICATED_VALUE, "A002", "NICKNAME 중복"),
     LOGIN_OK(SUCCESS, "B000", "로그인 성공"),
-    SIGNUP_CREATED(CREATED, "A000", "회원가입 성공"),
-    LOGIN_ID(NOT_FOUND_VALUE, "B001", "로그인 실패"),
-    LOGIN_PW(NOT_FOUND_VALUE, "B002", "로그인 실패"),
-    SIGNUP_ID(DUPLICATED_VALUE, "A001", "ID 중복"),
-    SIGNUP_NICKNAME(DUPLICATED_VALUE, "A002", "NICKNAME 중복"),
+    LOGIN_NOT_FOUND_ID(NOT_FOUND_VALUE, "B001", "로그인 실패"),
+    LOGIN_NOT_FOUND_PW(NOT_FOUND_VALUE, "B002", "로그인 실패"),
+
 
 
     /**
