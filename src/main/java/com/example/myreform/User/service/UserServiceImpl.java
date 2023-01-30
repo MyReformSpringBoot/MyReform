@@ -86,6 +86,11 @@ public class UserServiceImpl implements UserService {
         if(userOp.isEmpty()){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
+
+        if (userRepository.findByNickname(userUpdateDto.getNickname()).isPresent()){
+            return new ResponseUser(ExceptionCode.SIGNUP_NICKNAME);
+        }
+
         User user =userOp.get();
         try {
             user.update(userUpdateDto);
