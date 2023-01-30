@@ -57,9 +57,10 @@ public class BoardServiceImpl implements BoardService {
     private static final Integer STATUS = 1;
 
     @Override
-    public Object save(User user, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
+    public Object save(String userNickname, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
 
-            user = userRepository.findById(user.getUserId()).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
+            User user = userRepository.findByNickname(userNickname).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
+
             Board board = boardSaveDto.toEntity(user);
         try {
             List<BoardCategory> boardCategories = new ArrayList<>();
@@ -80,7 +81,8 @@ public class BoardServiceImpl implements BoardService {
 
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, STATUS);
         try {
-            validateBoard(boardCategories, user, ExceptionCode.BOARD_UPDATE_INVALID);
+//            user = userRepository.findByNickname(user.getNickname()).get(); -> id로 valid확인 할 때 사용
+            validateBoard(boardCategories, user.getNickname(), ExceptionCode.BOARD_UPDATE_INVALID);
         } catch (IllegalArgumentException exception) {
             ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
             return new ResponseBoardEmpty(exceptionCode);
@@ -102,7 +104,7 @@ public class BoardServiceImpl implements BoardService {
     public Object delete(Long boardId, User user) {
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, STATUS); // validate 통일성을 위해 리스트로 참조
         try {
-            validateBoard(boardCategories, user, ExceptionCode.BOARD_DELETE_INVALID);
+            validateBoard(boardCategories, user.getNickname(), ExceptionCode.BOARD_DELETE_INVALID);
         } catch (IllegalArgumentException exception) {
             ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
             return new ResponseBoardEmpty(exceptionCode);
@@ -221,9 +223,13 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    private void validateBoard(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+//    private void validateBoard(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+//        checkNotFound(boardCategories);
+//        checkInvalidAccess(boardCategories, user, exceptionCodeOfService);
+//    }
+    private void validateBoard(List<BoardCategory> boardCategories, String userNickname, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
         checkNotFound(boardCategories);
-        checkInvalidAccess(boardCategories, user, exceptionCodeOfService);
+        checkInvalidAccess(boardCategories, userNickname, exceptionCodeOfService);
     }
 
     private void validateBoard(Board board) throws IllegalArgumentException { // 직접 점검 시 사용
@@ -240,8 +246,14 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    private void checkInvalidAccess(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
-        if (!boardCategories.get(0).getBoard().getUser().getUserId().equals(user.getUserId())) {
+//    private void checkInvalidAccess(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+//        if (!boardCategories.get(0).getBoard().getUser().getUserId().equals(user.getUserId())) {
+//            throw new IllegalArgumentException(exceptionCodeOfService.getCode());
+//        }
+//    }
+
+    private void checkInvalidAccess(List<BoardCategory> boardCategories, String userNickname, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+        if (!boardCategories.get(0).getBoard().getUser().getNickname().equals(userNickname)) {
             throw new IllegalArgumentException(exceptionCodeOfService.getCode());
         }
     }
