@@ -223,10 +223,6 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-//    private void validateBoard(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
-//        checkNotFound(boardCategories);
-//        checkInvalidAccess(boardCategories, user, exceptionCodeOfService);
-//    }
     private void validateBoard(List<BoardCategory> boardCategories, String userNickname, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
         checkNotFound(boardCategories);
         checkInvalidAccess(boardCategories, userNickname, exceptionCodeOfService);
@@ -245,12 +241,6 @@ public class BoardServiceImpl implements BoardService {
             throw new IllegalArgumentException(ExceptionCode.BOARD_NOT_FOUND.getCode());
         }
     }
-
-//    private void checkInvalidAccess(List<BoardCategory> boardCategories, User user, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
-//        if (!boardCategories.get(0).getBoard().getUser().getUserId().equals(user.getUserId())) {
-//            throw new IllegalArgumentException(exceptionCodeOfService.getCode());
-//        }
-//    }
 
     private void checkInvalidAccess(List<BoardCategory> boardCategories, String userNickname, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
         if (!boardCategories.get(0).getBoard().getUser().getNickname().equals(userNickname)) {
