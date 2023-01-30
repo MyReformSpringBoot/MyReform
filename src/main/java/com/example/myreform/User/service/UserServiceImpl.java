@@ -83,14 +83,16 @@ public class UserServiceImpl implements UserService {
     public Object update(Long userId, UserUpdateDto userUpdateDto) {
 
         Optional<User> userOp = userRepository.findByUserId(userId);
+        if(userOp.isEmpty()){
+            return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
+        }
         User user =userOp.get();
         try {
             user.update(userUpdateDto);
         } catch (RuntimeException exception) {
-            return new ResponseBoardEmpty(ExceptionCode.LOGIN_ID);
+            return new ResponseBoardEmpty(ExceptionCode.USER_UPDATE_INVALID);
         }
-
-        return new ResponseBoard(ExceptionCode.LOGIN_OK, user.toFindDto(userOp));
+        return new ResponseBoard(ExceptionCode.USER_UPDATE_OK, user.toFindDto(userOp));
     }
 
 

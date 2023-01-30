@@ -44,6 +44,8 @@ public enum ExceptionCode {
 
     USER_GET_OK(SUCCESS, "H000", "회원정보있음"),
     USER_NOT_FOUND(NOT_FOUND_VALUE, "H001", "회원정보없음"),
+    USER_UPDATE_OK(SUCCESS, "I000", "회원정보수정성공"),
+    USER_UPDATE_INVALID(INVALID_ACCESS, "I001", "회원정보수정실패"),
 
 
     /**
