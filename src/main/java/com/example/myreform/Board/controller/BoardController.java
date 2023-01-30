@@ -38,9 +38,9 @@ public class BoardController {
 
         ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
         BoardSaveDto boardSaveDto = mapper.treeToValue(saveObj.get("board"), BoardSaveDto.class);
-        User user = mapper.treeToValue(saveObj.get("user"), User.class);
+        String userNickname = mapper.treeToValue(saveObj.get("user").get("nickname"),String.class); //프론트로부터 전달 받는 값 => userId에서 nickname으로 변경
 
-        return new ResponseEntity<>(boardService.save(user, boardSaveDto, files), HttpStatus.OK);
+        return new ResponseEntity<>(boardService.save(userNickname, boardSaveDto, files), HttpStatus.OK);
     }
 
     // 게시물 조회
