@@ -2,6 +2,7 @@ package com.example.myreform.User.domain;
 
 import com.example.myreform.Board.domain.Board;
 import com.example.myreform.User.dto.UserFindDto;
+import com.example.myreform.User.dto.UserUpdateDto;
 import com.example.myreform.config.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -73,6 +74,11 @@ public class User extends BaseEntity {
                 .nickname(nickname)
                 .introduction(introduction)
                 .build();
+    }
+
+    public void update(UserUpdateDto userUpdateDto) {
+        this.nickname = userUpdateDto.getNickname();
+        this.introduction = userUpdateDto.getIntroduction();
     }
 
 }

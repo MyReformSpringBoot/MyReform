@@ -1,8 +1,11 @@
 package com.example.myreform.User.service;
 
+import com.example.myreform.Board.response.ResponseBoard;
+import com.example.myreform.Board.response.ResponseBoardEmpty;
 import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.User.dto.UserLoginDto;
 import com.example.myreform.User.dto.UserSignupDto;
+import com.example.myreform.User.dto.UserUpdateDto;
 import com.example.myreform.User.response.ResponseProfile;
 import com.example.myreform.validation.ExceptionCode;
 import com.example.myreform.User.repository.UserRepository;
@@ -74,6 +77,20 @@ public class UserServiceImpl implements UserService {
 
         return new ResponseProfile(ExceptionCode.USER_GET_OK, findDto);
 
+    }
+
+    @Override
+    public Object update(Long userId, UserUpdateDto userUpdateDto) {
+
+        Optional<User> userOp = userRepository.findByUserId(userId);
+        User user =userOp.get();
+        try {
+            user.update(userUpdateDto);
+        } catch (RuntimeException exception) {
+            return new ResponseBoardEmpty(ExceptionCode.LOGIN_ID);
+        }
+
+        return new ResponseBoard(ExceptionCode.LOGIN_OK, user.toFindDto(userOp));
     }
 
 
