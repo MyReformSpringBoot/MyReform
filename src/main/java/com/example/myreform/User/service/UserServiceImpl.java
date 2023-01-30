@@ -1,7 +1,5 @@
 package com.example.myreform.User.service;
 
-import com.example.myreform.Board.response.ResponseBoard;
-import com.example.myreform.Board.response.ResponseBoardEmpty;
 import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.User.dto.UserLoginDto;
 import com.example.myreform.User.dto.UserSignupDto;
@@ -95,9 +93,9 @@ public class UserServiceImpl implements UserService {
         try {
             user.update(userUpdateDto);
         } catch (RuntimeException exception) {
-            return new ResponseBoardEmpty(ExceptionCode.USER_UPDATE_INVALID);
+            return new ResponseUser(ExceptionCode.USER_UPDATE_INVALID);
         }
-        return new ResponseBoard(ExceptionCode.USER_UPDATE_OK, user.toFindDto(userOp));
+        return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto(userOp));
     }
 
 
