@@ -13,8 +13,8 @@ import java.util.List;
 public interface BoardService {
 
     // 게시글 등록
-    Object save(String userNickname, BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception;
-    Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) throws JsonProcessingException;
+    Object save(BoardSaveDto boardSaveDto, List<MultipartFile> files) throws Exception;
+    Object update(Long boardId, BoardUpdateDto boardUpdateDto, List<MultipartFile> files) throws JsonProcessingException;
     Object delete(Long boardId, User user);
     Object getOneBoard(Long boardId);
     Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword);

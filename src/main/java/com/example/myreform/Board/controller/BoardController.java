@@ -34,13 +34,12 @@ public class BoardController {
     @PostMapping("/create")
     public ResponseEntity<Object> save(@RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception {
         //이미지가 들어가며 return type ResponseEntity<Post>에서 ResponseEntity<Object>로 바뀜
-        //파라메터 @Requestbody ObjectNode saveObj => @RequestPart ObjectNode saveObj(json형식과 이미지파일 모두 박디 위해 고침)
+        //파라메터 @Requestbody ObjectNode saveObj => @RequestPart ObjectNode saveObj(json형식과 이미지파일 모두 받기 위해 고침)
 
         ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-        BoardSaveDto boardSaveDto = mapper.treeToValue(saveObj.get("board"), BoardSaveDto.class);
-        String userNickname = mapper.treeToValue(saveObj.get("user").get("nickname"),String.class); //프론트로부터 전달 받는 값 => userId에서 nickname으로 변경
+        BoardSaveDto boardSaveDto = mapper.treeToValue(saveObj, BoardSaveDto.class);//nickname과 board정보 같이 맵핑
 
-        return new ResponseEntity<>(boardService.save(userNickname, boardSaveDto, files), HttpStatus.OK);
+        return new ResponseEntity<>(boardService.save(boardSaveDto, files), HttpStatus.OK);
     }
 
     // 게시물 조회
@@ -61,9 +60,8 @@ public class BoardController {
     @PostMapping("/{boardId}")
     public ResponseEntity<Object> updatePost(@PathVariable("boardId") long boardId, @RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
         ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-        BoardUpdateDto boardUpdateDto = mapper.treeToValue(saveObj.get("board"), BoardUpdateDto.class);
-        User user = mapper.treeToValue(saveObj.get("user"), User.class);
-        return new ResponseEntity<>(boardService.update(boardId, boardUpdateDto, user, files), HttpStatus.OK);
+        BoardUpdateDto boardUpdateDto = mapper.treeToValue(saveObj, BoardUpdateDto.class);//nickname과 board정보 같이 맵핑
+        return new ResponseEntity<>(boardService.update(boardId, boardUpdateDto, files), HttpStatus.OK);
     }
 
     //게시물 삭제

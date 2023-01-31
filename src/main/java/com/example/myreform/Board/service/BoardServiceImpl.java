@@ -57,9 +57,9 @@ public class BoardServiceImpl implements BoardService {
     private static final Integer STATUS = 1;
 
     @Override
-    public Object save(String userNickname, BoardSaveDto boardSaveDto, List<MultipartFile> files) {
+    public Object save(BoardSaveDto boardSaveDto, List<MultipartFile> files) {
 
-            User user = userRepository.findByNickname(userNickname).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
+            User user = userRepository.findByNickname(boardSaveDto.getNickname()).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
 
             Board board = boardSaveDto.toEntity(user);
         try {
@@ -77,12 +77,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Object update(Long boardId, BoardUpdateDto boardUpdateDto, User user, List<MultipartFile> files) {
+    public Object update(Long boardId, BoardUpdateDto boardUpdateDto, List<MultipartFile> files) {
 
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, STATUS);
         try {
-//            user = userRepository.findByNickname(user.getNickname()).get(); -> id로 valid확인 할 때 사용
-            validateBoard(boardCategories, user.getNickname(), ExceptionCode.BOARD_UPDATE_INVALID);
+            validateBoard(boardCategories, boardUpdateDto.getNickname(), ExceptionCode.BOARD_UPDATE_INVALID);
         } catch (IllegalArgumentException exception) {
             ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
             return new ResponseBoardEmpty(exceptionCode);
@@ -122,6 +121,9 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findBoardByBoardIdAndStatusEquals(boardId, STATUS);
         try {
             validateBoard(board);
+//            ResponseBoard responseBoard = new ResponseBoard(ExceptionCode.BOARD_GET_OK, board.toOneBoardFindDto());
+//            System.out.println(responseBoard.getData().getClass().getDeclaredField("updateAt").get(responseBoard.getData()).getClass().getName());
+//            System.out.println(new ResponseBoard(ExceptionCode.BOARD_GET_OK, board.toOneBoardFindDto()).getData().getClass().getDeclaredField("updateAt").getName().getClass().getName());
         } catch (IllegalArgumentException exception) {
             ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
             return new ResponseBoardEmpty(exceptionCode);

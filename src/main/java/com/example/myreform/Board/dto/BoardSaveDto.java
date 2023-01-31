@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class BoardSaveDto extends BaseEntity {
-
+    private String nickname;
     private List<Integer> categoryId;//배열 저장을 위해 List로 만듬
     private String title;
     private String contents;
@@ -31,7 +31,8 @@ public class BoardSaveDto extends BaseEntity {
     }
 
     @Builder
-    public BoardSaveDto(List<Integer> categoryId, String title, String contents, Integer price) {
+    public BoardSaveDto(String userNickname, List<Integer> categoryId, String title, String contents, Integer price) {
+        this.nickname = userNickname;
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;

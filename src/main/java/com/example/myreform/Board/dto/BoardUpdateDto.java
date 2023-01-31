@@ -13,6 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardUpdateDto extends BaseEntity {
+    private String nickname;
+
     @Column(name = "board_id")
     private Long boardId;
     private List<Integer> categoryId;
@@ -23,7 +25,8 @@ public class BoardUpdateDto extends BaseEntity {
     private Integer price;
 
     @Builder
-    public BoardUpdateDto(List<Integer> categoryId, String title, String contents, Integer price) {
+    public BoardUpdateDto(String nickname, List<Integer> categoryId, String title, String contents, Integer price) {
+        this.nickname = nickname;
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
