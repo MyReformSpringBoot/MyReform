@@ -22,8 +22,8 @@ public class OneBoardFindDto {
     private List<Integer> categoryId;
     private String title;
     private String contents;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateAt;
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    public LocalDateTime updateAt;
     private Integer price;
     private List<String> imageUrls;
 

@@ -18,7 +18,7 @@ public class AllBoardFindDto {
     private List<Integer> categoryId;
     private String title;
     private String contents;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
     private Integer price;
 
