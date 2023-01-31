@@ -1,5 +1,6 @@
 package com.example.myreform.Board.dto;
 
+import com.example.myreform.config.Time;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -18,8 +19,9 @@ public class AllBoardFindDto {
     private List<Integer> categoryId;
     private String title;
     private String contents;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateAt;
+    private String time;
     private Integer price;
 
     // user
@@ -30,12 +32,13 @@ public class AllBoardFindDto {
 
 
     @Builder
-    public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title,String contents, LocalDateTime updateAt, Integer price, String nickname, List<String> imageUrl) {
+    public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title,String contents,LocalDateTime updateAt ,Integer price, String nickname, List<String> imageUrl) {
         this.boardId = boardId;
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;
         this.updateAt = updateAt;
+        this.time = Time.calculateTime(updateAt);
         this.price = price;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
