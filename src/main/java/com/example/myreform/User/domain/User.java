@@ -77,6 +77,8 @@ public class User extends BaseEntity {
     }
 
     public void update(UserUpdateDto userUpdateDto) {
+        this.pw = userUpdateDto.getPw();
+        this.email = userUpdateDto.getEmail();
         this.nickname = userUpdateDto.getNickname();
         this.introduction = userUpdateDto.getIntroduction();
     }
