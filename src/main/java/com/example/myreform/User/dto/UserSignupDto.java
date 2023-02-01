@@ -31,6 +31,7 @@ public class UserSignupDto {
                 .nickname(nickname)
                 .pw(encodePw)
                 .role(User.Role.USER)
+                .marketing(marketing)
                 .build();
     }
 
