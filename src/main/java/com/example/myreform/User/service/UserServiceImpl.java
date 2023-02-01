@@ -91,7 +91,8 @@ public class UserServiceImpl implements UserService {
 
         User user = userOp.get();
         try {
-            user.update(userUpdateDto);
+            String encodePw = passwordEncoder.encode(userUpdateDto.getPw());
+            user.update(userUpdateDto, encodePw);
         } catch (RuntimeException exception) {
             return new ResponseUser(ExceptionCode.USER_UPDATE_INVALID);
         }
