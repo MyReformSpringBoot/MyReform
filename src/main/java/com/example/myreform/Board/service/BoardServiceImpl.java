@@ -189,6 +189,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     List<BoardImage> saveBoardImage(Board board, List<MultipartFile> files) throws Exception{
+        System.out.println("files.get(0) = " + files.get(0));
         List<Image> imageList = imageUploadHandler.parseImageInfo(board.getBoardId(), files);
         List<BoardImage> boardImages = new ArrayList<>();
         for(Image image : imageList){

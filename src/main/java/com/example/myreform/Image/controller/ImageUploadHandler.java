@@ -57,14 +57,15 @@ public class ImageUploadHandler {
             if (!multipartFile.isEmpty()) {
                 // jpeg, png 파일들만 받아서 처리할 예정
                 String contentType = multipartFile.getContentType();
+                String contentName = multipartFile.getOriginalFilename();
                 String originalFileExtension;
                 // 확장자 명이 없으면 이 파일은 잘 못 된 것
                 if (ObjectUtils.isEmpty(contentType)) {
                     break;
                 } else {
-                    if (contentType.contains("image/jpeg")) {
+                    if (contentName.contains("jpg")) {
                         originalFileExtension = ".jpg";
-                    } else if (contentType.contains("image/png")) {
+                    } else if (contentName.contains("png")) {
                         originalFileExtension = ".png";
                     }
                     // 다른 파일 명이면 아무 일 하지 않음
