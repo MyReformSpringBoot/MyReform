@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Entity(name = "board")
+@Entity(name = "BOARD")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -15,7 +15,7 @@ import java.util.Optional;
 
 
 @Getter
-@Entity(name = "user")
+@Entity(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 
