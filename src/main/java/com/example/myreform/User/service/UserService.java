@@ -8,8 +8,8 @@ import com.example.myreform.User.response.ResponseUser;
 
 public interface UserService {
 
-    ResponseUser signUp(UserSignupDto signupDTO);
-    ResponseUser login(UserLoginDto loginDTO);
+    Object signUp(UserSignupDto signupDTO);
+    Object login(UserLoginDto loginDTO);
     Object find(Long userId);
     Object update(Long userId, UserUpdateDto userUpdateDto);
 }

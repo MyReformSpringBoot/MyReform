@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Transactional
-    public ResponseUser signUp(UserSignupDto signupDTO) {
+    public Object signUp(UserSignupDto signupDTO) {
 
         if (userRepository.findById(signupDTO.getId()).isPresent()){
             return new ResponseUser(ExceptionCode.SIGNUP_DUPLICATED_ID);
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public ResponseUser login(UserLoginDto loginDTO) {
+    public Object login(UserLoginDto loginDTO) {
 
         Optional<User> user = userRepository.findById(loginDTO.getId());
         if (user.isPresent()) { // 조회 결과가 있다(해당 이메일을 가진 회원 정보가 있다)

@@ -22,19 +22,19 @@ public class UserController {
 
     @GetMapping("/home")
     public String test() {
-        return "MyReform users page!";
+        return "MyReform page!";
     }
 
     // 회원가입
     @PostMapping("/users/new-user")
-    public ResponseUser signUp(@RequestBody UserSignupDto request) {
-        return userService.signUp(request);
+    public ResponseEntity<Object> signUp(@RequestBody UserSignupDto userSignupDto) {
+        return new ResponseEntity<>(userService.signUp(userSignupDto), HttpStatus.OK);
     }
 
     //로그인
     @PostMapping("/users")
-    public ResponseUser login(@RequestBody UserLoginDto request) {
-        return userService.login(request);
+    public ResponseEntity<Object> login(@RequestBody UserLoginDto userLoginDto) {
+        return new ResponseEntity<>(userService.login(userLoginDto), HttpStatus.OK);
     }
 
     //프로필
