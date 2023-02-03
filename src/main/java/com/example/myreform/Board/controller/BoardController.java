@@ -10,6 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
@@ -32,13 +34,7 @@ public class BoardController {
 
     // 게시물 생성
     @PostMapping("/create")
-    public ResponseEntity<Object> save(@RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception {
-        //이미지가 들어가며 return type ResponseEntity<Post>에서 ResponseEntity<Object>로 바뀜
-        //파라메터 @Requestbody ObjectNode saveObj => @RequestPart ObjectNode saveObj(json형식과 이미지파일 모두 받기 위해 고침)
-
-        ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-        BoardSaveDto boardSaveDto = mapper.treeToValue(saveObj, BoardSaveDto.class);//nickname과 board정보 같이 맵핑
-
+    public ResponseEntity<Object> save(@RequestPart(value = "saveObj") BoardSaveDto boardSaveDto, @RequestPart(value = "file") List<MultipartFile> files) throws Exception {
         return new ResponseEntity<>(boardService.save(boardSaveDto, files), HttpStatus.OK);
     }
 
@@ -58,9 +54,7 @@ public class BoardController {
 
     //게시물 수정
     @PostMapping("/{boardId}")
-    public ResponseEntity<Object> updatePost(@PathVariable("boardId") long boardId, @RequestPart ObjectNode saveObj, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
-        ObjectMapper mapper = new ObjectMapper();   // JSON을 Object화 하기 위한 Jackson ObjectMapper 이용
-        BoardUpdateDto boardUpdateDto = mapper.treeToValue(saveObj, BoardUpdateDto.class);//nickname과 board정보 같이 맵핑
+    public ResponseEntity<Object> updatePost(@PathVariable("boardId") long boardId, @RequestPart(value = "saveObj") BoardUpdateDto boardUpdateDto, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
         return new ResponseEntity<>(boardService.update(boardId, boardUpdateDto, files), HttpStatus.OK);
     }
 
