@@ -27,10 +27,10 @@ public class OneBoardFindDto {
     public LocalDateTime updateAt;
     public String time;
     private Integer price;
-    private List<String> imageUrls;
+    private List<String> imageUrl;
 
     @Builder
-    public OneBoardFindDto(Long boardId, User user, List<Integer> categoryId, String title, String contents, LocalDateTime updateAt, Integer price, List<String> imageUrls) {
+    public OneBoardFindDto(Long boardId, User user, List<Integer> categoryId, String title, String contents, LocalDateTime updateAt, Integer price, List<String> imageUrl) {
         this.boardId = boardId;
         this.userId = user.getUserId();
         this.nickname = user.getNickname();
@@ -40,6 +40,6 @@ public class OneBoardFindDto {
         this.updateAt = updateAt;
         this.time = Time.calculateTime(updateAt);
         this.price = price;
-        this.imageUrls = imageUrls;
+        this.imageUrl = imageUrl;
     }
 }
