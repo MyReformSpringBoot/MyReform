@@ -7,7 +7,6 @@ build/
 <<<<<<< HEAD
 /src/main/resources/application.yml
 =======
-src/main/resources/application.properties
 >>>>>>> feature/post
 
 ### STS ###
