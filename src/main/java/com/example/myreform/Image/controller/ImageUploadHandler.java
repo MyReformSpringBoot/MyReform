@@ -67,6 +67,8 @@ public class ImageUploadHandler {
                 } else {
                     if (contentName.contains("jpg")) {
                         originalFileExtension = ".jpg";
+                    } else if (contentName.contains("jpeg")) {
+                        originalFileExtension = ".jpeg";
                     } else if (contentName.contains("png")) {
                         originalFileExtension = ".png";
                     }
