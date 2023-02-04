@@ -35,8 +35,9 @@ public class BoardController {
     // 게시물 생성
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<Object> save(@RequestPart(value = "saveObj") BoardSaveDto boardSaveDto, @RequestPart(value = "file") List<MultipartFile> files) throws Exception {
-        System.out.println("boardSaveDto = " + boardSaveDto);
+    public ResponseEntity<Object> save(@RequestPart(value = "file") List<MultipartFile> files) throws Exception {
+        BoardSaveDto boardSaveDto = new BoardSaveDto(); // 임시 데이터
+        boardSaveDto.setNickname("kong"); // 임시 데이터
         return new ResponseEntity<>(boardService.save(boardSaveDto, files), HttpStatus.OK);
     }
 
