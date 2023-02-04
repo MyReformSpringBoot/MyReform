@@ -35,6 +35,7 @@ public class BoardController {
     // 게시물 생성
     @PostMapping("/create")
     public ResponseEntity<Object> save(@RequestPart(value = "saveObj") BoardSaveDto boardSaveDto, @RequestPart(value = "file") List<MultipartFile> files) throws Exception {
+        System.out.println("boardSaveDto = " + boardSaveDto);
         return new ResponseEntity<>(boardService.save(boardSaveDto, files), HttpStatus.OK);
     }
 
