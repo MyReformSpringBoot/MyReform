@@ -73,7 +73,7 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_CREATE_ERROR);
         }
 
-        return new ResponseBoard(ExceptionCode.BOARD_CREATE_OK, board.toOneBoardFindDto());
+        return new ResponseBoardEmpty(ExceptionCode.BOARD_CREATE_OK);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_CREATE_ERROR);
         }
 
-        return new ResponseBoard(ExceptionCode.BOARD_UPDATE_OK, board.toOneBoardFindDto());
+        return new ResponseBoardEmpty(ExceptionCode.BOARD_UPDATE_OK);
     }
 
     @Override

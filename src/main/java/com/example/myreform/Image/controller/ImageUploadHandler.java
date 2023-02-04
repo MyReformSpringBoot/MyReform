@@ -46,8 +46,10 @@ public class ImageUploadHandler {
         // 경로를 지정하고 그곳에다가 저장
         String path = current_date;
         File file = new File(IMG_PATH + "/" + path);
+        System.out.println(1);
         // 저장할 위치의 디렉토리가 존지하지 않을 경우
         if (!file.exists()) {
+            System.out.println("2 = " + 2);
             // mkdir() 함수와 다른 점은 상위 디렉토리가 존재하지 않을 때 그것까지 생성
             file.mkdirs();
         }
