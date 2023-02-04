@@ -34,6 +34,7 @@ public class BoardController {
 
     // 게시물 생성
     @PostMapping("/create")
+    @ResponseBody
     public ResponseEntity<Object> save(@RequestPart(value = "saveObj") BoardSaveDto boardSaveDto, @RequestPart(value = "file") List<MultipartFile> files) throws Exception {
         System.out.println("boardSaveDto = " + boardSaveDto);
         return new ResponseEntity<>(boardService.save(boardSaveDto, files), HttpStatus.OK);
@@ -55,12 +56,14 @@ public class BoardController {
 
     //게시물 수정
     @PostMapping("/{boardId}")
+    @ResponseBody
     public ResponseEntity<Object> updatePost(@PathVariable("boardId") long boardId, @RequestPart(value = "saveObj") BoardUpdateDto boardUpdateDto, @RequestPart(value = "file") List<MultipartFile> files) throws Exception{
         return new ResponseEntity<>(boardService.update(boardId, boardUpdateDto, files), HttpStatus.OK);
     }
 
     //게시물 삭제
     @DeleteMapping("/{boardId}")
+    @ResponseBody
     public Object deletePost(@PathVariable("boardId") long boardId, @RequestBody User user) {
         return new ResponseEntity<>(boardService.delete(boardId, user), HttpStatus.OK);
     }
