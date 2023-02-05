@@ -46,6 +46,16 @@ public enum ExceptionCode {
     USER_UPDATE_OK(SUCCESS, "I000", "회원정보수정성공"),
     USER_UPDATE_INVALID(NOT_FOUND_VALUE, "I001", "회원정보수정실패"),
 
+    /**
+     * 채팅
+     */
+    CHATROOM_GET_OK(SUCCESS, "J000", "채팅방있음"),
+    CHATROOM_NOT_FOUND(NOT_FOUND_VALUE, "J001", "채팅방을 찾을 수 없습니다."),
+    CHATROOM_CREATE_OK(SUCCESS, "k000", "채팅방 생성에 성공했습니다."),
+    CHATROOM_CREATE_ERROR(SUCCESS, "K001", "채팅방이 이미 있습니다."),
+    CHATROOM_UPDATE_INVALID(NOT_FOUND_VALUE, "K002", "채팅방 생성 실패"),
+
+
 
     /**
      * 잘못된 ExceptionCode

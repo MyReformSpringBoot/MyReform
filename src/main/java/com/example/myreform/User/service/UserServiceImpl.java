@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
         User user= userOp.get();
-        UserFindDto findDto = user.toFindDto(userOp);
+        UserFindDto findDto = user.toFindDto(userOp.get());
 
         return new ResponseProfile(ExceptionCode.USER_GET_OK, findDto);
 
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
         } catch (RuntimeException exception) {
             return new ResponseUser(ExceptionCode.USER_UPDATE_INVALID);
         }
-        return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto(userOp));
+        return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto(userOp.get()));
     }
 
 

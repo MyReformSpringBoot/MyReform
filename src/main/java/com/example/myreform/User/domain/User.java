@@ -42,8 +42,6 @@ public class User extends BaseEntity {
     @JsonIgnore
     private boolean marketing;
 
-
-
     public enum Role {
         USER, MANAGER, ADMIN
     }
@@ -66,7 +64,7 @@ public class User extends BaseEntity {
         this.marketing = marketing;
     }
 
-    public UserFindDto toFindDto(Optional<User> userOp) {
+    public UserFindDto toFindDto(User userOp) {
         return UserFindDto.builder()
                 .userId(userId)
                 .email(email)
