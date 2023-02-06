@@ -49,11 +49,14 @@ public enum ExceptionCode {
     /**
      * 채팅
      */
-    CHATROOM_GET_OK(SUCCESS, "J000", "채팅방있음"),
+    CHATROOM_GET_OK(SUCCESS, "J000", "해당 채팅방 있음"),
     CHATROOM_NOT_FOUND(NOT_FOUND_VALUE, "J001", "채팅방을 찾을 수 없습니다."),
-    CHATROOM_CREATE_OK(SUCCESS, "k000", "채팅방 생성에 성공했습니다."),
+    CHATROOM_CREATE_OK(SUCCESS, "K000", "채팅방 생성에 성공했습니다."),
     CHATROOM_CREATE_ERROR(SUCCESS, "K001", "채팅방이 이미 있습니다."),
     CHATROOM_UPDATE_INVALID(NOT_FOUND_VALUE, "K002", "채팅방 생성 실패"),
+
+    CHATROOM_LIST_NOT_FOUND(SUCCESS, "L000", "채팅방 리스트 없습니다."),
+    CHATROOM_LIST_GET_OK(SUCCESS, "L001", "채팅방 리스트 있음"),
 
 
 

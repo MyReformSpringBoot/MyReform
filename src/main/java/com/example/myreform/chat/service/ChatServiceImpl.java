@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface ChatServiceImpl {
     Object save(ChatroomSaveDto ChatroomSaveDto);
+    Object findByNickname(ChatroomFindDto chatroomFindDto);
 }

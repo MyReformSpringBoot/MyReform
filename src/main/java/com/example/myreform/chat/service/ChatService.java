@@ -5,6 +5,7 @@ import com.example.myreform.Board.repository.BoardRepository;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.chat.domain.Chatroom;
+import com.example.myreform.chat.dto.ChatroomFindDto;
 import com.example.myreform.chat.dto.ChatroomSaveDto;
 import com.example.myreform.chat.repository.ChatroomRepository;
 import com.example.myreform.chat.repository.UserBoardChatroomRepository;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,6 +64,20 @@ public class ChatService implements ChatServiceImpl {
         }
     }
 
+    @Override
+    public Object findByNickname(ChatroomFindDto chatroomFindDto) {
+        String nickname = chatroomFindDto.getNickname();
+        List<UserBoardChatroom> chatroomList = userBoardChatroomRepository
+                .findByOwnerNicknameOrSenderNickname(nickname, nickname);
+        if (chatroomList.size() > 0) {
+            return new ResponseChatroom(ExceptionCode.CHATROOM_LIST_GET_OK, chatroomList);
+        }
+        else {
+            return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_LIST_NOT_FOUND);
+        }
+    }
+
+
     private boolean validation(Board board, Optional<User> owner, Optional<User> sender) {
         if (board == null || owner.isEmpty() || sender.isEmpty()) {
             //System.out.println("빈 정보");
@@ -75,7 +91,6 @@ public class ChatService implements ChatServiceImpl {
             return true;
         }
     }
-
 
     private ResponseChatroom checkChatroom(Chatroom room) {
         Chatroom chatroom = chatroomRepository.findByBoardIdAndSenderId(room.getBoardId(), room.getSenderId());

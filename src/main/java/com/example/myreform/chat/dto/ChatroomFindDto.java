@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChatroomFindDto {
-    private Long userId;
+    private String nickname;
 }
