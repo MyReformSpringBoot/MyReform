@@ -31,11 +31,11 @@ public class ChatService implements ChatServiceImpl {
 
     @Override // 채팅방 생성 및 조회
     public Object save(ChatroomSaveDto chatroomSaveDto) {
-        Optional<User> sender = userRepository.findByNickname(chatroomSaveDto.getSenderNickname());
-        Optional<User> owner = userRepository.findByNickname(chatroomSaveDto.getOwnerNickname());
         Board board = boardRepository.findBoardByBoardIdAndStatusEquals(chatroomSaveDto.getBoardId(), 1);
+        Optional<User> sender = userRepository.findByNickname(chatroomSaveDto.getSenderNickname());
+        Optional<User> owner = userRepository.findByNickname(board.getUser().getNickname());
 
-        if (owner.isPresent() && sender.isPresent()) {
+        if (validation(board, owner, sender)) {
             Chatroom room = Chatroom.builder()
                     .boardId(chatroomSaveDto.getBoardId())
                     .ownerId(owner.get().getUserId())
@@ -43,7 +43,7 @@ public class ChatService implements ChatServiceImpl {
                     .build();
 
             UserBoardChatroom roomInfo = UserBoardChatroom.builder()
-                    .board(board).owner(owner.get().getNickname()).sender(sender.get().getNickname()).build();
+                    .boardTitle(board.getTitle()).owner(owner.get().getNickname()).sender(sender.get().getNickname()).build();
 
             ResponseChatroom responseChatroom = checkChatroom(room);
             if (responseChatroom == null) {
@@ -59,6 +59,20 @@ public class ChatService implements ChatServiceImpl {
         }
         else {
             return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_UPDATE_INVALID);
+        }
+    }
+
+    private boolean validation(Board board, Optional<User> owner, Optional<User> sender) {
+        if (board == null || owner.isEmpty() || sender.isEmpty()) {
+            //System.out.println("빈 정보");
+            return false;
+        }
+        else if (owner.get().getUserId().equals(sender.get().getUserId())) {
+            //System.out.println("중복");
+            return false;
+        }
+        else {
+            return true;
         }
     }
 

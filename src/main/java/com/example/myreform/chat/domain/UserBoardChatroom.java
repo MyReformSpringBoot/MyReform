@@ -24,15 +24,12 @@ public class UserBoardChatroom {
 
     private String ownerNickname;
     private String senderNickname;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "board_id")
-    private Board board;
+    private String boardTitle;
 
 
     @Builder
-    public UserBoardChatroom(Board board, String owner, String sender){
-        this.board = board;
+    public UserBoardChatroom(String boardTitle, String owner, String sender){
+        this.boardTitle = boardTitle;
         this.ownerNickname = owner;
         this.senderNickname = sender;
     }
