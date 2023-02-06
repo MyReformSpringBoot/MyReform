@@ -1,6 +1,7 @@
 package com.example.myreform.User.domain;
 
 import com.example.myreform.Board.domain.Board;
+import com.example.myreform.Like.domain.Like;
 import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.User.dto.UserUpdateDto;
 import com.example.myreform.config.BaseEntity;
@@ -41,6 +42,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @JsonIgnore
     private boolean marketing;
+
+    @OneToMany(mappedBy = "user")
+    private List<Like> likes = new ArrayList<>();
 
 
 

@@ -23,6 +23,7 @@ public class AllBoardFindDto {
     private LocalDateTime updateAt;
     private String time;
     private Integer price;
+    private Long countOfLike;
 
     // user
     private String nickname;
@@ -32,7 +33,7 @@ public class AllBoardFindDto {
 
 
     @Builder
-    public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title,String contents,LocalDateTime updateAt ,Integer price, String nickname, List<String> imageUrl) {
+    public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title,String contents,LocalDateTime updateAt ,Integer price, Long countOfLike,String nickname, List<String> imageUrl) {
         this.boardId = boardId;
         this.categoryId = categoryId;
         this.title = title;
@@ -42,5 +43,6 @@ public class AllBoardFindDto {
         this.price = price;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
+        this.countOfLike = countOfLike;
     }
 }
