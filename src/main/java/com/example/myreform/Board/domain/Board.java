@@ -121,7 +121,11 @@ public class Board extends BaseEntity {
     }
 
     public void updateLike(boolean like) {
-        if(like) this.countOfLike += 1;
-        else this.countOfLike -= 1;
+        if(like) {
+            this.countOfLike += 1;
+        }
+        else {
+            this.countOfLike -= 1;
+        }
     }
 }
