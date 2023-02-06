@@ -55,7 +55,8 @@ public class UserServiceImpl implements UserService {
                     .pw(user.get().getPw())
                     .build();
             if (passwordEncoder.matches(loginDTO.getPw(), checkIdUser.getPw())) { // 비밀번호 일치
-                return new ResponseUser(ExceptionCode.LOGIN_OK);
+                String token = user.get().getNickname();
+                return new ResponseUser(ExceptionCode.LOGIN_OK, token);
             }
             return new ResponseUser(ExceptionCode.LOGIN_NOT_FOUND_PW);
         }
@@ -65,8 +66,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Object find(Long userId) {
-        Optional<User> userOp = userRepository.findByUserId(userId);
+    public Object find(String nickname) {
+        Optional<User> userOp = userRepository.findByNickname(nickname);
         if(userOp.isEmpty()){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
@@ -78,9 +79,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object update(Long userId, UserUpdateDto userUpdateDto) {
+    public Object update(String nickname, UserUpdateDto userUpdateDto) {
 
-        Optional<User> userOp = userRepository.findByUserId(userId);
+        Optional<User> userOp = userRepository.findByNickname(nickname);
         if(userOp.isEmpty()){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
