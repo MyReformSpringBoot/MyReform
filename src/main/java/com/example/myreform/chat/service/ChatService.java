@@ -36,22 +36,21 @@ public class ChatService implements ChatServiceImpl {
         Board board = boardRepository.findBoardByBoardIdAndStatusEquals(chatroomSaveDto.getBoardId(), 1);
 
         if (owner.isPresent() && sender.isPresent()) {
-            UserBoardChatroom roomInfo = UserBoardChatroom.builder()
-                    .board(board).owner(owner.get()).sender(sender.get()).build();
-            System.out.println(roomInfo);
-
             Chatroom room = Chatroom.builder()
                     .boardId(chatroomSaveDto.getBoardId())
-                    .ownerId(roomInfo.getOwner().getUserId())
-                    .senderId(roomInfo.getSender().getUserId())
+                    .ownerId(owner.get().getUserId())
+                    .senderId(sender.get().getUserId())
                     .build();
-            System.out.println(room);
+
+            UserBoardChatroom roomInfo = UserBoardChatroom.builder()
+                    .board(board).owner(owner.get().getNickname()).sender(sender.get().getNickname()).build();
 
             ResponseChatroom responseChatroom = checkChatroom(room);
-            System.out.println(responseChatroom);
             if (responseChatroom == null) {
-                userBoardChatroomRepository.save(roomInfo);
                 chatroomRepository.save(room);
+                roomInfo.setLastTime(room.getCreateAt());
+                roomInfo.setChatroomId(room.getChatroomId());
+                userBoardChatroomRepository.save(roomInfo);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_OK, room);
             }
             else {

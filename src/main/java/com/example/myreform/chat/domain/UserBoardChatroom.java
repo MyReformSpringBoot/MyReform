@@ -19,25 +19,26 @@ public class UserBoardChatroom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userBoardChatroomId;
 
-    @OneToOne
-    @JoinColumn(name = "sender_user_id")
-    private User sender;
+    private Long chatroomId;
+    private LocalDateTime lastTime;
 
-    @OneToOne
-    @JoinColumn(name = "owner_user_id")
-    private User owner;
+    private String ownerNickname;
+    private String senderNickname;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "board_id")
     private Board board;
 
-    private LocalDateTime lastTime;
 
     @Builder
-    public UserBoardChatroom(Board board, User owner, User sender){
+    public UserBoardChatroom(Board board, String owner, String sender){
         this.board = board;
-        this.owner = owner;
-        this.sender = sender;
+        this.ownerNickname = owner;
+        this.senderNickname = sender;
+    }
+
+    public void setChatroomId(Long chatroomId) {
+        this.chatroomId = chatroomId;
     }
 
     public void setLastTime(LocalDateTime time) {
