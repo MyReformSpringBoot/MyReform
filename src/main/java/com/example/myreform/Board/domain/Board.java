@@ -7,6 +7,7 @@ import com.example.myreform.User.domain.User;
 import com.example.myreform.config.BaseEntity;
 import com.example.myreform.Board.dto.OneBoardFindDto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -41,16 +42,13 @@ public class Board extends BaseEntity {
     private Integer price;
 
     @Column(name = "count_of_like")
-    private Long countOfLike = 0L;
+    private Long countOfLike;
 
     @OneToMany(mappedBy = "board")
     private List<BoardImage> boardImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "board")
     private List<BoardCategory> boardCategories = new ArrayList<>();
-
-    @OneToMany(mappedBy = "board")
-    private List<Like> likes = new ArrayList<>();
 
 
     // 연관관계 편의 메서드, 수정 시 사용
@@ -70,7 +68,6 @@ public class Board extends BaseEntity {
         this.title = title;
         this.contents = contents;
         this.price = price;
-        this.countOfLike = countOfLike;
     }
 
 

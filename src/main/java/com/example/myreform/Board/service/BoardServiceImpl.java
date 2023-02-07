@@ -15,6 +15,7 @@ import com.example.myreform.Image.controller.ImageUploadHandler;
 import com.example.myreform.Board.repository.BoardImageRepository;
 import com.example.myreform.Board.repository.BoardRepository;
 
+import com.example.myreform.Like.repository.LikeRepository;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 import com.example.myreform.validation.ExceptionCode;
@@ -50,6 +51,9 @@ public class BoardServiceImpl implements BoardService {
     private final BoardCategoryRepository boardCategoryRepository;
     @Autowired
     private final CategoryRepository categoryRepository;
+
+    @Autowired
+    private final LikeRepository likRepository;
 
     @Value("${img.path}")
     private String IMG_PATH;
@@ -117,27 +121,28 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Object getOneBoard(Long boardId) {
+    public Object getOneBoard(Long boardId, String loginNickname) {
         Board board = boardRepository.findBoardByBoardIdAndStatusEquals(boardId, STATUS);
         try {
             validateBoard(board);
-//            ResponseBoard responseBoard = new ResponseBoard(ExceptionCode.BOARD_GET_OK, board.toOneBoardFindDto());
-//            System.out.println(responseBoard.getData().getClass().getDeclaredField("updateAt").get(responseBoard.getData()).getClass().getName());
-//            System.out.println(new ResponseBoard(ExceptionCode.BOARD_GET_OK, board.toOneBoardFindDto()).getData().getClass().getDeclaredField("updateAt").getName().getClass().getName());
         } catch (IllegalArgumentException exception) {
             ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
             return new ResponseBoardEmpty(exceptionCode);
         }
-        return new ResponseBoard(ExceptionCode.BOARD_GET_OK, board.toOneBoardFindDto());
+        OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto(); // 하나의 게시글에서 좋아요 보여주기
+        oneBoardFindDto.setLikeOrNot(likRepository.existsLikeByBoard_BoardIdAndUser_Nickname(boardId, loginNickname));
+        return new ResponseBoard(ExceptionCode.BOARD_GET_OK, oneBoardFindDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword) {
+    public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword, String loginNickname) {
         List<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
         List<AllBoardFindDto> allBoardFindDtos = boards.stream()
                 .map((x) -> x.toAllBoardFindDto())
                 .collect(Collectors.toList());
+        allBoardFindDtos.forEach(x->x.setLikeOrNot(likRepository.existsLikeByBoard_BoardIdAndUser_Nickname(x.getBoardId(), loginNickname)));
+
         try {
             validateBoard(boards);
         } catch (IllegalArgumentException exception) {

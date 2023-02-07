@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 public class OneBoardFindDto {
@@ -28,11 +29,12 @@ public class OneBoardFindDto {
     public String time;
     private Integer price;
     private Long countOfLike;
+    private boolean likeOrNot;
     private List<String> imageUrl;
 
     @Builder
     public OneBoardFindDto(Long boardId, User user, List<Integer> categoryId, String title, String contents, LocalDateTime updateAt,
-                           Integer price, Long countOfLike, List<String> imageUrl) {
+                           Integer price, Long countOfLike,boolean likeOrNot, List<String> imageUrl) {
         this.boardId = boardId;
         this.userId = user.getUserId();
         this.nickname = user.getNickname();
@@ -43,6 +45,7 @@ public class OneBoardFindDto {
         this.time = Time.calculateTime(updateAt);
         this.price = price;
         this.countOfLike = countOfLike;
+        this.likeOrNot =likeOrNot;
         this.imageUrl = imageUrl;
     }
 }

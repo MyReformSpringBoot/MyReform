@@ -44,14 +44,14 @@ public class BoardController {
     @GetMapping("")
     @ResponseBody
     public ResponseEntity<Object> getBoard(@RequestParam(required = false) Long lastBoardId, @RequestParam int size,
-                                           @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String keyword) throws Exception {
-        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId, keyword), HttpStatus.OK);
+                                           @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String keyword, @RequestParam String loginNickname) throws Exception {
+        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId, keyword,loginNickname), HttpStatus.OK);
     }
 
     @GetMapping("/{boardId}")
     @ResponseBody
-    public ResponseEntity<Object> getOneBoard(@PathVariable("boardId") long boardId) {
-        return new ResponseEntity<>(boardService.getOneBoard(boardId), HttpStatus.OK);
+    public ResponseEntity<Object> getOneBoard(@PathVariable("boardId") long boardId, @RequestParam("nickname") String loginNickname) {
+        return new ResponseEntity<>(boardService.getOneBoard(boardId, loginNickname), HttpStatus.OK);
     }
 
     //게시물 수정
