@@ -1,6 +1,8 @@
 package com.example.myreform.User.domain;
 
 import com.example.myreform.Board.domain.Board;
+import com.example.myreform.Board.dto.OneBoardFindDto;
+import com.example.myreform.Like.domain.Like;
 import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.User.dto.UserUpdateDto;
 import com.example.myreform.config.BaseEntity;
@@ -11,14 +13,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Getter
 @Entity(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-
 @EntityListeners(AuditingEntityListener.class) // 자동으로 날짜, 시간
 public class User extends BaseEntity {
 
@@ -41,6 +40,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @JsonIgnore
     private boolean marketing;
+
+    @OneToMany(mappedBy = "user")
+    List<Like> likes = new ArrayList<>();
 
     public enum Role {
         USER, MANAGER, ADMIN
@@ -71,6 +73,7 @@ public class User extends BaseEntity {
                 .id(id)
                 .nickname(nickname)
                 .introduction(introduction)
+                .likeBoards(getLikeBoards())
                 .build();
     }
 
@@ -79,6 +82,13 @@ public class User extends BaseEntity {
         this.email = userUpdateDto.getEmail();
         this.nickname = userUpdateDto.getNickname();
         this.introduction = userUpdateDto.getIntroduction();
+    }
+
+    public List<OneBoardFindDto> getLikeBoards(){
+        List<OneBoardFindDto> boardsLikes = new ArrayList<>();
+        likes.forEach(x -> boardsLikes.add(x.getBoard().toOneBoardFindDto()));
+        boardsLikes.forEach(x->x.setLikeOrNot(true));//자기가 찜한 것만 불러오기 때문에 무조건 true로 설정해도 상관없음
+        return boardsLikes;
     }
 
 }

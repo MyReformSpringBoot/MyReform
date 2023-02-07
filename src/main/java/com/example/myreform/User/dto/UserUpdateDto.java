@@ -1,10 +1,13 @@
 package com.example.myreform.User.dto;
 
+import com.example.myreform.Board.domain.Board;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.config.BaseEntity;
 import lombok.*;
 
 import javax.persistence.Column;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,11 +16,12 @@ import javax.persistence.Column;
 public class UserUpdateDto extends BaseEntity {
     @Column(name = "user_id")
     private Long userId;
-
     private String pw;
     private String email;
     private String nickname;
     private String introduction;
+
+    private List<Board> likeBoards = new ArrayList<>();
 
 
     @Builder

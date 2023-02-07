@@ -13,9 +13,11 @@ public class ResponseUser extends ResponseType {
     public ResponseUser(ExceptionCode exceptionCode) {
         super(exceptionCode);
     }
+
     @Nullable
     @Autowired
     private String token;
+
     public ResponseUser(ExceptionCode exceptionCode, @Nullable String token) {
         super(exceptionCode);
         this.token = token;
