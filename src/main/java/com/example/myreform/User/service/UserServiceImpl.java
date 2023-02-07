@@ -1,5 +1,7 @@
 package com.example.myreform.User.service;
 
+import com.example.myreform.Board.domain.Board;
+import com.example.myreform.Board.repository.BoardRepository;
 import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.User.dto.UserLoginDto;
 import com.example.myreform.User.dto.UserSignupDto;
@@ -15,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -26,6 +31,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final BoardRepository boardRepository;
 
 
     @Transactional
@@ -55,7 +62,8 @@ public class UserServiceImpl implements UserService {
                     .pw(user.get().getPw())
                     .build();
             if (passwordEncoder.matches(loginDTO.getPw(), checkIdUser.getPw())) { // 비밀번호 일치
-                return new ResponseUser(ExceptionCode.LOGIN_OK);
+                String token = user.get().getNickname();
+                return new ResponseUser(ExceptionCode.LOGIN_OK, token);
             }
             return new ResponseUser(ExceptionCode.LOGIN_NOT_FOUND_PW);
         }
@@ -65,27 +73,33 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Object find(Long userId) {
-        Optional<User> userOp = userRepository.findByUserId(userId);
+    public Object find(String nickname) {
+        Optional<User> userOp = userRepository.findByNickname(nickname);
         if(userOp.isEmpty()){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
         User user= userOp.get();
         UserFindDto findDto = user.toFindDto(userOp);
+        return new ResponseProfile(ExceptionCode.USER_GET_OK, findDto);//, getLikeBoards(findDto.getLikeBoardsId()
 
-        return new ResponseProfile(ExceptionCode.USER_GET_OK, findDto);
-
+    }
+    private List<Board> getLikeBoards(List<Long> boardIds){
+        List<Board> boards = new ArrayList<>();
+        for(Long id : boardIds){
+            boards.add(boardRepository.findById(id).get());
+        }
+        return boards;
     }
 
     @Override
-    public Object update(Long userId, UserUpdateDto userUpdateDto) {
+    public Object update(String nickname, UserUpdateDto userUpdateDto) {
 
-        Optional<User> userOp = userRepository.findByUserId(userId);
+        Optional<User> userOp = userRepository.findByNickname(nickname);
         if(userOp.isEmpty()){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
 
-        if (userRepository.findByNickname(userUpdateDto.getNickname()).isPresent()){
+        if (userOp.isPresent()){//기존: userRepository.findByNickname(userUpdateDto.getNickname()).isPresent()
             return new ResponseUser(ExceptionCode.SIGNUP_DUPLICATED_NICKNAME);
         }
 
@@ -98,6 +112,5 @@ public class UserServiceImpl implements UserService {
         }
         return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto(userOp));
     }
-
 
 }
