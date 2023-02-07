@@ -3,10 +3,7 @@ package com.example.myreform.Like.domain;
 import com.example.myreform.Board.domain.Board;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.config.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 

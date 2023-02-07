@@ -44,7 +44,7 @@ public class AllBoardFindDto {
         this.price = price;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
-        this.likeOrNot = false;
+        this.likeOrNot = likeOrNot;
         this.countOfLike = countOfLike;
     }
 }
