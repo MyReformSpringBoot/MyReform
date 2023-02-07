@@ -1,5 +1,7 @@
 package com.example.myreform.User.service;
 
+import com.example.myreform.Board.domain.Board;
+import com.example.myreform.Board.repository.BoardRepository;
 import com.example.myreform.User.dto.UserFindDto;
 import com.example.myreform.User.dto.UserLoginDto;
 import com.example.myreform.User.dto.UserSignupDto;
@@ -15,6 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -26,6 +31,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final BoardRepository boardRepository;
 
 
     @Transactional
@@ -72,8 +79,8 @@ public class UserServiceImpl implements UserService {
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
         User user= userOp.get();
-        UserFindDto findDto = user.toFindDto(userOp.get());
 
+        UserFindDto findDto = user.toFindDto(userOp.get());
         return new ResponseProfile(ExceptionCode.USER_GET_OK, findDto);
 
     }
@@ -86,7 +93,7 @@ public class UserServiceImpl implements UserService {
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
 
-        if (userRepository.findByNickname(userUpdateDto.getNickname()).isPresent()){
+        if (userOp.isPresent()){//기존: userRepository.findByNickname(userUpdateDto.getNickname()).isPresent()
             return new ResponseUser(ExceptionCode.SIGNUP_DUPLICATED_NICKNAME);
         }
 
@@ -99,6 +106,5 @@ public class UserServiceImpl implements UserService {
         }
         return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto(userOp.get()));
     }
-
 
 }

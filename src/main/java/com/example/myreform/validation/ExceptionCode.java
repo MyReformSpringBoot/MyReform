@@ -63,7 +63,15 @@ public enum ExceptionCode {
     /**
      * 잘못된 ExceptionCode
      */
-    EMPTY(null, "", "");
+    EMPTY(null, "", ""),
+
+    /**
+     * 좋아요/찜 ExceptionCode
+     */
+    LIKE_FOUND_OK(SUCCESS, "K000", "좋아요 추가/찜목록에 추가"),
+    LIKE_NOT_FOUND(NOT_FOUND_VALUE, "K001", "찜목록에 존재하지 않음"),
+    LIKE_DUPLICATED(DUPLICATED_VALUE, "K002", "이미 찜한 게시글"),
+    LIKE_DELETE(SUCCESS, "K003", "좋아요 취소/찜 제거");
 
     private final HttpStatus status;
     private final String code;

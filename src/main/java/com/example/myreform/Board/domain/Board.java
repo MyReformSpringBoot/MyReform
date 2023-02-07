@@ -2,10 +2,12 @@ package com.example.myreform.Board.domain;
 
 import com.example.myreform.Board.dto.AllBoardFindDto;
 import com.example.myreform.Board.dto.BoardUpdateDto;
+import com.example.myreform.Like.domain.Like;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.config.BaseEntity;
 import com.example.myreform.Board.dto.OneBoardFindDto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -39,6 +41,9 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
+    @Column(name = "count_of_like")
+    private Long countOfLike;
+
     @OneToMany(mappedBy = "board")
     private List<BoardImage> boardImages = new ArrayList<>();
 
@@ -57,7 +62,7 @@ public class Board extends BaseEntity {
     }
 
     @Builder
-    public Board(Long boardId, User user, String title, String contents, Integer price){
+    public Board(Long boardId, User user, String title, String contents, Integer price, Long countOfLike){
         this.boardId = boardId;
         this.user = user;
         this.title = title;
@@ -74,6 +79,7 @@ public class Board extends BaseEntity {
                 .title(title)
                 .contents(contents)
                 .price(price)
+                .countOfLike(countOfLike)
                 .updateAt(getUpdateAt())
                 .imageUrl(getUrlString())
                 .build();
@@ -87,6 +93,7 @@ public class Board extends BaseEntity {
                 .contents(contents)
                 .updateAt(getUpdateAt())
                 .price(price)
+                .countOfLike(countOfLike)
                 .nickname(user.getNickname())
                 .imageUrl(getUrlString())
                 .build();
@@ -108,5 +115,14 @@ public class Board extends BaseEntity {
         return boardCategories.stream()
                 .map(x -> x.getCategory().getCategoryId())
                 .collect(Collectors.toList());
+    }
+
+    public void updateLike(boolean like) {
+        if(like) {
+            this.countOfLike += 1;
+        }
+        else {
+            this.countOfLike -= 1;
+        }
     }
 }
