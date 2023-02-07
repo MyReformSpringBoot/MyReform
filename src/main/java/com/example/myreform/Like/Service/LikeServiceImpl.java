@@ -32,27 +32,20 @@ public class LikeServiceImpl implements LikeService{
             User user = userRepository.findByNickname(nickname).get();
             likeRepository.save(new Like(user, board));
             board.updateLike(true);
-            return new ResponseLike(ExceptionCode.LIKE_FOUND_OK ,likeRepository.countByBoard_BoardIdAndUser_Nickname(boardId, nickname));
+            return new ResponseLike(ExceptionCode.LIKE_FOUND_OK ,likeRepository.countByBoard_BoardId(boardId));
 
         }
-        return new ResponseLike(ExceptionCode.LIKE_DUPLICATED ,likeRepository.countByBoard_BoardIdAndUser_Nickname(boardId, nickname));
+        return new ResponseLike(ExceptionCode.LIKE_DUPLICATED ,likeRepository.countByBoard_BoardId(boardId));
     }
     @Override
     public Object removeLike(Long boardId, String nickname){
         if(!likeRepository.existsLikeByBoard_BoardIdAndUser_Nickname(boardId, nickname)){
-            return new ResponseLike(ExceptionCode.LIKE_NOT_FOUND ,likeRepository.countByBoard_BoardIdAndUser_Nickname(boardId, nickname));
+            return new ResponseLike(ExceptionCode.LIKE_NOT_FOUND ,likeRepository.countByBoard_BoardId(boardId));
         }
         Board board = boardRepository.findById(boardId).get();
-        //User user = userRepository.findByNickname(nickname).get();
         board.updateLike(false);
         likeRepository.delete(likeRepository.findByBoard_BoardIdAndUser_Nickname(boardId, nickname));
-        return new ResponseLike(ExceptionCode.LIKE_DELETE ,likeRepository.countByBoard_BoardIdAndUser_Nickname(boardId, nickname));
+        return new ResponseLike(ExceptionCode.LIKE_DELETE ,likeRepository.countByBoard_BoardId(boardId));
     }
-//    private void removeL
-    public Object getUserLikeList(String nickname){
-        return likeRepository.findAllByUser_Nickname(nickname).stream()
-                .map(x -> x.getBoard()).collect(Collectors.toList());
-    }
-
 
 }
