@@ -13,7 +13,6 @@ import javax.persistence.*;
 @Getter
 @Entity(name = "LIKE_USER")
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Like extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

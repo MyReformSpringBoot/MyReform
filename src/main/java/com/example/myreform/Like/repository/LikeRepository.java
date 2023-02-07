@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface LikeRepository extends JpaRepository<Like, Long> {
-    boolean existsLikeByBoard_BoardIdAndUser_UserId(Board board, User user);
-    Long countByBoard_BoardIdAndUser_UserId(Board board, User user);
-    Like findByBoard_BoardIdAndUser_UserId(Board board, User user);
-    List<Like> findAllByUser_UserId(User user);
+public interface LikeRepository extends JpaRepository<Like, Long> {//이후에 nickname => token으로
+    boolean existsLikeByBoard_BoardIdAndUser_Nickname(Long boardId, String nickname);
+    Long countByBoard_BoardIdAndUser_Nickname(Long boardId, String nickname);
+    Like findByBoard_BoardIdAndUser_Nickname(Long boardId, String nickname);
+    List<Like> findAllByUser_Nickname(String nickname);
 }
