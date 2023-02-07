@@ -16,7 +16,7 @@ public class ChatController {
     private final ChatService chatService;
     
     // 채팅방 생성
-    @PostMapping("/chats/new-chat")
+    @PostMapping("/chats")
     public Object createRoom(@RequestBody ChatroomSaveDto chatroomSaveDto) {
         return new ResponseEntity<>(chatService.save(chatroomSaveDto), HttpStatus.OK);
     }

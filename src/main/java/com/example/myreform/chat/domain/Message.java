@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "message")
+@Entity
 @Getter
-@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 public class Message extends BaseEntity {
     @Id
@@ -17,30 +16,33 @@ public class Message extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
 
-    @ManyToOne
+    private Long chatroomId;
+
+    public void setMessage(String s) {
+        this.message = s;
+    }
+
+/*    @ManyToOne
     @JoinColumn(name = "chatroom_id")
-    private Chatroom chatroom;
+    private ChatRoom chatRoom;*/
 
-    private Long senderId;
-    private String contents;
-
-    public enum MessageType{
+    // 메시지 타입 : 입장, 채팅
+    public enum MessageType {
         ENTER, TALK
     }
-    private MessageType type;
+
+    private MessageType type; // 메시지 타입
+    private String nickname; // 메시지 보낸사람
+    private String message; // 메시지
 
     @Builder
-    public Message(MessageType messageType, Long senderId, String contents) {
+    public Message(MessageType messageType, String nickname, String message, ChatRoom chatRoom) {
         this.type = messageType;
-        this.senderId = senderId;
-        this.contents = contents;
-    }
-
-    public void setChatroom(Chatroom chatroom) {
-        this.chatroom = chatroom;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
+        this.nickname = nickname;
+        this.message = message;
+        this.chatroomId = chatRoom.getChatroomId();
+        //this.chatRoom = chatRoom;
+        /*if (messageType.equals(MessageType.TALK))
+        chatRoom.getMessages().add(this);*/
     }
 }

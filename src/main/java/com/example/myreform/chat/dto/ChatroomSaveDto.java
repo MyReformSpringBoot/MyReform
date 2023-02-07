@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class ChatroomSaveDto {
     private String senderNickname;
-    private Long boardId;
+    private int boardId;
 }
