@@ -67,4 +67,11 @@ public class BoardController {
     public Object deletePost(@PathVariable("boardId") long boardId, @RequestBody User user) {
         return new ResponseEntity<>(boardService.delete(boardId, user), HttpStatus.OK);
     }
+    //게시물 권한 확인
+    @PostMapping("/{boardId}/{token}")
+    @ResponseBody
+    public Object checkAuthority(@PathVariable("boardId") long boardId, @PathVariable("token") String LoginNickname) {
+        //return boardService.checkAuthority(boardId, LoginNickname);
+        return new ResponseEntity<>(boardService.checkAuthority(boardId, LoginNickname), HttpStatus.OK);
+    }
 }

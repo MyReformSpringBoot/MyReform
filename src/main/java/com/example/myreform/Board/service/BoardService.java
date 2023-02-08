@@ -19,4 +19,5 @@ public interface BoardService {
     Object getOneBoard(Long boardId, String loginNickname);
     Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword, String loginNickname);
 
+    Object checkAuthority(Long boardId, String Loginnickname);
 }

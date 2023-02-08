@@ -230,6 +230,21 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);//수정
         }
     }
+    @Override
+    public Object checkAuthority(Long boardId, String LoginNickname){
+        Board board;
+        try{
+            board = boardRepository.findById(boardId).get();
+        } catch (Exception e){
+            return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
+        }
+
+        if(LoginNickname.equals(board.getUser().getNickname())){
+            System.out.println(board.getUser().getNickname());
+            return true;
+        }
+        return false;
+    }
 
     private void validateBoard(List<BoardCategory> boardCategories, String userNickname, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
         checkNotFound(boardCategories);
