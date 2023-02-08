@@ -73,13 +73,13 @@ public class ChatService implements ChatServiceImpl {
                     .senderNickname(sender.get().getNickname())
                     .build();
 
-            List<ChatRoom> chatRooms = chatRoomRepository
-                    .findByOwnerNicknameOrSenderNickname(owner.get().getNickname(), sender.get().getNickname());
+            Optional<ChatRoom> chatRooms = chatRoomRepository
+                    .findByOwnerNicknameAndSenderNickname(owner.get().getNickname(), sender.get().getNickname());
             if (chatRooms.isEmpty()) {
                 chatRoomRepository.save(room);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_OK, room);
             } else {
-                return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_ERROR, chatRooms.get(0));
+                return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_ERROR, chatRooms.get());
             }
         }
         else {

@@ -13,6 +13,7 @@ public class ResponseChatroomList extends ResponseType {
 
     public ResponseChatroomList(ExceptionCode exceptionCode, List<ChatRoom> rooms) {
         super(exceptionCode);
+        this.rooms = rooms;
     }
 
     public void addInfo(ChatRoom data) {
