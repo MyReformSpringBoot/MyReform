@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -44,8 +45,8 @@ public class Message extends BaseEntity {
         this.nickname = nickname;
         this.message = message;
         this.chatroomId = chatRoom.getChatroomId();
-        //this.chatRoom = chatRoom;
-        /*if (messageType.equals(MessageType.TALK))
-        chatRoom.getMessages().add(this);*/
+
+        setCreateAt(LocalDateTime.now());
+        setUpdateAt(LocalDateTime.now());
     }
 }
