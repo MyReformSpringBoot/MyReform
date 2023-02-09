@@ -74,8 +74,8 @@ public class ChatService implements ChatServiceImpl {
                     .senderNickname(sender.get().getNickname())
                     .build();
 
-            Optional<ChatRoom> chatRooms = chatRoomRepository
-                    .findByOwnerNicknameAndSenderNickname(owner.get().getNickname(), sender.get().getNickname());
+            Optional<ChatRoom> chatRooms = chatRoomRepository.findByBoardIdAndOwnerNicknameAndSenderNickname(
+                            board.getBoardId(), owner.get().getNickname(), sender.get().getNickname());
             if (chatRooms.isEmpty()) {
                 chatRoomRepository.save(room);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_OK, room);

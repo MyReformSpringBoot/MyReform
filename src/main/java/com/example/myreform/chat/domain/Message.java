@@ -1,15 +1,18 @@
 package com.example.myreform.chat.domain;
 
 import com.example.myreform.config.BaseEntity;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class) // 자동으로 날짜, 시간
 public class Message extends BaseEntity {
     @Id
     @Column(name = "message_id")
