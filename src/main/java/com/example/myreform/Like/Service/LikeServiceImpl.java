@@ -7,6 +7,7 @@ import com.example.myreform.Like.repository.LikeRepository;
 import com.example.myreform.Like.response.ResponseLike;
 import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
+import com.example.myreform.User.response.ResponseUser;
 import com.example.myreform.validation.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,12 @@ public class LikeServiceImpl implements LikeService{
         }
         Board board = boardRepository.findById(boardId).get();
         board.updateLike(false);
+        if(!userRepository.existsByNickname(nickname)){
+            return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
+        }
+        userRepository.findByNickname(nickname).get().getLikes().remove(this);
         likeRepository.delete(likeRepository.findByBoard_BoardIdAndUser_Nickname(boardId, nickname));
+
         return new ResponseLike(ExceptionCode.LIKE_DELETE ,likeRepository.countByBoard_BoardId(boardId));
     }
 
