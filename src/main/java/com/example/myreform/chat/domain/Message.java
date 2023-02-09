@@ -20,10 +20,17 @@ public class Message extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
 
+    private Long chatroomId;
+
     public void setMessage(String s) {
         this.message = s;
     }
 
+/*    @ManyToOne
+    @JoinColumn(name = "chatroom_id")
+    private ChatRoom chatRoom;*/
+
+    // 메시지 타입 : 입장, 채팅
     public enum MessageType {
         ENTER, TALK, EXIT
     }
@@ -37,6 +44,8 @@ public class Message extends BaseEntity {
         this.type = messageType;
         this.nickname = nickname;
         this.message = message;
+        this.chatroomId = chatRoom.getChatroomId();
+
         setCreateAt(LocalDateTime.now());
         setUpdateAt(LocalDateTime.now());
     }
