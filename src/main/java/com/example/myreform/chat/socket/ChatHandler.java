@@ -60,7 +60,8 @@ public class ChatHandler extends TextWebSocketHandler {
             sessions.add(session);
             chatMessage.setMessage(chatMessage.getNickname() + "님이 퇴장했습니다.");
         }
-
+        messageRepository.save(chatMessage);
+        // DB에 저장되는 type은 0=ENTER, 1=TALK, 2=EXIT
         sendMessage(chatMessage, chatService);
     }
 }
