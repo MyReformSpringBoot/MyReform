@@ -28,7 +28,7 @@ public class Message extends BaseEntity {
 
     // 메시지 타입 : 입장, 채팅
     public enum MessageType {
-        ENTER, TALK
+        ENTER, TALK, EXIT
     }
 
     private MessageType type; // 메시지 타입

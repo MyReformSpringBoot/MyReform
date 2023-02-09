@@ -55,6 +55,12 @@ public class ChatHandler extends TextWebSocketHandler {
             sessions.add(session);
             chatMessage.setMessage(chatMessage.getNickname() + "님이 입장했습니다.");
         }
+
+        if (chatMessage.getType().equals(Message.MessageType.EXIT)) {
+            sessions.add(session);
+            chatMessage.setMessage(chatMessage.getNickname() + "님이 퇴장했습니다.");
+        }
+
         sendMessage(chatMessage, chatService);
     }
 }
