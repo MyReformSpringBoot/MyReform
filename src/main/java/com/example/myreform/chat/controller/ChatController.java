@@ -2,6 +2,7 @@ package com.example.myreform.chat.controller;
 
 import com.example.myreform.chat.dto.ChatroomFindDto;
 import com.example.myreform.chat.dto.ChatroomSaveDto;
+import com.example.myreform.chat.dto.MessageFindDto;
 import com.example.myreform.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,11 @@ public class ChatController {
     @GetMapping("/chats")
     public Object findRoom(@RequestBody ChatroomFindDto chatroomFindDto) {
         return new ResponseEntity<>(chatService.findByNickname(chatroomFindDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/messages")
+    public Object findMsg(@RequestBody MessageFindDto messageFindDto) {
+        return new ResponseEntity<>(chatService.findmessages(messageFindDto), HttpStatus.OK);
     }
 
 }

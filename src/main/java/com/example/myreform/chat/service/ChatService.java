@@ -9,11 +9,13 @@ import com.example.myreform.chat.domain.ChatRoom;
 import com.example.myreform.chat.domain.Message;
 import com.example.myreform.chat.dto.ChatroomFindDto;
 import com.example.myreform.chat.dto.ChatroomSaveDto;
+import com.example.myreform.chat.dto.MessageFindDto;
 import com.example.myreform.chat.repository.ChatRoomRepository;
 import com.example.myreform.chat.repository.MessageRepository;
 import com.example.myreform.chat.response.ResponseChatroom;
 import com.example.myreform.chat.response.ResponseChatroomEmpty;
 import com.example.myreform.chat.response.ResponseChatroomList;
+import com.example.myreform.chat.response.ResponseMessageList;
 import com.example.myreform.validation.ExceptionCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,15 @@ public class ChatService implements ChatServiceImpl {
             return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_LIST_NOT_FOUND);
         }
         return new ResponseChatroomList(ExceptionCode.CHATROOM_LIST_GET_OK, rooms);
+    }
+
+    public Object findmessages(MessageFindDto messageFindDto) { // 메세지 조회
+        Long chatroomId = messageFindDto.getChatroomId();
+        List<Message> messages = messageRepository.findByChatroomId(chatroomId);
+        if (messages.isEmpty()) {
+            return new ResponseChatroomEmpty(ExceptionCode.MESSAGE_LIST_NOT_FOUND);
+        }
+        return new ResponseMessageList(ExceptionCode.MESSAGE_LIST_GET_OK, messages);
     }
 
     @Override

@@ -58,6 +58,9 @@ public enum ExceptionCode {
     CHATROOM_LIST_NOT_FOUND(SUCCESS, "L000", "채팅방 리스트 없습니다."),
     CHATROOM_LIST_GET_OK(SUCCESS, "L001", "채팅방 리스트 있음"),
 
+    MESSAGE_LIST_NOT_FOUND(NOT_FOUND_VALUE, "M000", "메세지 리스트 없음"),
+    MESSAGE_LIST_GET_OK(SUCCESS, "M001", "메세지 리스트 있음"),
+
 
 
     /**
