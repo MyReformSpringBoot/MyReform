@@ -1,5 +1,6 @@
 package com.example.myreform.chat.domain;
 
+import com.example.myreform.chat.repository.MessageRepository;
 import com.example.myreform.config.BaseEntity;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity(name = "CHATROOM")
 @EntityListeners(AuditingEntityListener.class) // 자동으로 날짜, 시간
@@ -27,8 +29,8 @@ public class ChatRoom extends BaseEntity {
     private Long senderId;
     private Long boardId;
 
-/*    @OneToMany(mappedBy = "message")
-    List<Message> messages = new ArrayList<>();*/
+    @OneToMany(mappedBy = "message")
+    List<Message> messages = new ArrayList<>();
 
     @Builder
     public ChatRoom(Long ownerId, Long senderId, Long boardId,
@@ -39,5 +41,9 @@ public class ChatRoom extends BaseEntity {
         this.ownerNickname = ownerNickname;
         this.senderNickname = senderNickname;
         this.boardTitle = boardTitle;
+    }
+
+    public void updatemg(Optional<ChatRoom> chatRooms, List<Message> messages){
+        this.messages = messages;
     }
 }

@@ -6,9 +6,11 @@ import com.example.myreform.User.domain.User;
 import com.example.myreform.User.repository.UserRepository;
 
 import com.example.myreform.chat.domain.ChatRoom;
+import com.example.myreform.chat.domain.Message;
 import com.example.myreform.chat.dto.ChatroomFindDto;
 import com.example.myreform.chat.dto.ChatroomSaveDto;
 import com.example.myreform.chat.repository.ChatRoomRepository;
+import com.example.myreform.chat.repository.MessageRepository;
 import com.example.myreform.chat.response.ResponseChatroom;
 import com.example.myreform.chat.response.ResponseChatroomEmpty;
 import com.example.myreform.chat.response.ResponseChatroomList;
@@ -43,6 +45,9 @@ public class ChatService implements ChatServiceImpl {
     private final ChatRoomRepository chatRoomRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+
+    private final MessageRepository messageRepository;
+
 
     public Object findByNickname(ChatroomFindDto chatroomFindDto) { // 채팅방 조회
         String nickname = chatroomFindDto.getNickname();
@@ -80,6 +85,9 @@ public class ChatService implements ChatServiceImpl {
                 chatRoomRepository.save(room);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_OK, room);
             } else {
+                List<Message> messages = messageRepository.findByChatroomId(chatRooms.get().getChatroomId());
+                ChatRoom chatroom =chatRooms.get();
+                chatroom.updatemg(chatRooms, messages);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_ERROR, chatRooms.get());
             }
         }

@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
     Message save(Message message);
+
+    List<Message> findByChatroomId(Long chatroomId);
 }
 
