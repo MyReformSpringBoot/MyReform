@@ -59,10 +59,14 @@ public class ChatService implements ChatServiceImpl {
             return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_LIST_NOT_FOUND);
         }
         List<ChatRoom> result  = new ArrayList<>();
-        for (int i = 0; i < rooms.size(); i++) {
-            List<Message> messages = messageRepository.findByChatroomId(rooms.get(i).getChatroomId()); // fix
-            ChatRoom room = rooms.get(i);
-            room.setLastMessage(messages.get(messages.size()-1).getMessage());
+        for (ChatRoom chatRoom : rooms) {
+            List<Message> messages = messageRepository.findByChatroomId(chatRoom.getChatroomId()); // fix
+            ChatRoom room = chatRoom;
+            if (messages.size() > 0) {
+                room.setLastMessage(messages.get(messages.size() - 1).getMessage());
+            } else {
+                room.setLastMessage(null);
+            }
             result.add(room);
         }
         return new ResponseChatroomList(ExceptionCode.CHATROOM_LIST_GET_OK, result);
