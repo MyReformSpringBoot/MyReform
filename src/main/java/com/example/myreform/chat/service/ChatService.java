@@ -47,17 +47,25 @@ public class ChatService implements ChatServiceImpl {
     private final ChatRoomRepository chatRoomRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-
     private final MessageRepository messageRepository;
 
-
+    @Override
     public Object findByNickname(ChatroomFindDto chatroomFindDto) { // 채팅방 조회
         String nickname = chatroomFindDto.getNickname();
+
         List<ChatRoom> rooms = chatRoomRepository.findByOwnerNicknameOrSenderNickname(nickname, nickname);
+        Collections.reverse(rooms);
         if (rooms.isEmpty()) {
             return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_LIST_NOT_FOUND);
         }
-        return new ResponseChatroomList(ExceptionCode.CHATROOM_LIST_GET_OK, rooms);
+        List<ChatRoom> result  = new ArrayList<>();
+        for (int i = 0; i < rooms.size(); i++) {
+            List<Message> messages = messageRepository.findByChatroomId(rooms.get(i).getChatroomId()); // fix
+            ChatRoom room = rooms.get(i);
+            room.setLastMessage(messages.get(messages.size()-1).getMessage());
+            result.add(room);
+        }
+        return new ResponseChatroomList(ExceptionCode.CHATROOM_LIST_GET_OK, result);
     }
 
     public Object findmessages(MessageFindDto messageFindDto) { // 메세지 조회
@@ -70,8 +78,12 @@ public class ChatService implements ChatServiceImpl {
     }
 
     @Override
-    public ChatRoom findRoomById(Long roomId) {
-        return chatRoomRepository.findByChatroomId(roomId);
+    public Object findChatroomById(Long roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findByChatroomId(roomId);
+        if(chatRoom == null) {
+            return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_NOT_FOUND);
+        }
+        return new ResponseChatroom(ExceptionCode.CHATROOM_GET_OK, chatRoom);
     }
 
     @Override // 채팅방 생성
@@ -96,9 +108,6 @@ public class ChatService implements ChatServiceImpl {
                 chatRoomRepository.save(room);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_OK, room);
             } else {
-                List<Message> messages = messageRepository.findByChatroomId(chatRooms.get().getChatroomId());
-                ChatRoom chatroom =chatRooms.get();
-                chatroom.updatemg(chatRooms, messages);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_ERROR, chatRooms.get());
             }
         }

@@ -5,7 +5,7 @@ import com.example.myreform.chat.dto.ChatroomFindDto;
 import com.example.myreform.chat.dto.ChatroomSaveDto;
 
 public interface ChatServiceImpl {
+    Object findChatroomById(Long roomId);
     Object save(ChatroomSaveDto ChatroomSaveDto);
     Object findByNickname(ChatroomFindDto chatroomFindDto);
-    ChatRoom findRoomById(Long roomId);
 }
