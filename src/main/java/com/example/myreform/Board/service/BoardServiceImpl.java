@@ -6,6 +6,7 @@ import com.example.myreform.Board.domain.BoardCategory;
 import com.example.myreform.Board.domain.BoardImage;
 import com.example.myreform.Board.dto.*;
 import com.example.myreform.Board.repository.BoardCategoryRepository;
+import com.example.myreform.Board.response.ResponseAuthority;
 import com.example.myreform.Board.response.ResponseBoard;
 import com.example.myreform.Board.response.ResponseBoardEmpty;
 import com.example.myreform.Image.domain.Image;
@@ -240,10 +241,9 @@ public class BoardServiceImpl implements BoardService {
         }
 
         if(LoginNickname.equals(board.getUser().getNickname())){
-            System.out.println(board.getUser().getNickname());
-            return true;
+            return new ResponseAuthority(ExceptionCode.AUTHORITY_HAVE, true);
         }
-        return false;
+        return new ResponseAuthority(ExceptionCode.AUTHORITY_NOT_HAVE, false);
     }
 
     private void validateBoard(List<BoardCategory> boardCategories, String userNickname, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
