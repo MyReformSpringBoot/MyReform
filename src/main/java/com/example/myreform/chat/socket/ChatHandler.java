@@ -16,6 +16,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Component
@@ -27,12 +28,10 @@ public class ChatHandler extends TextWebSocketHandler {
     private final ChatService chatService;
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
-    private Set<WebSocketSession> sessions = new HashSet<>();
+    private final Set<WebSocketSession> sessions = new HashSet<>();
 
     public <T> void sendMessage(WebSocketSession session, T message) {
         try {
-            System.out.println("ChatHandler.sendMessage");
-            System.out.println(objectMapper.writeValueAsString(message));
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -40,14 +39,13 @@ public class ChatHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         String payload = message.getPayload();
         log.info("payload {}", payload);
         handleActions(session, payload, chatService);
     }
 
     public <TextMessage> void sendMessage(String message, ChatService chatService) {
-        System.out.println("ChatHandler.sendMessage");
         TextMessage text = (TextMessage) message;
         sessions.parallelStream().forEach(session -> chatService.sendMessage(session, text));
     }
@@ -66,18 +64,19 @@ public class ChatHandler extends TextWebSocketHandler {
 
         Message.MessageType typeValue;
         Message result, result2;
-        if (messages.isEmpty()) {
-            typeValue = Message.MessageType.ENTER;
-            result = Message.builder()
-                    .messageType(typeValue)
-                    .chatRoom(findChatRoom)
-                    .nickname(nicknameValue)
-                    .message(nicknameValue + "님이 입장했습니다.")
-                    .build();
-            sessions.add(session);
-            messageRepository.save(result);
-            sendMessage(messageValue, chatService);
+        boolean enter = false;
+
+        for (Message message : messages) {
+            if (Objects.equals(message.getNickname(), nicknameValue)) {
+                enter = true;
+                break;
+            }
         }
+
+        if (enter || messages.isEmpty()) {
+            messageValue = nicknameValue + "님이 입장했습니다. " + messageValue;
+        }
+
         typeValue = Message.MessageType.TALK;
         result2 = Message.builder()
                 .messageType(typeValue)
