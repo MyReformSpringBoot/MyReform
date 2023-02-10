@@ -29,6 +29,7 @@ public enum ExceptionCode {
     BOARD_UPDATE_OK(SUCCESS, "F000", "게시물 업데이트에 성공했습니다."),
     BOARD_UPDATE_INVALID(INVALID_ACCESS, "F001", "게시물을 변경할 수 있는 권한이 없습니다."),
 
+
     /**
      * 이미지
      */
@@ -61,6 +62,11 @@ public enum ExceptionCode {
     MESSAGE_LIST_NOT_FOUND(NOT_FOUND_VALUE, "M000", "메세지 리스트 없음"),
     MESSAGE_LIST_GET_OK(SUCCESS, "M001", "메세지 리스트 있음"),
 
+    /**
+     * 권한여부
+     */
+    AUTHORITY_HAVE(SUCCESS, "N000", "수정/삭제 권한이 있습니다"),
+    AUTHORITY_NOT_HAVE(NOT_FOUND_VALUE, "N001", "수정/삭제 권한이 없습니다."),
 
 
     /**
