@@ -62,7 +62,7 @@ public class BoardController {
     }
 
     //게시물 삭제
-    @PostMapping("/{boardId}")
+    @PostMapping("/delete/{boardId}")
     @ResponseBody
     public Object deletePost(@PathVariable("boardId") long boardId, @RequestBody User user) {
         return new ResponseEntity<>(boardService.delete(boardId, user), HttpStatus.OK);
