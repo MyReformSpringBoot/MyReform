@@ -34,9 +34,9 @@ public class ChatService implements ChatServiceImpl {
 
     private final ObjectMapper objectMapper;
 
-    public <T> void sendMessage(WebSocketSession session, T message) {
+    public <TextMessage> void sendMessage(WebSocketSession session, TextMessage message) {
         try {
-            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            session.sendMessage(new org.springframework.web.socket.TextMessage(message.toString()));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
