@@ -51,9 +51,6 @@ public class ChatHandler extends TextWebSocketHandler {
     }
 
     public void handleActions(WebSocketSession session, String chatMessage, ChatService chatService) {
-        System.out.println("ChatHandler.handleActions");
-        System.out.println("session = " + session + ", chatMessage = " + chatMessage + ", chatService = " + chatService);
-
         List<String> values = List.of(chatMessage.split("/"));
         Long chatroomIdValue = Long.valueOf(values.get(0));
         String nicknameValue = values.get(1);
@@ -64,11 +61,11 @@ public class ChatHandler extends TextWebSocketHandler {
 
         Message.MessageType typeValue;
         Message result, result2;
-        boolean enter = false;
+        boolean enter = true;
 
         for (Message message : messages) {
             if (Objects.equals(message.getNickname(), nicknameValue)) {
-                enter = true;
+                enter = false;
                 break;
             }
         }
@@ -92,6 +89,6 @@ public class ChatHandler extends TextWebSocketHandler {
 
         sessions.add(session);
         messageRepository.save(result2); // DB에 저장되는 type은 0=ENTER, 1=TALK, 2=EXIT
-        sendMessage(messageValue, chatService);
+        sendMessage(result2.getCreateAt()+"/"+nicknameValue+"/"+messageValue, chatService);
     }
 }

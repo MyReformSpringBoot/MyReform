@@ -12,10 +12,8 @@ import com.example.myreform.chat.dto.ChatroomSaveDto;
 import com.example.myreform.chat.dto.MessageFindDto;
 import com.example.myreform.chat.repository.ChatRoomRepository;
 import com.example.myreform.chat.repository.MessageRepository;
-import com.example.myreform.chat.response.ResponseChatroom;
-import com.example.myreform.chat.response.ResponseChatroomEmpty;
-import com.example.myreform.chat.response.ResponseChatroomList;
-import com.example.myreform.chat.response.ResponseMessageList;
+import com.example.myreform.chat.response.*;
+import com.example.myreform.config.Time;
 import com.example.myreform.validation.ExceptionCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -58,16 +56,24 @@ public class ChatService implements ChatServiceImpl {
         if (rooms.isEmpty()) {
             return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_LIST_NOT_FOUND);
         }
-        List<ChatRoom> result  = new ArrayList<>();
+        List<ChatRoomInfo> result  = new ArrayList<>();
         for (ChatRoom chatRoom : rooms) {
-            List<Message> messages = messageRepository.findByChatroomId(chatRoom.getChatroomId()); // fix
-            ChatRoom room = chatRoom;
+            List<Message> messages = messageRepository.findByChatroomId(chatRoom.getChatroomId());
+            ChatRoomInfo chatRoomInfo = ChatRoomInfo.builder()
+                    .boardTitle(chatRoom.getBoardTitle())
+                    .ownerNickname(chatRoom.getOwnerNickname())
+                    .senderNickname(chatRoom.getSenderNickname())
+                    .chatroomId(chatRoom.getChatroomId())
+                    .boardId(chatRoom.getBoardId())
+                    .time(Time.calculateTime(chatRoom.getUpdateAt()))
+                    .build();
+
             if (messages.size() > 0) {
-                room.setLastMessage(messages.get(messages.size() - 1).getMessage());
+                chatRoomInfo.setLastMessage(messages.get(messages.size() - 1).getMessage());
             } else {
-                room.setLastMessage(null);
+                chatRoomInfo.setLastMessage(null);
             }
-            result.add(room);
+            result.add(chatRoomInfo);
         }
         return new ResponseChatroomList(ExceptionCode.CHATROOM_LIST_GET_OK, result);
     }

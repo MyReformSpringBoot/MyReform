@@ -18,7 +18,4 @@ public class ResponseMessageList extends ResponseType{
         this.messages = messages;
     }
 
-    public void addInfo(Message data) {
-        this.messages.add(data);
-    }
 }

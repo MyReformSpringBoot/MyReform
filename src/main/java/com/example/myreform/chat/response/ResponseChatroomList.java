@@ -9,14 +9,10 @@ import java.util.List;
 
 @Getter
 public class ResponseChatroomList extends ResponseType {
-    private List<ChatRoom> rooms;
+    private List<ChatRoomInfo> rooms;
 
-    public ResponseChatroomList(ExceptionCode exceptionCode, List<ChatRoom> rooms) {
+    public ResponseChatroomList(ExceptionCode exceptionCode, List<ChatRoomInfo> rooms) {
         super(exceptionCode);
         this.rooms = rooms;
-    }
-
-    public void addInfo(ChatRoom data) {
-        this.rooms.add(data);
     }
 }

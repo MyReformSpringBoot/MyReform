@@ -27,7 +27,6 @@ public class ChatRoom extends BaseEntity {
     private Long senderId;
     private Long boardId;
 
-    private String lastMessage;
 
     @OneToMany(mappedBy = "message")
     List<Message> messages = new ArrayList<>();
@@ -41,9 +40,5 @@ public class ChatRoom extends BaseEntity {
         this.ownerNickname = ownerNickname;
         this.senderNickname = senderNickname;
         this.boardTitle = boardTitle;
-    }
-
-    public void setLastMessage(String message) {
-        this.lastMessage = message;
     }
 }
