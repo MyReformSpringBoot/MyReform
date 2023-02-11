@@ -49,16 +49,20 @@ public class ChatService implements ChatServiceImpl {
 
     @Override
     public Object findByNickname(ChatroomFindDto chatroomFindDto) { // 채팅방 조회
+        System.out.println("ChatService.findByNickname");
         String nickname = chatroomFindDto.getNickname();
 
         List<ChatRoom> rooms = chatRoomRepository.findByOwnerNicknameOrSenderNickname(nickname, nickname);
+        System.out.println(rooms.size());
         Collections.reverse(rooms);
         if (rooms.isEmpty()) {
             return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_LIST_NOT_FOUND);
         }
         List<ChatRoomInfo> result  = new ArrayList<>();
+
         for (ChatRoom chatRoom : rooms) {
             List<Message> messages = messageRepository.findByChatroomId(chatRoom.getChatroomId());
+            Board board = boardRepository.findBoardByBoardIdAndStatusEquals(chatRoom.getBoardId(), 1);
             ChatRoomInfo chatRoomInfo = ChatRoomInfo.builder()
                     .boardTitle(chatRoom.getBoardTitle())
                     .ownerNickname(chatRoom.getOwnerNickname())
@@ -66,6 +70,8 @@ public class ChatService implements ChatServiceImpl {
                     .chatroomId(chatRoom.getChatroomId())
                     .boardId(chatRoom.getBoardId())
                     .time(Time.calculateTime(chatRoom.getUpdateAt()))
+                    .price(board.getPrice())
+                    .imageList(board.getBoardImages())
                     .build();
 
             if (messages.size() > 0) {
@@ -113,7 +119,7 @@ public class ChatService implements ChatServiceImpl {
                     .build();
 
             Optional<ChatRoom> chatRooms = chatRoomRepository.findByBoardIdAndOwnerNicknameAndSenderNickname(
-                            board.getBoardId(), owner.get().getNickname(), sender.get().getNickname());
+                    board.getBoardId(), owner.get().getNickname(), sender.get().getNickname());
             if (chatRooms.isEmpty()) {
                 chatRoomRepository.save(room);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_OK, room);
