@@ -67,7 +67,7 @@ public class User extends BaseEntity {
         this.marketing = marketing;
     }
 
-    public UserFindDto toFindDto(User userOp) {
+    public UserFindDto toFindDto() {
         return UserFindDto.builder()
                 .email(email)
                 .id(id)

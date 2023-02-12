@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         }
         User user= userOp.get();
 
-        UserFindDto findDto = user.toFindDto(userOp.get());
+        UserFindDto findDto = user.toFindDto();
         return new ResponseProfile(ExceptionCode.USER_GET_OK, findDto);
 
     }
@@ -88,23 +88,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public Object update(String nickname, UserUpdateDto userUpdateDto) {
 
-        Optional<User> userOp = userRepository.findByNickname(nickname);
-        if(userOp.isEmpty()){
+        String AlterNickname = userUpdateDto.getNickname();
+        if (!isPresentNickname(nickname)){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
 
-        if (userOp.isPresent()){//기존: userRepository.findByNickname(userUpdateDto.getNickname()).isPresent()
+        if (isPresentNickname(AlterNickname) && !AlterNickname.equals(nickname)) {
             return new ResponseUser(ExceptionCode.SIGNUP_DUPLICATED_NICKNAME);
         }
 
-        User user = userOp.get();
+        User user = userRepository.findByNickname(nickname).get();
         try {
             String encodePw = passwordEncoder.encode(userUpdateDto.getPw());
             user.update(userUpdateDto, encodePw);
         } catch (RuntimeException exception) {
             return new ResponseUser(ExceptionCode.USER_UPDATE_INVALID);
         }
-        return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto(userOp.get()));
+        return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto());
     }
 
+
+    private boolean isPresentNickname(String nickname) {
+        return userRepository.findByNickname(nickname).isPresent();
+    }
 }
