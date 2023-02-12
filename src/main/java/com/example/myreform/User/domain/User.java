@@ -77,9 +77,7 @@ public class User extends BaseEntity {
                 .build();
     }
 
-    public void update(UserUpdateDto userUpdateDto, String encodePw) {
-        this.pw = encodePw;
-        this.email = userUpdateDto.getEmail();
+    public void update(UserUpdateDto userUpdateDto) {
         this.nickname = userUpdateDto.getNickname();
         this.introduction = userUpdateDto.getIntroduction();
     }

@@ -99,12 +99,11 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByNickname(nickname).get();
         try {
-            String encodePw = passwordEncoder.encode(userUpdateDto.getPw());
-            user.update(userUpdateDto, encodePw);
+            user.update(userUpdateDto);
         } catch (RuntimeException exception) {
             return new ResponseUser(ExceptionCode.USER_UPDATE_INVALID);
         }
-        return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto());
+        return new ResponseUser(ExceptionCode.USER_UPDATE_OK);
     }
 
 
