@@ -49,42 +49,44 @@ public class ChatService implements ChatServiceImpl {
 
     @Override
     public Object findByNickname(ChatroomFindDto chatroomFindDto) { // 채팅방 조회
-        System.out.println("ChatService.findByNickname");
-        String nickname = chatroomFindDto.getNickname();
+        String userId = chatroomFindDto.getUserId();
+        Optional<User> user = userRepository.findById(userId);
+        List<ChatRoomInfo> result = null;
+        if (user.isPresent()) {
+            List<ChatRoom> rooms = chatRoomRepository.findByOwnerUserIdOrSenderUserId(userId, userId);
 
-        List<ChatRoom> rooms = chatRoomRepository.findByOwnerNicknameOrSenderNickname(nickname, nickname);
-        System.out.println(rooms.size());
-        Collections.reverse(rooms);
-        if (rooms.isEmpty()) {
-            return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_LIST_NOT_FOUND);
-        }
-        List<ChatRoomInfo> result  = new ArrayList<>();
-
-        for (ChatRoom chatRoom : rooms) {
-            List<Message> messages = messageRepository.findByChatroomId(chatRoom.getChatroomId());
-            Board board = boardRepository.findBoardByBoardIdAndStatusEquals(chatRoom.getBoardId(), 1);
-            ChatRoomInfo chatRoomInfo = ChatRoomInfo.builder()
-                    .boardTitle(chatRoom.getBoardTitle())
-                    .ownerNickname(chatRoom.getOwnerNickname())
-                    .senderNickname(chatRoom.getSenderNickname())
-                    .chatroomId(chatRoom.getChatroomId())
-                    .boardId(chatRoom.getBoardId())
-                    .time(Time.calculateTime(chatRoom.getUpdateAt()))
-                    .price(board.getPrice())
-                    .imageList(board.getBoardImages())
-                    .build();
-
-            if (messages.size() > 0) {
-                chatRoomInfo.setLastMessage(messages.get(messages.size() - 1).getMessage());
-            } else {
-                chatRoomInfo.setLastMessage(null);
+            Collections.reverse(rooms);
+            if (rooms.isEmpty()) {
+                return new ResponseChatroomEmpty(ExceptionCode.CHATROOM_LIST_NOT_FOUND);
             }
-            result.add(chatRoomInfo);
+            result = new ArrayList<>();
+
+            for (ChatRoom chatRoom : rooms) {
+                List<Message> messages = messageRepository.findByChatroomId(chatRoom.getChatroomId());
+                Board board = boardRepository.findBoardByBoardIdAndStatusEquals(chatRoom.getBoardId(), 1);
+                ChatRoomInfo chatRoomInfo = ChatRoomInfo.builder()
+                        .boardTitle(chatRoom.getBoardTitle())
+                        .ownerUserId(chatRoom.getOwnerUserId())
+                        .senderUserId(chatRoom.getSenderUserId())
+                        .chatroomId(chatRoom.getChatroomId())
+                        .boardId(chatRoom.getBoardId())
+                        .time(Time.calculateTime(chatRoom.getUpdateAt()))
+                        .price(board.getPrice())
+                        .imageList(board.getBoardImages())
+                        .build();
+
+                if (messages.size() > 0) {
+                    chatRoomInfo.setLastMessage(messages.get(messages.size() - 1).getMessage());
+                } else {
+                    chatRoomInfo.setLastMessage(null);
+                }
+                result.add(chatRoomInfo);
+            }
         }
         return new ResponseChatroomList(ExceptionCode.CHATROOM_LIST_GET_OK, result);
     }
 
-    public Object findmessages(MessageFindDto messageFindDto) { // 메세지 조회
+    public Object findMessages(MessageFindDto messageFindDto) { // 메세지 조회
         Long chatroomId = messageFindDto.getChatroomId();
         List<Message> messages = messageRepository.findByChatroomId(chatroomId);
         if (messages.isEmpty()) {
@@ -105,21 +107,19 @@ public class ChatService implements ChatServiceImpl {
     @Override // 채팅방 생성
     public Object save(ChatroomSaveDto chatroomSaveDto) {
         Board board = boardRepository.findBoardByBoardIdAndStatusEquals(Long.parseLong(String.valueOf(chatroomSaveDto.getBoardId())), 1);
-        Optional<User> sender = userRepository.findByNickname(chatroomSaveDto.getSenderNickname());
+        Optional<User> sender = userRepository.findById(chatroomSaveDto.getSenderId());
         Optional<User> owner = userRepository.findByNickname(board.getUser().getNickname());
 
         if (validation(board, owner, sender)) {
             ChatRoom room = ChatRoom.builder()
                     .boardId(board.getBoardId())
-                    .ownerId(owner.get().getUserId())
-                    .senderId(sender.get().getUserId())
+                    .ownerUserId(owner.get().getId())
+                    .senderUserId(sender.get().getId())
                     .boardTitle(board.getTitle())
-                    .ownerNickname(owner.get().getNickname())
-                    .senderNickname(sender.get().getNickname())
                     .build();
 
-            Optional<ChatRoom> chatRooms = chatRoomRepository.findByBoardIdAndOwnerNicknameAndSenderNickname(
-                    board.getBoardId(), owner.get().getNickname(), sender.get().getNickname());
+            Optional<ChatRoom> chatRooms = chatRoomRepository.findByBoardIdAndOwnerUserIdAndSenderUserId(
+                    board.getBoardId(), owner.get().getId(), sender.get().getId());
             if (chatRooms.isEmpty()) {
                 chatRoomRepository.save(room);
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_OK, room);

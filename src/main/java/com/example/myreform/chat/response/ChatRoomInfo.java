@@ -13,8 +13,8 @@ import java.util.List;
 public class ChatRoomInfo {
 
     private Long chatroomId;
-    private String ownerNickname;
-    private String senderNickname;
+    private String ownerUserId;
+    private String senderUserId;
     private String boardTitle;
     private Long boardId;
 
@@ -25,12 +25,12 @@ public class ChatRoomInfo {
     private List<BoardImage> imageList;
 
     @Builder
-    public ChatRoomInfo(Long chatroomId, String ownerNickname, String senderNickname, Long boardId,
+    public ChatRoomInfo(Long chatroomId, String ownerUserId, String senderUserId, Long boardId,
                         Integer price, List<BoardImage> imageList, String boardTitle, String time) {
         this.chatroomId = chatroomId;
         this.boardId = boardId;
-        this.ownerNickname = ownerNickname;
-        this.senderNickname = senderNickname;
+        this.ownerUserId = ownerUserId;
+        this.senderUserId = senderUserId;
         this.boardTitle = boardTitle;
         this.time = time;
         this.price = price;

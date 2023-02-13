@@ -36,13 +36,13 @@ public class Message extends BaseEntity {
     }
 
     private MessageType type; // 메시지 타입
-    private String nickname; // 메시지 보낸사람
+    private String userId; // 메시지 보낸사람
     private String message; // 메시지
 
     @Builder
-    public Message(MessageType messageType, String nickname, String message, ChatRoom chatRoom) {
+    public Message(MessageType messageType, String userId, String message, ChatRoom chatRoom) {
         this.type = messageType;
-        this.nickname = nickname;
+        this.userId = userId;
         this.message = message;
         this.chatroomId = chatRoom.getChatroomId();
 

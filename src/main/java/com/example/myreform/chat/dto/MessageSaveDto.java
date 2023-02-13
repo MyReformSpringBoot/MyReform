@@ -9,6 +9,6 @@ import lombok.Setter;
 public class MessageSaveDto {
     private Message.MessageType type;
     private int chatroomId;
-    private String nickname;
+    private String userId;
     private String message;
 }

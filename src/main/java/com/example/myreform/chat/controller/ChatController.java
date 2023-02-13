@@ -31,6 +31,6 @@ public class ChatController {
     // 채팅 기록
     @GetMapping("/messages")
     public Object findMsg(@RequestBody MessageFindDto messageFindDto) {
-        return new ResponseEntity<>(chatService.findmessages(messageFindDto), HttpStatus.OK);
+        return new ResponseEntity<>(chatService.findMessages(messageFindDto), HttpStatus.OK);
     }
 }

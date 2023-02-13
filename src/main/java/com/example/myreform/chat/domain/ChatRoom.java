@@ -19,12 +19,10 @@ public class ChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatroomId;
 
-    private String ownerNickname;
-    private String senderNickname;
+    private String ownerUserId;
+    private String senderUserId;
     private String boardTitle;
 
-    private Long ownerId;
-    private Long senderId;
     private Long boardId;
 
 
@@ -33,12 +31,10 @@ public class ChatRoom extends BaseEntity {
 
     @Builder
     public ChatRoom(Long ownerId, Long senderId, Long boardId,
-                    String ownerNickname, String senderNickname, String boardTitle) {
-        this.ownerId = ownerId;
-        this.senderId = senderId;
+                    String ownerUserId, String senderUserId, String boardTitle) {
+        this.ownerUserId = ownerUserId;
+        this.senderUserId = senderUserId;
         this.boardId = boardId;
-        this.ownerNickname = ownerNickname;
-        this.senderNickname = senderNickname;
         this.boardTitle = boardTitle;
     }
 }

@@ -8,6 +8,7 @@ import com.example.myreform.chat.service.ChatService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Component
 @Slf4j
@@ -40,7 +42,7 @@ public class ChatHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         sessions.remove(session);
     }
 
@@ -51,6 +53,20 @@ public class ChatHandler extends TextWebSocketHandler {
         handleActions(session, payload, chatService);
     }
 
+    public static void tryCloseWithError(WebSocketSession session, Throwable exception, Log logger) {
+        if (logger.isErrorEnabled()) {
+            logger.error("Closing session due to exception for " + session, exception);
+        }
+        if (session.isOpen()) {
+            try {
+                session.close(CloseStatus.SERVER_ERROR);
+            }
+            catch (Throwable ex) {
+                // ignore
+            }
+        }
+    }
+
     public <TextMessage> void sendMessage(String message, ChatService chatService) {
         TextMessage text = (TextMessage) message;
         sessions.parallelStream().forEach(session -> chatService.sendMessage(session, text));
@@ -59,7 +75,7 @@ public class ChatHandler extends TextWebSocketHandler {
     public void handleActions(WebSocketSession session, String chatMessage, ChatService chatService) {
         List<String> values = List.of(chatMessage.split("/"));
         Long chatroomIdValue = Long.valueOf(values.get(0));
-        String nicknameValue = values.get(1);
+        String userIdValue = values.get(1);
         String messageValue = values.get(2);
 
         ChatRoom findChatRoom = chatRoomRepository.findByChatroomId(chatroomIdValue);
@@ -70,21 +86,21 @@ public class ChatHandler extends TextWebSocketHandler {
         boolean enter = true;
 
         for (Message message : messages) {
-            if (Objects.equals(message.getNickname(), nicknameValue)) {
+            if (Objects.equals(message.getUserId(), userIdValue)) {
                 enter = false;
                 break;
             }
         }
 
         if (enter || messages.isEmpty()) {
-            messageValue = nicknameValue + "님이 입장했습니다. " + messageValue;
+            messageValue = userIdValue + "님이 입장했습니다. " + messageValue;
         }
 
         typeValue = Message.MessageType.TALK;
         result2 = Message.builder()
                 .messageType(typeValue)
                 .chatRoom(findChatRoom)
-                .nickname(nicknameValue)
+                .userId(userIdValue)
                 .message(messageValue)
                 .build();
 
@@ -95,6 +111,6 @@ public class ChatHandler extends TextWebSocketHandler {
 
         sessions.add(session);
         messageRepository.save(result2); // DB에 저장되는 type은 0=ENTER, 1=TALK, 2=EXIT
-        sendMessage(result2.getCreateAt()+"/"+nicknameValue+"/"+messageValue, chatService);
+        sendMessage(result2.getCreateAt()+"/"+userIdValue+"/"+messageValue, chatService);
     }
 }
