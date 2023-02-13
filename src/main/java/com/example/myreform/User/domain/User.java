@@ -84,7 +84,7 @@ public class User extends BaseEntity {
 
     public List<AllBoardFindDto> getLikeBoards(){
         List<AllBoardFindDto> boardsLikes = new ArrayList<>();
-        likes.forEach(x -> boardsLikes.add(x.getBoard().toAllBoardFindDto()));
+        likes.forEach(x -> boardsLikes.add(0, x.getBoard().toAllBoardFindDto()));
         boardsLikes.forEach(x->x.setLikeOrNot(true));//자기가 찜한 것만 불러오기 때문에 무조건 true로 설정해도 상관없음
         return boardsLikes;
     }
