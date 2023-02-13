@@ -26,12 +26,12 @@ class UserRepositoryTest {
     }
 
     @Test
-    void existsByNickname_있음() throws Exception {
-        String nickname = "kong";
-        System.out.println(userRepository.existsUserByNickname(nickname));
+    void existsById_있음() throws Exception {
+        String id = "hil0409";
+        System.out.println(userRepository.existsById(id));
 
-        nickname = "kung";
-        System.out.println(userRepository.existsUserByNickname(nickname));
+        id = "kung";
+        System.out.println(userRepository.existsById(id));
     }
 
 }
