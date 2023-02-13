@@ -17,5 +17,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(Long lastBoardId, int status, PageRequest pageRequest);
     List<Board> findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(Long lastBoardId, int status, String title, PageRequest pageRequest);
     Board findBoardByBoardIdAndStatusEquals(Long boardId, int status);
+    Board findFirstByOrderByBoardIdDesc();
 
 }

@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -156,7 +157,7 @@ public class BoardServiceImpl implements BoardService {
 
     private List<Board> fetchPages(Long lastBoardId, int size, Integer categoryId, String keyword)  {
         if (Optional.ofNullable(lastBoardId).isEmpty()) {
-            lastBoardId = boardRepository.count() + 1;
+            lastBoardId = boardRepository.findFirstByOrderByBoardIdDesc().getBoardId() + 1;
         }
         PageRequest pageRequest = PageRequest.of(0, size);
         if (Optional.ofNullable(categoryId).isEmpty() && keyword == null) { // 카테고리나 검색안할 때
