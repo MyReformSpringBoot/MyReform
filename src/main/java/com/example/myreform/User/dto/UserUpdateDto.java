@@ -19,9 +19,6 @@ public class UserUpdateDto extends BaseEntity {
     private String nickname;
     private String introduction;
 
-    private List<Board> likeBoards = new ArrayList<>();
-
-
     @Builder
     public UserUpdateDto( String nickname, String introduction) {
         this.nickname = nickname;
