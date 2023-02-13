@@ -25,7 +25,6 @@ public class ChatRoom extends BaseEntity {
 
     private Long boardId;
 
-
     @OneToMany(mappedBy = "message")
     List<Message> messages = new ArrayList<>();
 

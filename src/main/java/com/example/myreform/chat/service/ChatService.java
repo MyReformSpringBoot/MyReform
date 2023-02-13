@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -63,27 +62,36 @@ public class ChatService implements ChatServiceImpl {
 
             for (ChatRoom chatRoom : rooms) {
                 List<Message> messages = messageRepository.findByChatroomId(chatRoom.getChatroomId());
-                Board board = boardRepository.findBoardByBoardIdAndStatusEquals(chatRoom.getBoardId(), 1);
-                ChatRoomInfo chatRoomInfo = ChatRoomInfo.builder()
-                        .boardTitle(chatRoom.getBoardTitle())
-                        .ownerUserId(chatRoom.getOwnerUserId())
-                        .senderUserId(chatRoom.getSenderUserId())
-                        .chatroomId(chatRoom.getChatroomId())
-                        .boardId(chatRoom.getBoardId())
-                        .time(Time.calculateTime(chatRoom.getUpdateAt()))
-                        .price(board.getPrice())
-                        .imageList(board.getBoardImages())
-                        .build();
-
-                if (messages.size() > 0) {
-                    chatRoomInfo.setLastMessage(messages.get(messages.size() - 1).getMessage());
-                } else {
-                    chatRoomInfo.setLastMessage(null);
+                Optional<User> owner = userRepository.findById(chatRoom.getOwnerUserId());
+                Optional<User> sender = userRepository.findById(chatRoom.getSenderUserId());
+                if (owner.isPresent() && sender.isPresent()) {
+                    Board board = boardRepository.findBoardByBoardIdAndStatusEquals(chatRoom.getBoardId(), 1);
+                    ChatRoomInfo chatRoomInfo = ChatRoomInfo.builder()
+                            .boardTitle(chatRoom.getBoardTitle())
+                            .ownerUserId(chatRoom.getOwnerUserId())
+                            .senderUserId(chatRoom.getSenderUserId())
+                            .ownerNickname(owner.get().getNickname())
+                            .senderNickname(sender.get().getNickname())
+                            .chatroomId(chatRoom.getChatroomId())
+                            .boardId(chatRoom.getBoardId())
+                            .time(Time.calculateTime(chatRoom.getUpdateAt()))
+                            .price(board.getPrice())
+                            .imageList(board.getBoardImages())
+                            .build();
+                    chatRoomInfo.setLastMessage(checkLastMessage(messages));
+                    result.add(chatRoomInfo);
                 }
-                result.add(chatRoomInfo);
             }
         }
         return new ResponseChatroomList(ExceptionCode.CHATROOM_LIST_GET_OK, result);
+    }
+
+    private String checkLastMessage(List<Message> messages) {
+        if (messages.size() > 0) {
+            return messages.get(messages.size() - 1).getMessage();
+        } else {
+            return null;
+        }
     }
 
     public Object findMessages(MessageFindDto messageFindDto) { // 메세지 조회
@@ -118,12 +126,23 @@ public class ChatService implements ChatServiceImpl {
                     .boardTitle(board.getTitle())
                     .build();
 
+            ChatRoomInfo chatRoomInfo = ChatRoomInfo.builder()
+                    .senderNickname(sender.get().getNickname())
+                    .ownerNickname(owner.get().getNickname())
+                    .boardId(board.getBoardId())
+                    .ownerUserId(owner.get().getId())
+                    .senderUserId(sender.get().getId())
+                    .boardTitle(board.getTitle())
+                    .build();
+
             Optional<ChatRoom> chatRooms = chatRoomRepository.findByBoardIdAndOwnerUserIdAndSenderUserId(
                     board.getBoardId(), owner.get().getId(), sender.get().getId());
             if (chatRooms.isEmpty()) {
                 chatRoomRepository.save(room);
+
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_OK, room);
             } else {
+                chatRoomInfo.setLastMessage(checkLastMessage(chatRooms.get().getMessages()));
                 return new ResponseChatroom(ExceptionCode.CHATROOM_CREATE_ERROR, chatRooms.get());
             }
         }
