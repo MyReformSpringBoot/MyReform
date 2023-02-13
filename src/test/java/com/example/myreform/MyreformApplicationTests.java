@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class MyreformApplicationTests {
 
 	@Test
-	@Disabled
 	void contextLoads() {
 	}
 

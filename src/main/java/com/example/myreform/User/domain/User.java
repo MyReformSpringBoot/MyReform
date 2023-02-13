@@ -1,6 +1,7 @@
 package com.example.myreform.User.domain;
 
 import com.example.myreform.Board.domain.Board;
+import com.example.myreform.Board.dto.AllBoardFindDto;
 import com.example.myreform.Board.dto.OneBoardFindDto;
 import com.example.myreform.Like.domain.Like;
 import com.example.myreform.User.dto.UserFindDto;
@@ -66,9 +67,8 @@ public class User extends BaseEntity {
         this.marketing = marketing;
     }
 
-    public UserFindDto toFindDto(User userOp) {
+    public UserFindDto toFindDto() {
         return UserFindDto.builder()
-                .userId(userId)
                 .email(email)
                 .id(id)
                 .nickname(nickname)
@@ -77,16 +77,14 @@ public class User extends BaseEntity {
                 .build();
     }
 
-    public void update(UserUpdateDto userUpdateDto, String encodePw) {
-        this.pw = encodePw;
-        this.email = userUpdateDto.getEmail();
+    public void update(UserUpdateDto userUpdateDto) {
         this.nickname = userUpdateDto.getNickname();
         this.introduction = userUpdateDto.getIntroduction();
     }
 
-    public List<OneBoardFindDto> getLikeBoards(){
-        List<OneBoardFindDto> boardsLikes = new ArrayList<>();
-        likes.forEach(x -> boardsLikes.add(x.getBoard().toOneBoardFindDto()));
+    public List<AllBoardFindDto> getLikeBoards(){
+        List<AllBoardFindDto> boardsLikes = new ArrayList<>();
+        likes.forEach(x -> boardsLikes.add(x.getBoard().toAllBoardFindDto()));
         boardsLikes.forEach(x->x.setLikeOrNot(true));//자기가 찜한 것만 불러오기 때문에 무조건 true로 설정해도 상관없음
         return boardsLikes;
     }
