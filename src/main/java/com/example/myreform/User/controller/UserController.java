@@ -35,14 +35,14 @@ public class UserController {
     }
 
     //프로필
-    @GetMapping("/users/{userNickname}/profiles")
-    public ResponseEntity<Object> find(@PathVariable("userNickname") String nickname) {
-        return new ResponseEntity<>(userService.find(nickname), HttpStatus.OK);
+    @GetMapping("/users/{loginId}/profiles")
+    public ResponseEntity<Object> find(@PathVariable("loginId") String loginId) {
+        return new ResponseEntity<>(userService.find(loginId), HttpStatus.OK);
     }
 
-    @PostMapping("/users/{userNickname}/profiles")
-    public ResponseEntity<Object> update(@PathVariable("userNickname") String nickname, @RequestBody UserUpdateDto userUpdateDto) throws Exception{
-        return new ResponseEntity<>(userService.update(nickname, userUpdateDto), HttpStatus.OK);
+    @PostMapping("/users/{loginId}/profiles")
+    public ResponseEntity<Object> update(@PathVariable("loginId") String loginId, @RequestBody UserUpdateDto userUpdateDto) throws Exception{
+        return new ResponseEntity<>(userService.update(loginId, userUpdateDto), HttpStatus.OK);
     }
 
 }

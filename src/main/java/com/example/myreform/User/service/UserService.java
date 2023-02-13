@@ -10,6 +10,6 @@ public interface UserService {
 
     Object signUp(UserSignupDto signupDTO);
     Object login(UserLoginDto loginDTO);
-    Object find(String nickname);
-    Object update(String nickname, UserUpdateDto userUpdateDto);
+    Object find(String loginId);
+    Object update(String loginId, UserUpdateDto userUpdateDto);
 }

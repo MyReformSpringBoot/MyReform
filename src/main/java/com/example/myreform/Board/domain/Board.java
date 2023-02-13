@@ -94,6 +94,7 @@ public class Board extends BaseEntity {
                 .updateAt(getUpdateAt())
                 .price(price)
                 .countOfLike(countOfLike)
+                .id(user.getId())
                 .nickname(user.getNickname())
                 .imageUrl(getUrlString())
                 .build();

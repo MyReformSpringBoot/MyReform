@@ -64,9 +64,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Object save(BoardSaveDto boardSaveDto, List<MultipartFile> files) {
 
-            User user = userRepository.findByNickname(boardSaveDto.getNickname()).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
-
-            Board board = boardSaveDto.toEntity(user);
+        User user = userRepository.findById(boardSaveDto.getId()).get(); // db에 저장된 객체와의 연관관계 부여를 위해 find 진행
+        Board board = boardSaveDto.toEntity(user);
         try {
             List<BoardCategory> boardCategories = new ArrayList<>();
             for (Integer categoryId : boardSaveDto.getCategoryId()) {
@@ -75,6 +74,7 @@ public class BoardServiceImpl implements BoardService {
             boardCategoryRepository.saveAll(boardCategories);
             boardImageRepository.saveAll(saveBoardImage(board, files));
         } catch (Exception exception) {
+            System.out.println(exception);
             return new ResponseBoardEmpty(ExceptionCode.BOARD_CREATE_ERROR);
         }
 
@@ -86,7 +86,7 @@ public class BoardServiceImpl implements BoardService {
 
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, STATUS);
         try {
-            validateBoard(boardCategories, boardUpdateDto.getNickname(), ExceptionCode.BOARD_UPDATE_INVALID);
+            validateBoard(boardCategories, boardUpdateDto.getId(), ExceptionCode.BOARD_UPDATE_INVALID);
         } catch (IllegalArgumentException exception) {
             ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
             return new ResponseBoardEmpty(exceptionCode);
@@ -108,7 +108,7 @@ public class BoardServiceImpl implements BoardService {
     public Object delete(Long boardId, User user) {
         List<BoardCategory> boardCategories = boardCategoryRepository.findAllByBoard_BoardIdAndBoard_Status(boardId, STATUS); // validate 통일성을 위해 리스트로 참조
         try {
-            validateBoard(boardCategories, user.getNickname(), ExceptionCode.BOARD_DELETE_INVALID);
+            validateBoard(boardCategories, user.getId(), ExceptionCode.BOARD_DELETE_INVALID);
         } catch (IllegalArgumentException exception) {
             ExceptionCode exceptionCode = ExceptionCode.findExceptionCodeByCode(exception.getMessage());
             return new ResponseBoardEmpty(exceptionCode);
@@ -122,7 +122,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Object getOneBoard(Long boardId, String loginNickname) {
+    public Object getOneBoard(Long boardId, String loginId) {
         Board board = boardRepository.findBoardByBoardIdAndStatusEquals(boardId, STATUS);
         try {
             validateBoard(board);
@@ -131,18 +131,18 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoardEmpty(exceptionCode);
         }
         OneBoardFindDto oneBoardFindDto = board.toOneBoardFindDto(); // 하나의 게시글에서 좋아요 보여주기
-        oneBoardFindDto.setLikeOrNot(likRepository.existsLikeByBoard_BoardIdAndUser_Nickname(boardId, loginNickname));
+        oneBoardFindDto.setLikeOrNot(likRepository.existsLikeByBoard_BoardIdAndUser_Id(boardId, loginId));
         return new ResponseBoard(ExceptionCode.BOARD_GET_OK, oneBoardFindDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword, String loginNickname) {
+    public Object fetchBoardPagesBy(Long lastBoardId, int size, Integer categoryId, String keyword, String loginId) {
         List<Board> boards = fetchPages(lastBoardId, size, categoryId, keyword);
         List<AllBoardFindDto> allBoardFindDtos = boards.stream()
                 .map((x) -> x.toAllBoardFindDto())
                 .collect(Collectors.toList());
-        allBoardFindDtos.forEach(x->x.setLikeOrNot(likRepository.existsLikeByBoard_BoardIdAndUser_Nickname(x.getBoardId(), loginNickname)));
+        allBoardFindDtos.forEach(x->x.setLikeOrNot(likRepository.existsLikeByBoard_BoardIdAndUser_Id(x.getBoardId(), loginId)));
 
         try {
             validateBoard(boards);
@@ -232,7 +232,7 @@ public class BoardServiceImpl implements BoardService {
         }
     }
     @Override
-    public Object checkAuthority(Long boardId, String LoginNickname){
+    public Object checkAuthority(Long boardId, String loginId){
         Board board;
         try{
             board = boardRepository.findById(boardId).get();
@@ -240,15 +240,15 @@ public class BoardServiceImpl implements BoardService {
             return new ResponseBoardEmpty(ExceptionCode.BOARD_NOT_FOUND);
         }
 
-        if(LoginNickname.equals(board.getUser().getNickname())){
+        if(loginId.equals(board.getUser().getId())){
             return new ResponseAuthority(ExceptionCode.AUTHORITY_HAVE, true);
         }
         return new ResponseAuthority(ExceptionCode.AUTHORITY_NOT_HAVE, false);
     }
 
-    private void validateBoard(List<BoardCategory> boardCategories, String userNickname, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+    private void validateBoard(List<BoardCategory> boardCategories, String id, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
         checkNotFound(boardCategories);
-        checkInvalidAccess(boardCategories, userNickname, exceptionCodeOfService);
+        checkInvalidAccess(boardCategories, id, exceptionCodeOfService);
     }
 
     private void validateBoard(Board board) throws IllegalArgumentException { // 직접 점검 시 사용
@@ -265,8 +265,8 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    private void checkInvalidAccess(List<BoardCategory> boardCategories, String userNickname, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
-        if (!boardCategories.get(0).getBoard().getUser().getNickname().equals(userNickname)) {
+    private void checkInvalidAccess(List<BoardCategory> boardCategories, String id, ExceptionCode exceptionCodeOfService) throws IllegalArgumentException {
+        if (!boardCategories.get(0).getBoard().getUser().getId().equals(id)) {
             throw new IllegalArgumentException(exceptionCodeOfService.getCode());
         }
     }

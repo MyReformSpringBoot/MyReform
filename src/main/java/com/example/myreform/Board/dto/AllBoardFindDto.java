@@ -26,15 +26,15 @@ public class AllBoardFindDto {
     private Long countOfLike;
     private boolean likeOrNot;
     // user
+    private String id;
     private String nickname;
-
     // image
     private List<String> imageUrl;
 
 
     @Builder
     public AllBoardFindDto(Long boardId, List<Integer> categoryId, String title,String contents,LocalDateTime updateAt ,Integer price, Long countOfLike,
-                           String nickname,boolean likeOrNot, List<String> imageUrl) {
+                           String id, String nickname, boolean likeOrNot, List<String> imageUrl) {
         this.boardId = boardId;
         this.categoryId = categoryId;
         this.title = title;
@@ -42,6 +42,7 @@ public class AllBoardFindDto {
         this.updateAt = updateAt;
         this.time = Time.calculateTime(updateAt);
         this.price = price;
+        this.id = id;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
         this.likeOrNot = likeOrNot;

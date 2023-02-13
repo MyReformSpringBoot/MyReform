@@ -19,6 +19,7 @@ public class OneBoardFindDto {
     @Column(name = "board_id")
     private Long boardId;
     private Long userId;
+    private String id;
     private String nickname;
 
     private List<Integer> categoryId;
@@ -36,8 +37,9 @@ public class OneBoardFindDto {
     public OneBoardFindDto(Long boardId, User user, List<Integer> categoryId, String title, String contents, LocalDateTime updateAt,
                            Integer price, Long countOfLike,boolean likeOrNot, List<String> imageUrl) {
         this.boardId = boardId;
-        this.userId = user.getUserId();
         this.nickname = user.getNickname();
+        this.userId = user.getUserId();
+        this.id = user.getId();
         this.categoryId = categoryId;
         this.title = title;
         this.contents = contents;

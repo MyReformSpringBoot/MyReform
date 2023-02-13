@@ -9,7 +9,9 @@ import java.util.List;
 @Getter
 public class ResponseProfile extends ResponseUser {
     private Object data;
-
+    public ResponseProfile(ExceptionCode exceptionCode) {
+        super(exceptionCode);
+    }
     public ResponseProfile(ExceptionCode exceptionCode, Object data) {
         super(exceptionCode);
         this.data = data;

@@ -27,29 +27,31 @@ public class LikeServiceImpl implements LikeService{
     @Autowired
     private final UserRepository userRepository;
     @Override
-    public Object addLike(Long boardId, String nickname){
-        if(!likeRepository.existsLikeByBoard_BoardIdAndUser_Nickname(boardId, nickname)){
+    public Object addLike(Long boardId, String loginId){
+        if(!likeRepository.existsLikeByBoard_BoardIdAndUser_Id(boardId, loginId)){
+
             Board board = boardRepository.findById(boardId).get();
-            User user = userRepository.findByNickname(nickname).get();
+            User user = userRepository.findById(loginId).get();
+
             likeRepository.save(new Like(user, board));
             board.updateLike(true);
-            return new ResponseLike(ExceptionCode.LIKE_FOUND_OK ,likeRepository.countByBoard_BoardId(boardId));
 
+            return new ResponseLike(ExceptionCode.LIKE_FOUND_OK ,likeRepository.countByBoard_BoardId(boardId));
         }
         return new ResponseLike(ExceptionCode.LIKE_DUPLICATED ,likeRepository.countByBoard_BoardId(boardId));
     }
     @Override
-    public Object removeLike(Long boardId, String nickname){
-        if(!likeRepository.existsLikeByBoard_BoardIdAndUser_Nickname(boardId, nickname)){
+    public Object removeLike(Long boardId, String loginId){
+        if(!likeRepository.existsLikeByBoard_BoardIdAndUser_Id(boardId, loginId)){
             return new ResponseLike(ExceptionCode.LIKE_NOT_FOUND ,likeRepository.countByBoard_BoardId(boardId));
         }
         Board board = boardRepository.findById(boardId).get();
         board.updateLike(false);
-        if(!userRepository.existsByNickname(nickname)){
+        if(!userRepository.existsById(loginId)){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
-        userRepository.findByNickname(nickname).get().getLikes().remove(this);
-        likeRepository.delete(likeRepository.findByBoard_BoardIdAndUser_Nickname(boardId, nickname));
+        userRepository.findById(loginId).get().getLikes().remove(this);
+        likeRepository.delete(likeRepository.findByBoard_BoardIdAndUser_Id(boardId, loginId));
 
         return new ResponseLike(ExceptionCode.LIKE_DELETE ,likeRepository.countByBoard_BoardId(boardId));
     }

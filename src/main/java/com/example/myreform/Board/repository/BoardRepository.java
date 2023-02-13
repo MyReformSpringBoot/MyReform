@@ -17,7 +17,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByBoardIdLessThanAndStatusEqualsOrderByBoardIdDesc(Long lastBoardId, int status, PageRequest pageRequest);
     List<Board> findAllByBoardIdLessThanAndStatusEqualsAndTitleContainingOrderByBoardIdDesc(Long lastBoardId, int status, String title, PageRequest pageRequest);
     Board findBoardByBoardIdAndStatusEquals(Long boardId, int status);
-    @Query("SELECT board FROM BOARD board WHERE board.boardId IN :boardIds")
-    List<Board> findAllByBoardId(@Param("boardIds" )List<Long> boardIds);
 
 }

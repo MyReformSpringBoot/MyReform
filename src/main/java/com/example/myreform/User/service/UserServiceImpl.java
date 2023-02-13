@@ -31,9 +31,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    @Autowired
-    private final BoardRepository boardRepository;
-
 
     @Transactional
     public Object signUp(UserSignupDto signupDTO) {
@@ -62,7 +59,7 @@ public class UserServiceImpl implements UserService {
                     .pw(user.get().getPw())
                     .build();
             if (passwordEncoder.matches(loginDTO.getPw(), checkIdUser.getPw())) { // 비밀번호 일치
-                String token = user.get().getNickname();
+                String token = user.get().getId();
                 return new ResponseUser(ExceptionCode.LOGIN_OK, token);
             }
             return new ResponseUser(ExceptionCode.LOGIN_NOT_FOUND_PW);
@@ -73,8 +70,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Object find(String nickname) {
-        Optional<User> userOp = userRepository.findByNickname(nickname);
+    public Object find(String loginId) {
+        Optional<User> userOp = userRepository.findById(loginId);
         if(userOp.isEmpty()){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
@@ -86,29 +83,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Object update(String nickname, UserUpdateDto userUpdateDto) {
+    public Object update(String loginId, UserUpdateDto userUpdateDto) {
 
         String AlterNickname = userUpdateDto.getNickname();
-        if (!isPresentNickname(nickname)){
+        if (!isPresentLoginId(loginId)){
             return new ResponseUser(ExceptionCode.USER_NOT_FOUND);
         }
 
-        if (isPresentNickname(AlterNickname) && !AlterNickname.equals(nickname)) {
+        User user = userRepository.findById(loginId).get();
+        if (isPresentNickname(AlterNickname) && !AlterNickname.equals(user.getNickname())) {
             return new ResponseUser(ExceptionCode.SIGNUP_DUPLICATED_NICKNAME);
         }
 
-        User user = userRepository.findByNickname(nickname).get();
         try {
-            String encodePw = passwordEncoder.encode(userUpdateDto.getPw());
-            user.update(userUpdateDto, encodePw);
+            user.update(userUpdateDto);
         } catch (RuntimeException exception) {
             return new ResponseUser(ExceptionCode.USER_UPDATE_INVALID);
         }
-        return new ResponseProfile(ExceptionCode.USER_UPDATE_OK, user.toFindDto());
+        return new ResponseProfile(ExceptionCode.USER_UPDATE_OK);
     }
-
 
     private boolean isPresentNickname(String nickname) {
         return userRepository.findByNickname(nickname).isPresent();
+    }
+    private boolean isPresentLoginId(String loginId) {
+        return userRepository.findById(loginId).isPresent();
     }
 }

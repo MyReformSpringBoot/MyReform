@@ -44,14 +44,14 @@ public class BoardController {
     @GetMapping("")
     @ResponseBody
     public ResponseEntity<Object> getBoard(@RequestParam(required = false) Long lastBoardId, @RequestParam int size,
-                                           @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String keyword, @RequestParam String loginNickname) throws Exception {
-        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId, keyword,loginNickname), HttpStatus.OK);
+                                           @RequestParam(required = false) Integer categoryId, @RequestParam(required = false) String keyword, @RequestParam String loginId) throws Exception {
+        return new ResponseEntity<>(boardService.fetchBoardPagesBy(lastBoardId, size, categoryId, keyword,loginId), HttpStatus.OK);
     }
 
     @GetMapping("/{boardId}")
     @ResponseBody
-    public ResponseEntity<Object> getOneBoard(@PathVariable("boardId") long boardId, @RequestParam("nickname") String loginNickname) {
-        return new ResponseEntity<>(boardService.getOneBoard(boardId, loginNickname), HttpStatus.OK);
+    public ResponseEntity<Object> getOneBoard(@PathVariable("boardId") long boardId, @RequestParam("loginId") String loginId) {
+        return new ResponseEntity<>(boardService.getOneBoard(boardId, loginId), HttpStatus.OK);
     }
 
     //게시물 수정
@@ -70,8 +70,7 @@ public class BoardController {
     //게시물 권한 확인
     @PostMapping("/{boardId}/{token}")
     @ResponseBody
-    public Object checkAuthority(@PathVariable("boardId") long boardId, @PathVariable("token") String LoginNickname) {
-        //return boardService.checkAuthority(boardId, LoginNickname);
-        return new ResponseEntity<>(boardService.checkAuthority(boardId, LoginNickname), HttpStatus.OK);
+    public Object checkAuthority(@PathVariable("boardId") long boardId, @PathVariable("token") String loginId) {
+        return new ResponseEntity<>(boardService.checkAuthority(boardId, loginId), HttpStatus.OK);
     }
 }

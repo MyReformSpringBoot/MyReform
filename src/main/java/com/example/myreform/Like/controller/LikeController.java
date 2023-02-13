@@ -13,14 +13,14 @@ public class LikeController {
     LikeServiceImpl likeServiceImpl;
     @PostMapping("/add")
     @ResponseBody
-    public ResponseEntity<Object> addLike(@RequestParam("boardId") Long boardId, @RequestParam("token") String nickname) {
-        return new ResponseEntity<>(likeServiceImpl.addLike(boardId, nickname), HttpStatus.OK);
+    public ResponseEntity<Object> addLike(@RequestParam("boardId") Long boardId, @RequestParam("token") String loginId) {
+        return new ResponseEntity<>(likeServiceImpl.addLike(boardId, loginId), HttpStatus.OK);
     }
 
     @PostMapping("/remove")
     @ResponseBody
-    public ResponseEntity<Object> removeLike(@RequestParam("boardId") Long boardId, @RequestParam("token") String nickname) {
-        return new ResponseEntity<>(likeServiceImpl.removeLike(boardId, nickname), HttpStatus.OK);
+    public ResponseEntity<Object> removeLike(@RequestParam("boardId") Long boardId, @RequestParam("token") String loginId) {
+        return new ResponseEntity<>(likeServiceImpl.removeLike(boardId, loginId), HttpStatus.OK);
     }
 
 }

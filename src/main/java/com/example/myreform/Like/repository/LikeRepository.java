@@ -10,8 +10,7 @@ import java.util.List;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {//이후에 nickname => token으로
-    boolean existsLikeByBoard_BoardIdAndUser_Nickname(Long boardId, String nickname);
+    boolean existsLikeByBoard_BoardIdAndUser_Id(Long boardId, String loginId);
     Long countByBoard_BoardId(Long boardId);
-    Like findByBoard_BoardIdAndUser_Nickname(Long boardId, String nickname);
-    List<Like> findAllByUser_Nickname(String nickname);
+    Like findByBoard_BoardIdAndUser_Id(Long boardId, String loginId);
 }

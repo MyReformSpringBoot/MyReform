@@ -29,7 +29,6 @@ public class Like extends BaseEntity {
     public Like(User user, Board board){
         this.user = user;
         this.board = board;
-        //board.getLikes().add(this);
         user.getLikes().add(this);
     }
 
