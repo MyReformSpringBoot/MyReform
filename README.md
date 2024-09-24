@@ -1,18 +1,25 @@
-# :art: MyReform :art:
-#### 흔한 물건! 나만의 것으로 [마이리폼]
-#### 리폼한 물건을 거래하는 플랫폼
+# :art: MyReform
+
+<img src="https://github.com/user-attachments/assets/ef08f663-c986-4588-9861-8ac23607811d" width=150 height=150/>
+
+#### 흔한 물건! 나만의 것으로, 리폼한 물건을 거래하는 플랫폼
+A platform for sharing and trading upcycled or redesigned secondhand items.
 
 <br>
 
-## :date: 진행일정
-PROJECT <2023.01.06 ~ >
+## Overview
 
-- 2023.01.07 프로젝트 초기 세팅
-- 2023.01.11 ~ (시엔 & 리안) 회원가입 & 로그인 기능 구현
-- 2023.01.11 ~ (단세 & 콩) 게시글, 카테고리 작성, 조회, 검색 기능 구현
-- 2023.02.02 (시엔) 채팅
 
+## For End User
+* ### Login
+* ### Display List
+* ### Register Items
+* ### Category
+* ### Profile
 <br>
+
+## Demo
+[🔗 Demonstration video](https://zesty-hawthorn-ac1.notion.site/6-f1b16c754e5f41dab5201b9e09db1b2b)
 
 ## :fire: SpringBoot Contributors
 <table>
