@@ -18,6 +18,7 @@ This platform is a new marketplace where users can trade creatively redesigned a
 
 * ### Display List
   Show list of items that users uploaded. These are the redesigned or upcycled items.
+  
   <img src="https://github.com/user-attachments/assets/3bd1f92e-59e5-451c-9651-109d03708d74" width=200 height=400>
 
 * ### Example Of Post
