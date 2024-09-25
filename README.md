@@ -8,18 +8,38 @@ A platform for sharing and trading upcycled or redesigned secondhand items.
 <br>
 
 ## Overview
-
+This platform is a new marketplace where users can trade creatively redesigned and upcycled items by reassessing their value. Users have the option to either share their redesigned items or set a price and sell them. The platform contributes to environmental sustainability by promoting the reuse of resources while also fostering new economic activity. It allows users to discover new value in products through creative design and upcycling, encouraging a more sustainable approach to consumption.
 
 ## For End User
 * ### Login
-* ### Display List
-* ### Register Items
-* ### Category
-* ### Profile
-<br>
+  Login with ID and password.
+  
+  <img src="https://github.com/user-attachments/assets/56e7f4ec-c6ce-426e-ba6f-e48de54b2e1e" width=200 height=400>
 
-## Demo
-[🔗 Demonstration video](https://zesty-hawthorn-ac1.notion.site/6-f1b16c754e5f41dab5201b9e09db1b2b)
+* ### Display List
+  Show list of items that users uploaded. These are the redesigned or upcycled items.
+  <img src="https://github.com/user-attachments/assets/3bd1f92e-59e5-451c-9651-109d03708d74" width=200 height=400>
+
+* ### Example Of Post
+  
+  <img src="https://github.com/user-attachments/assets/dd30d4de-075e-4e2f-a62c-6ed6977896a3" width=200 height=400>
+
+* ### Register Items
+  
+  <img src="https://github.com/user-attachments/assets/49c51510-9f77-4e3b-b4a0-5326baa703b3" width=200 height=400>
+  
+* ### Category
+  
+  <img src="https://github.com/user-attachments/assets/7e083996-60e7-4d65-84a0-9fd918c13d25" width=200 height=400>
+  <img src="https://github.com/user-attachments/assets/3488ca2c-8c29-48f5-a753-31189541edeb" width=200 height=400>
+  
+* ### Profile
+  
+  <img src="https://github.com/user-attachments/assets/99d9906b-e50f-489c-b0a7-6fad801d0e20" width=200 height=400>
+  <img src="https://github.com/user-attachments/assets/e3cdfbad-0fab-427c-a626-c11569551b9a" width=200 height=400>
+
+  
+<br>
 
 ## :fire: SpringBoot Contributors
 <table>
