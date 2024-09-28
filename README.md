@@ -17,24 +17,28 @@ This platform is a new marketplace where users can trade creatively redesigned a
   <img src="https://github.com/user-attachments/assets/56e7f4ec-c6ce-426e-ba6f-e48de54b2e1e" width=200 height=400>
 
 * ### Display List
-  Show list of items that users uploaded. These are the redesigned or upcycled items.
+  Display a list of items uploaded by users, which consist of redesigned or upcycled products.
   
   <img src="https://github.com/user-attachments/assets/3bd1f92e-59e5-451c-9651-109d03708d74" width=200 height=400>
 
 * ### Example Of Post
-  
+  Users can view the item details, including the item name, description, price, and the number of 'likes'.
+
   <img src="https://github.com/user-attachments/assets/dd30d4de-075e-4e2f-a62c-6ed6977896a3" width=200 height=400>
 
 * ### Register Items
+  Users can register items they have upcycled or redesigned.
   
   <img src="https://github.com/user-attachments/assets/49c51510-9f77-4e3b-b4a0-5326baa703b3" width=200 height=400>
   
 * ### Category
+  Items are categorized into several groups, allowing users to view and select items from the category they click on. When registering an item, it is assigned to a category based on pre-defined inputs, making it easier for users to find relevant items under each category.
   
   <img src="https://github.com/user-attachments/assets/7e083996-60e7-4d65-84a0-9fd918c13d25" width=200 height=400>
   <img src="https://github.com/user-attachments/assets/3488ca2c-8c29-48f5-a753-31189541edeb" width=200 height=400>
   
 * ### Profile
+  "MyReform" application allows users to edit their own profile.
   
   <img src="https://github.com/user-attachments/assets/99d9906b-e50f-489c-b0a7-6fad801d0e20" width=200 height=400>
   <img src="https://github.com/user-attachments/assets/e3cdfbad-0fab-427c-a626-c11569551b9a" width=200 height=400>
